@@ -1,7 +1,11 @@
 /**
  * BAZNAS BADMINTON CLUB (BBC)
- * Unified Data Store Layer (LocalStorage with Fallback Seed)
+ * Unified Data Store Layer (LocalStorage with Fallback Seed + Static JSON Sync)
  * Central management for Players, Events, Gallery Moments, and Articles.
+ *
+ * DEPLOYMENT FIX: Data kini di-fetch dari file JSON statis (/data/*.json) saat
+ * pertama kali dibuka atau saat versi JSON lebih baru dari localStorage.
+ * Alur kerja: Edit via CMS → Export JSON → Commit ke GitHub → Vercel redeploy.
  */
 const BBC_STORE = (function () {
     const STORAGE_KEYS = {
@@ -12,6 +16,23 @@ const BBC_STORE = (function () {
         OFFICIALS: 'bbc_data_officials_v1',
         HERO: 'bbc_data_hero_v1'
     };
+
+    // Versi JSON yang tersimpan di localStorage (untuk deteksi update)
+    const JSON_VERSION_KEYS = {
+        PLAYERS: 'bbc_json_ver_players',
+        EVENTS: 'bbc_json_ver_events',
+        GALLERY: 'bbc_json_ver_gallery',
+        ARTICLES: 'bbc_json_ver_articles',
+        OFFICIALS: 'bbc_json_ver_officials'
+    };
+
+    // Path JSON relatif — otomatis menyesuaikan apakah di /pages/ atau root
+    function getJsonBasePath() {
+        if (typeof window !== 'undefined' && window.location.pathname.includes('/pages/')) {
+            return '../data/';
+        }
+        return './data/';
+    }
 
     // Default Hero Settings (Supports Photo or Video)
     const DEFAULT_HERO = {
@@ -655,8 +676,115 @@ const BBC_STORE = (function () {
     }
 
     // ========================================================
+    // STATIC JSON SYNC — fetch data dari /data/*.json
+    // Dipanggil sekali saat halaman load. Jika JSON lebih baru
+    // dari versi di localStorage, data di-override secara otomatis.
+    // ========================================================
+    async function fetchJsonData(filename, arrayKey) {
+        try {
+            const base = getJsonBasePath();
+            const res = await fetch(`${base}${filename}?v=${Date.now()}`, {
+                cache: 'no-store'
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            return { data: json[arrayKey] || [], version: json._version || 0 };
+        } catch (e) {
+            console.warn(`[BBC_STORE] Gagal fetch ${filename}:`, e.message);
+            return null;
+        }
+    }
+
+    /**
+     * initialize() — Harus dipanggil satu kali sebelum render halaman.
+     * Fetch semua data dari JSON statis dan sync ke localStorage jika versi lebih baru.
+     * @returns {Promise<void>}
+     */
+    async function initialize() {
+        const tasks = [
+            { file: 'players.json', key: 'players', storageKey: STORAGE_KEYS.PLAYERS, verKey: JSON_VERSION_KEYS.PLAYERS },
+            { file: 'events.json',  key: 'events',  storageKey: STORAGE_KEYS.EVENTS,  verKey: JSON_VERSION_KEYS.EVENTS },
+            { file: 'gallery.json', key: 'gallery', storageKey: STORAGE_KEYS.GALLERY, verKey: JSON_VERSION_KEYS.GALLERY },
+            { file: 'articles.json',key: 'articles',storageKey: STORAGE_KEYS.ARTICLES,verKey: JSON_VERSION_KEYS.ARTICLES },
+            { file: 'officials.json',key: 'officials',storageKey: STORAGE_KEYS.OFFICIALS,verKey: JSON_VERSION_KEYS.OFFICIALS }
+        ];
+
+        await Promise.all(tasks.map(async (task) => {
+            const result = await fetchJsonData(task.file, task.key);
+            if (!result) return; // gagal fetch, pakai data localStorage
+
+            const storedVersion = parseInt(localStorage.getItem(task.verKey) || '0', 10);
+            const existingData = localStorage.getItem(task.storageKey);
+
+            // Override localStorage jika: (1) belum ada data, atau (2) versi JSON lebih baru
+            if (!existingData || result.version > storedVersion) {
+                writeStorage(task.storageKey, result.data);
+                localStorage.setItem(task.verKey, String(result.version));
+                console.info(`[BBC_STORE] Data '${task.key}' diperbarui dari JSON (v${result.version}).`);
+            }
+        }));
+    }
+
+    /**
+     * forceReloadFromJson() — Paksa reload semua data dari JSON statis,
+     * mengabaikan versi. Berguna setelah admin deploy data baru.
+     * @returns {Promise<void>}
+     */
+    async function forceReloadFromJson() {
+        // Reset semua version keys agar initialize() selalu override
+        Object.values(JSON_VERSION_KEYS).forEach(k => localStorage.removeItem(k));
+        await initialize();
+        broadcast(null);
+    }
+
+    // ========================================================
     // 6. BACKUP, RESTORE & FACTORY RESET
     // ========================================================
+
+    /**
+     * exportToJsonFiles() — Export semua data sebagai kumpulan file JSON
+     * yang bisa langsung di-commit ke repository untuk deploy ke Vercel.
+     * Dipanggil dari CMS → Backup → Export JSON Files.
+     */
+    function exportToJsonFiles() {
+        const timestamp = new Date().toISOString().split('T')[0];
+        const files = [
+            {
+                filename: 'players.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, players: getPlayers() }, null, 2)
+            },
+            {
+                filename: 'events.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, events: getEvents() }, null, 2)
+            },
+            {
+                filename: 'gallery.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, gallery: getGallery() }, null, 2)
+            },
+            {
+                filename: 'articles.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, articles: getArticles() }, null, 2)
+            },
+            {
+                filename: 'officials.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, officials: getOfficials() }, null, 2)
+            }
+        ];
+
+        files.forEach(f => {
+            const blob = new Blob([f.content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = f.filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        return files.map(f => f.filename);
+    }
     function exportDatabase() {
         const backup = {
             version: '1.0',
@@ -743,6 +871,11 @@ const BBC_STORE = (function () {
         setMediaBlob,
         getMediaBlob,
         deleteMediaBlob,
+
+        // Static JSON sync (DEPLOYMENT FIX)
+        initialize,
+        forceReloadFromJson,
+        exportToJsonFiles,
 
         exportDatabase,
         importDatabase,

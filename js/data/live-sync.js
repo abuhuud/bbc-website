@@ -70,15 +70,32 @@ const BBC_LIVE = (function () {
 
 /**
  * Helper halaman: jalankan render saat DOM siap DAN setiap kali data CMS berubah.
+ * DEPLOYMENT FIX: Memanggil BBC_STORE.initialize() sebelum render pertama kali,
+ * sehingga data dari file JSON statis (/data/*.json) di-load terlebih dahulu.
  */
 function BBC_onReady(render) {
     if (typeof render !== 'function') return;
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => render());
-    } else {
+
+    async function runWithInit() {
+        // Sync data dari JSON statis sebelum render (hanya jika ada update)
+        if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
+            try {
+                await BBC_STORE.initialize();
+            } catch (e) {
+                console.warn('[BBC_onReady] initialize() gagal, lanjut dengan data lokal:', e);
+            }
+        }
         render();
     }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => runWithInit());
+    } else {
+        runWithInit();
+    }
+
     if (typeof BBC_LIVE !== 'undefined') {
+        // Saat data berubah via CMS (di tab yang sama), langsung re-render tanpa fetch JSON
         BBC_LIVE.onChange(() => render());
     }
 }

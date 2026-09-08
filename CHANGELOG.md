@@ -5,18 +5,65 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-2. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-3. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-4. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-5. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-6. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-7. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-8. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-9. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-10. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-11. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-12. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+2. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+3. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+4. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+5. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+6. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+7. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+8. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+9. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+10. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+11. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+12. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+13. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna
+> *"project ini sudah di deploy ke vercel namun data2 yang diinputkan melalui CMS tidak muncul pada website, solusinya seperti apa?"*
+
+### 🔍 Permasalahan
+- Seluruh data CMS (pemain, jadwal, galeri, artikel, pengurus) disimpan di **`localStorage` browser** — bersifat per-device dan tidak pernah tersimpan di server.
+- Data yang diinput admin hanya ada di browser admin lokal, sehingga ketika pengguna lain membuka website di Vercel, semua data tampak default/kosong.
+- Tidak ada mekanisme untuk menyebarkan data CMS ke semua pengunjung website.
+
+### 💡 Solusi & Implementasi Teknis
+**Arsitektur baru: Static JSON Sync**
+1. **Buat folder `data/` dengan 5 file JSON statis** yang ikut di-deploy ke Vercel sebagai sumber data publik:
+   - `data/players.json` — data roster pemain
+   - `data/events.json` — data jadwal/event (tanggal diubah dari dinamis ke statis agar konsisten)
+   - `data/gallery.json` — data galeri momen
+   - `data/articles.json` — data berita/artikel
+   - `data/officials.json` — data pengurus BBC
+
+2. **Tambah `initialize()` async di `store.js`** — fetch semua JSON saat halaman pertama dibuka menggunakan `Promise.all()`. Menggunakan sistem versioning (`_version` field) untuk hanya override localStorage jika JSON lebih baru. Termasuk `forceReloadFromJson()` dan `exportToJsonFiles()`.
+
+3. **Modifikasi `BBC_onReady()` di `live-sync.js`** — dijadikan async-aware, memanggil `BBC_STORE.initialize()` sebelum `render()` pada **setiap halaman** tanpa perlu modifikasi halaman satu per satu. Re-render via CMS (tab yang sama) tetap langsung tanpa fetch JSON ulang.
+
+4. **Tambah card "Deploy ke Vercel" di CMS Backup** — panduan 3 langkah visual beserta tombol **"📦 Export JSON Files (5 File)"** yang mengunduh semua file JSON sekaligus untuk di-commit ke GitHub.
+
+**Alur kerja admin setelah implementasi:**
+```
+Edit via CMS → Klik "Export JSON Files" → Copy ke folder data/ di GitHub → Push → Vercel redeploy (±1 menit) → Data muncul untuk semua pengunjung ✅
+```
+
+### 📂 Berkas yang Dimodifikasi
+| Berkas | Perubahan |
+|---|---|
+| `data/players.json` | **[NEW]** Static JSON seed pemain |
+| `data/events.json` | **[NEW]** Static JSON seed jadwal (tanggal statis) |
+| `data/gallery.json` | **[NEW]** Static JSON seed galeri |
+| `data/articles.json` | **[NEW]** Static JSON seed artikel |
+| `data/officials.json` | **[NEW]** Static JSON seed pengurus |
+| `js/data/store.js` | Tambah `initialize()`, `forceReloadFromJson()`, `exportToJsonFiles()`, `getJsonBasePath()`, `JSON_VERSION_KEYS` |
+| `js/data/live-sync.js` | `BBC_onReady()` kini async-aware, memanggil `initialize()` sebelum render |
+| `pages/cms.html` | Tambah card "Deploy ke Vercel" dengan step-by-step guide & tombol export |
+| `js/pages/cms.js` | Tambah handler `btn-export-json-files` |
 
 ---
 

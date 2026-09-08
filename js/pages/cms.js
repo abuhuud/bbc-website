@@ -1866,6 +1866,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Tombol Export JSON Files untuk Deploy ke Vercel
+    const btnExportJsonFiles = document.getElementById('btn-export-json-files');
+    if (btnExportJsonFiles) {
+        btnExportJsonFiles.addEventListener('click', () => {
+            try {
+                const files = BBC_STORE.exportToJsonFiles();
+                showToast(`✅ ${files.length} file JSON berhasil diunduh! Letakkan ke folder data/ di GitHub lalu push.`);
+            } catch (e) {
+                showToast(`Gagal export JSON: ${e.message}`, 'error');
+            }
+        });
+    }
+
     // ========================================================
     // 10. MODULE: PENGURUS BBC (OFFICIALS) CRUD
     // ========================================================

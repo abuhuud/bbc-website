@@ -723,6 +723,61 @@
                     </div>
                 </div>
 
+                <!-- ============================================================
+                     DEPLOY KE VERCEL — Export JSON untuk update website publik
+                     ============================================================ -->
+                <div class="cms-card"
+                    style="border-top: 6px solid #7C3AED; background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); margin-top: 0;">
+                    <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 260px;">
+                            <div class="pixel-badge" style="background: #7C3AED; color: white; margin-bottom: 8px;">
+                                🚀 DEPLOY KE VERCEL
+                            </div>
+                            <h3 class="cms-backup-title" style="color: #5B21B6;">PUBLISH DATA KE WEBSITE PUBLIK</h3>
+                            <p class="cms-backup-desc" style="color: #4C1D95; font-weight: 500;">
+                                Data yang diinput via CMS tersimpan di browser lokal. Agar muncul di website Vercel
+                                untuk semua pengunjung, ikuti langkah di bawah ini:
+                            </p>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin: 14px 0;">
+                                <div style="display: flex; gap: 10px; align-items: flex-start; background: white; border: 2px solid #7C3AED; border-radius: 8px; padding: 10px 14px;">
+                                    <span style="font-family: var(--font-pixel, monospace); font-size: 0.7rem; background: #7C3AED; color: white; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">01</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #1E1B4B;">Klik tombol <strong>"Export JSON Files"</strong> di bawah → 5 file JSON terunduh otomatis.</span>
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: flex-start; background: white; border: 2px solid #7C3AED; border-radius: 8px; padding: 10px 14px;">
+                                    <span style="font-family: var(--font-pixel, monospace); font-size: 0.7rem; background: #7C3AED; color: white; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">02</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #1E1B4B;">Copy semua file ke folder <code style="background:#EDE9FE;padding:1px 5px;border-radius:3px;">data/</code> di repository GitHub project BBC.</span>
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: flex-start; background: white; border: 2px solid #7C3AED; border-radius: 8px; padding: 10px 14px;">
+                                    <span style="font-family: var(--font-pixel, monospace); font-size: 0.7rem; background: #7C3AED; color: white; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">03</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #1E1B4B;">Commit &amp; Push ke GitHub → Vercel otomatis redeploy dalam ±1–2 menit. ✅</span>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" id="btn-export-json-files"
+                                style="background: #7C3AED; border-color: #1E1B4B; box-shadow: 4px 4px 0 #1E1B4B;">
+                                <span>📦 EXPORT JSON FILES (5 FILE)</span>
+                            </button>
+                            <p style="font-size: 0.75rem; color: #6B7280; margin-top: 8px; font-weight: 500;">
+                                File yang diunduh: players.json, events.json, gallery.json, articles.json, officials.json
+                            </p>
+                        </div>
+
+                        <div style="background: white; border: 3px solid #7C3AED; border-radius: 10px; padding: 16px; min-width: 200px; max-width: 240px;">
+                            <div style="font-size: 0.7rem; font-weight: 800; color: #7C3AED; letter-spacing: 0.05em; margin-bottom: 8px;">📋 STRUKTUR FOLDER</div>
+                            <pre style="font-size: 0.72rem; color: #374151; margin: 0; line-height: 1.7; font-family: 'Courier New', monospace;">bbc-website/
+├── data/           📁
+│   ├── players.json
+│   ├── events.json
+│   ├── gallery.json
+│   ├── articles.json
+│   └── officials.json
+└── pages/
+    └── cms.html</pre>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="cms-card"
                     style="border-color: var(--cms-coral); border-top: 6px solid var(--cms-coral); background: #FFF9F8;">
                     <div class="pixel-badge pixel-badge--coral" style="margin-bottom: 8px;">PENGATURAN AWAL / RESET
