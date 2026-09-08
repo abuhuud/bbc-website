@@ -5,7 +5,8 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+1. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+2. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
 2. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
 3. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
 4. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
@@ -18,6 +19,30 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 11. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
 12. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
 13. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🎨 v2.12.0 — Favicon Logo BBC di Semua Halaman
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna
+> *"favicon logo bbc" → "favicon gunakan logo.png pada folder bbc-website/assets/images/brand"*
+
+### 💡 Solusi & Implementasi Teknis
+- Menggunakan file [`assets/images/brand/logo.png`](file:///e:/Ikrom%20Docs/bbc-website/assets/images/brand/logo.png) (logo resmi BBC yang sudah ada) sebagai favicon di seluruh halaman website.
+- Ditambahkan tag `<link rel="icon">`, `<link rel="apple-touch-icon">`, dan `<meta name="theme-color" content="#1B6B35">` di `<head>` semua halaman.
+
+### 📂 Berkas yang Dimodifikasi
+| Berkas | Perubahan |
+|---|---|
+| `index.html` | Tambah favicon → `assets/images/brand/logo.png` |
+| `pages/players.html` | Tambah favicon tags |
+| `pages/schedule.html` | Tambah favicon tags |
+| `pages/news.html` | Tambah favicon tags |
+| `pages/player-detail.html` | Tambah favicon tags |
+| `pages/article-detail.html` | Tambah favicon tags |
+| `pages/profile.html` | Tambah favicon tags |
+| `pages/cms.html` | Tambah favicon tags |
 
 ---
 
