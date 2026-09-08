@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca Artikel | BAZNAS Badminton Club</title>
+    <meta name="description" content="Baca artikel dan berita lengkap seputar BAZNAS Badminton Club (BBC) BAZNAS RI.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+    <main id="main-content">
+        <section class="section court-pattern-bg">
+            <div class="container container-narrow">
+                <div style="margin-bottom: 24px;">
+                    <a href="news.html" class="btn btn-outline btn-sm">
+                        <span style="font-family: var(--font-pixel);">←</span>
+                        <span>KEMBALI KE SEMUA ARTIKEL</span>
+                    </a>
+                </div>
+
+                <!-- Dynamic Article Container -->
+                <div id="article-detail-container">
+                    <div style="text-align: center; padding: 40px;">
+                        <span class="pixel-badge pixel-badge--green">MEMUAT ARTIKEL...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/data/players.js"></script>
+    <script src="../js/data/events.js"></script>
+    <script src="../js/data/news.js"></script>
+    <script src="../js/data/store.js"></script>
+    <script src="../js/data/live-sync.js"></script>
+    <script src="../js/utils/date.js"></script>
+    <script src="../js/utils/filters.js"></script>
+    <script src="../js/utils/dom.js"></script>
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/footer.js"></script>
+    <script src="../js/pages/article-detail.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

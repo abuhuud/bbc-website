@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAZNAS Badminton Club | Komunitas Badminton BAZNAS RI</title>
+    <meta name="description"
+        content="Website BAZNAS Badminton Club, komunitas badminton internal BAZNAS RI. Informasi pemain, jadwal latihan, friendly match, turnamen, dan keseruan lapangan BBC.">
+    <meta name="keywords"
+        content="BAZNAS Badminton Club, BBC, Badminton BAZNAS, Komunitas Badminton Internal, BAZNAS RI, Pixel Smash Club">
+    <meta name="author" content="BAZNAS Badminton Club">
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="BAZNAS Badminton Club | Komunitas Badminton BAZNAS RI">
+    <meta property="og:description" content="Main Bareng. Sehat Bareng. Komunitas badminton internal BAZNAS RI.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts: Barlow Condensed (Headlines), Plus Jakarta Sans (Body), Silkscreen (Pixel Accents) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <main id="main-content">
+        <!-- ==================================================
+             01. HERO SECTION (WILD, GREEN & ENERGETIC)
+             ================================================== -->
+        <section class="section court-pattern-bg"
+            style="padding-top: 54px; padding-bottom: 74px; border-bottom: var(--pixel-border-md);">
+            <div class="container">
+                <div class="grid grid-2 gap-lg items-center">
+                    <!-- Left Hero Content -->
+                    <div>
+                        <div
+                            style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span class="pixel-badge pixel-badge--green">BAZNAS RI BADMINTON COMMUNITY</span>
+                            <span class="pixel-sticker pixel-sticker--yellow sticker-tilt-right">SMASH! ⚡</span>
+                            <span class="pixel-badge pixel-badge--dark">100% INTERNAL</span>
+                        </div>
+
+                        <h1 style="margin-bottom: 6px; line-height: 0.90; letter-spacing: 0.01em;">
+                            BAZNAS<br>
+                            BADMINTON<br>
+                            <span
+                                style="color: var(--color-primary); text-shadow: 3px 3px 0 var(--color-primary-dark);">CLUB</span>
+                        </h1>
+
+                        <div class="campaign-tagline" style="margin-bottom: 20px; color: var(--color-primary-dark);">
+                            MAIN BARENG. SEHAT BARENG.
+                        </div>
+
+                        <p class="text-lead" style="margin-bottom: 32px; max-width: 530px;">
+                            BAZNAS Badminton Club merupakan komunitas badminton internal BAZNAS yang menjadi ruang untuk
+                            berolahraga, menjaga kesehatan, membangun sportivitas, dan mempererat silaturahmi amil &
+                            amilat.
+                        </p>
+
+                        <div class="hero-actions"
+                            style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                            <a href="pages/schedule.html" class="btn btn-primary" id="hero-schedule-cta">
+                                <span>LIHAT JADWAL</span>
+                                <span style="font-family: var(--font-pixel);">🏸</span>
+                            </a>
+                            <a href="pages/players.html" class="btn btn-outline" id="hero-players-cta">
+                                <span>KENALI PEMAIN</span>
+                                <span style="font-family: var(--font-pixel);">→</span>
+                            </a>
+                            <a href="https://www.instagram.com/baznas_badmintonclub/" target="_blank"
+                                rel="noopener noreferrer" class="btn btn-sm btn-yellow" data-bind-instagram
+                                id="hero-ig-link" style="gap: 8px;">
+                                <span>FOLLOW BBC</span>
+                                <span style="font-family: var(--font-pixel);">↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Visual Collage -->
+                    <div class="hero-collage" style="position: relative;">
+                        <!-- Isometric Court Green Lines Accent -->
+                        <div
+                            style="position: absolute; -inset: 14px; border: 3px dashed var(--color-primary); border-radius: var(--radius-xl); pointer-events: none; opacity: 0.45;">
+                        </div>
+
+                        <!-- Main Collage Box -->
+                        <div style="position: relative; z-index: 1;">
+                            <!-- Large Featured Player Photo Frame with BAZNAS Green Accent -->
+                            <div
+                                style="background: linear-gradient(135deg, #009B63 0%, #025335 100%); border: 3.5px solid var(--color-dark); border-radius: var(--radius-xl); padding: 16px; box-shadow: var(--pixel-shadow-xl);">
+                                <div
+                                    style="position: relative; border-radius: var(--radius-md); overflow: hidden; border: 2.5px solid var(--color-dark); aspect-ratio: 16/10;">
+                                    <img id="hero-main-img"
+                                        src="https://images.unsplash.com/photo-1521537634581-0dced2efa2a3?auto=format&fit=crop&q=80&w=900"
+                                        alt="Insan BAZNAS Badminton Club berlatih di lapangan"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+
+                                    <!-- Floating Pixel Elements inside Frame -->
+                                    <span id="hero-main-label"
+                                        class="pixel-sticker pixel-sticker--coral sticker-tilt-wild"
+                                        style="position: absolute; top: 12px; left: 12px; z-index: 2;">
+                                        🔥 MATCH POINT!
+                                    </span>
+                                    <span class="pixel-badge pixel-badge--dark"
+                                        style="position: absolute; bottom: 12px; right: 12px; z-index: 2;">
+                                        COURT 01 • LIVE SMASH
+                                    </span>
+                                </div>
+
+                                <!-- Auxiliary Mini Action Shots -->
+                                <div id="hero-thumbs-row"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+                                    <div id="hero-thumb1-wrap"
+                                        style="position: relative; border: 2.5px solid var(--color-dark); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 16/9;">
+                                        <img id="hero-thumb1-img"
+                                            src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&q=80&w=400"
+                                            alt="Turnamen Badminton BBC"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                        <span id="hero-thumb1-label" class="pixel-badge pixel-badge--yellow"
+                                            style="position: absolute; bottom: 4px; left: 4px; font-size: 0.62rem; padding: 2px 6px;">SPARING</span>
+                                    </div>
+                                    <div id="hero-thumb2-wrap"
+                                        style="position: relative; border: 2.5px solid var(--color-dark); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 16/9;">
+                                        <img id="hero-thumb2-img"
+                                            src="https://images.unsplash.com/photo-1613918108466-292b78a8ef95?auto=format&fit=crop&q=80&w=400"
+                                            alt="Latihan Footwork BBC"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                        <span id="hero-thumb2-label" class="pixel-badge pixel-badge--neon"
+                                            style="position: absolute; bottom: 4px; left: 4px; font-size: 0.62rem; padding: 2px 6px;">PRACTICE</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Decorative Floating Pixel Badges -->
+                            <div class="anim-float" style="position: absolute; -top: 18px; -right: 16px; z-index: 3;">
+                                <div class="pixel-sticker pixel-sticker--yellow sticker-tilt-right"
+                                    style="font-size: 0.9rem; padding: 8px 16px; box-shadow: 4px 4px 0px var(--color-dark);">
+                                    PLAY! 🏸
+                                </div>
+                            </div>
+                            <div style="position: absolute; -bottom: 16px; -left: 14px; z-index: 3;">
+                                <div class="pixel-badge pixel-badge--green"
+                                    style="box-shadow: 4px 4px 0px var(--color-dark); font-size: 0.75rem;">
+                                    #BBC_BAZNAS
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             RUNNING MARQUEE TICKER (RETRO GREEN SPORTS BANNER)
+             ================================================== -->
+        <div class="marquee-ticker marquee-ticker--green" aria-hidden="true">
+            <div class="marquee-track">
+                <span class="marquee-item">🏸 BAZNAS BADMINTON CLUB</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">MAIN BARENG SEHAT BARENG</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">⚡ SMASH! PLAY! REPEAT!</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">100% INTERNAL BAZNAS RI</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">FOLLOW THE GAME ON INSTAGRAM</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">NO SLACKING JUST SMASHING</span>
+                <span class="marquee-sep">✦</span>
+                <!-- Repeat for continuous ticker loop -->
+                <span class="marquee-item">🏸 BAZNAS BADMINTON CLUB</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">MAIN BARENG SEHAT BARENG</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">⚡ SMASH! PLAY! REPEAT!</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">100% INTERNAL BAZNAS RI</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">FOLLOW THE GAME ON INSTAGRAM</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">NO SLACKING JUST SMASHING</span>
+                <span class="marquee-sep">✦</span>
+            </div>
+        </div>
+
+        <!-- ==================================================
+             02. AGENDA TERDEKAT BBC (PERFORATED EVENT TICKET)
+             ================================================== -->
+        <section class="section section--white" id="section-agenda">
+            <div class="container">
+                <div class="section-header section-header--flex">
+                    <div>
+                        <span class="section-subtitle" id="agenda-period-sub">PERIODE 7 HARI KE DEPAN</span>
+                        <h2>AGENDA TERDEKAT BBC</h2>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span class="pixel-badge pixel-badge--green" id="agenda-period-badge">JANGAN LEWATKAN JADWAL
+                            🏸</span>
+                        <a href="pages/schedule.html" class="btn btn-sm btn-outline">SEMUA JADWAL <span
+                                style="font-family: var(--font-pixel);">→</span></a>
+                    </div>
+                </div>
+
+                <!-- Tiket Utama: Agenda Paling Dekat -->
+                <div id="next-play-card">
+                    <!-- Injected via home.js — filtered 7 days ke depan -->
+                </div>
+
+                <!-- Agenda Lain Dalam 7 Hari (jika ada lebih dari 1) -->
+                <div id="upcoming-week-list" style="display: none; margin-top: 24px;"></div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             03. PLAYER OF THE MONTH (1 AMILIN & 1 AMILAT)
+             ================================================== -->
+        <section id="section-potm" class="section section--sm"
+            style="background-color: var(--color-off-white); border-bottom: var(--pixel-border-sm);">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="section-header section-header--flex" style="margin-bottom: 28px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                            <span class="pixel-badge pixel-badge--yellow">👑 BBC HONORS // EDISI BULAN INI</span>
+                            <span class="pixel-sticker pixel-sticker--green sticker-tilt-right"
+                                style="font-size: 0.7rem; padding: 2px 8px;">TOP PERFORMERS</span>
+                        </div>
+                        <h2 style="margin: 0; line-height: 1;">PLAYER OF THE MONTH</h2>
+                        <div class="section-subtitle" style="margin-top: 6px; text-transform: uppercase;">
+                            1 Amilin &amp; 1 Amilat Terbaik Berdasarkan Dedikasi, Kehadiran, &amp; Performa Lapangan
+                        </div>
+                    </div>
+                    <div>
+                        <span class="pixel-badge pixel-badge--dark" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                            SEASON 2026 // BBC ROSTER
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Dynamic POTM Container (Populated by home.js) -->
+                <div id="potm-container" class="potm-grid">
+                    <!-- Populated dynamically by home.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             04. TENTANG BBC (PROFILE TEASER)
+             ================================================== -->
+        <section class="section section--white">
+            <div class="container">
+                <div class="grid grid-2 gap-lg items-center">
+                    <div>
+                        <span class="section-subtitle">HELLO, WE ARE BBC!</span>
+                        <h2 style="margin-bottom: 16px;">
+                            BADMINTON.<br>
+                            FRIENDSHIP.<br>
+                            <span style="color: var(--color-primary);">GOOD TIMES.</span>
+                        </h2>
+                        <div class="pixel-divider pixel-divider--green" style="margin: 18px 0 24px 0;"></div>
+                        <p class="text-lead" style="margin-bottom: 24px;">
+                            BAZNAS Badminton Club merupakan wadah olahraga badminton bagi insan amil & amilat BAZNAS
+                            untuk menjaga kesehatan, mempererat silaturahmi, membangun kebersamaan, dan menjunjung
+                            tinggi nilai sportivitas.
+                        </p>
+                        <p style="color: var(--color-grey); margin-bottom: 32px; line-height: 1.65;">
+                            Melalui rotasi permainan yang santai namun kompetitif, BBC menjadi ruang cair antar generasi
+                            dan divisi di lingkungan BAZNAS RI tanpa sekat birokrasi formal.
+                        </p>
+                        <a href="pages/profile.html" class="btn btn-outline">
+                            <span>KENALAN DENGAN BBC</span>
+                            <span style="font-family: var(--font-pixel);">→</span>
+                        </a>
+                    </div>
+
+                    <div>
+                        <div
+                            style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border: 3.5px solid var(--color-dark); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--pixel-shadow-xl); position: relative;">
+                            <div
+                                style="background: var(--color-white); border: 2.5px solid var(--color-dark); border-radius: var(--radius-md); padding: 26px;">
+                                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                                    <span class="pixel-badge pixel-badge--green">NILAI KAMI</span>
+                                    <span class="pixel-badge pixel-badge--yellow">SPORTIVITAS</span>
+                                </div>
+                                <h3 style="font-size: 1.8rem; margin-bottom: 14px; color: var(--color-dark);">ENERGI
+                                    POSITIF INSAN BAZNAS</h3>
+                                <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+                                    <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                        <span class="font-pixel"
+                                            style="color: var(--color-primary); font-size: 1.2rem;">✔</span>
+                                        <span><strong>Kesehatan Jasmani:</strong> Tubuh bugar untuk optimalisasi
+                                            pelayanan zakat nasional.</span>
+                                    </li>
+                                    <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                        <span class="font-pixel"
+                                            style="color: var(--color-primary); font-size: 1.2rem;">✔</span>
+                                        <span><strong>Silaturahmi Hangat:</strong> Mengikis sekat birokrasi lewat
+                                            kebersamaan di lapangan.</span>
+                                    </li>
+                                    <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                        <span class="font-pixel"
+                                            style="color: var(--color-primary); font-size: 1.2rem;">✔</span>
+                                        <span><strong>Fair Play & Respek:</strong> Menghormati lawan dan kawan setim di
+                                            setiap rally smash.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             05. OUR SQUAD (AMILIN & AMILAT HORIZONTAL ROWS)
+             ================================================== -->
+        <section class="section section--off-white" style="border-bottom: var(--pixel-border-sm);">
+            <div class="container">
+                <div class="section-header section-header--flex" style="margin-bottom: 32px;">
+                    <div>
+                        <span class="section-subtitle">OUR SQUAD // COLLECTIBLES</span>
+                        <h2>KENALAN SAMA PEMAINNYA.</h2>
+                    </div>
+                    <a href="pages/players.html" class="btn btn-outline">
+                        <span>LIHAT SEMUA PEMAIN</span>
+                        <span style="font-family: var(--font-pixel);">→</span>
+                    </a>
+                </div>
+
+                <!-- ROW 1: AMILIN -->
+                <div class="squad-row" id="squad-row-amilin">
+                    <div class="squad-row__header">
+                        <div class="squad-row__title">
+                            <span class="pixel-badge pixel-badge--green">🏸 AMILIN</span>
+                            <span id="squad-count-male" class="squad-row__count"></span>
+                        </div>
+                        <div class="squad-row__controls">
+                            <button type="button" class="squad-scroll-btn"
+                                onclick="document.getElementById('amilin-track').scrollBy({left: -300, behavior: 'smooth'})"
+                                aria-label="Geser Kiri Amilin">←</button>
+                            <button type="button" class="squad-scroll-btn"
+                                onclick="document.getElementById('amilin-track').scrollBy({left: 300, behavior: 'smooth'})"
+                                aria-label="Geser Kanan Amilin">→</button>
+                        </div>
+                    </div>
+                    <div class="squad-row__track" id="amilin-track">
+                        <!-- Injected by home.js -->
+                    </div>
+                </div>
+
+                <!-- ROW 2: AMILAT -->
+                <div class="squad-row" id="squad-row-amilat">
+                    <div class="squad-row__header">
+                        <div class="squad-row__title">
+                            <span class="pixel-badge pixel-badge--coral">🏸 AMILAT</span>
+                            <span id="squad-count-female" class="squad-row__count"></span>
+                        </div>
+                        <div class="squad-row__controls">
+                            <button type="button" class="squad-scroll-btn"
+                                onclick="document.getElementById('amilat-track').scrollBy({left: -300, behavior: 'smooth'})"
+                                aria-label="Geser Kiri Amilat">←</button>
+                            <button type="button" class="squad-scroll-btn"
+                                onclick="document.getElementById('amilat-track').scrollBy({left: 300, behavior: 'smooth'})"
+                                aria-label="Geser Kanan Amilat">→</button>
+                        </div>
+                    </div>
+                    <div class="squad-row__track" id="amilat-track">
+                        <!-- Injected by home.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 06 lama disembunyikan karena sudah digabung di Section 05 -->
+        <section id="upcoming-schedule-section" class="section section--sm section--off-white"
+            style="display: none; border-top: var(--pixel-border-sm); border-bottom: var(--pixel-border-sm);">
+            <div class="container">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <span class="pixel-label">UPCOMING SESSIONS</span>
+                        <h3 style="margin: 0;">JADWAL PERTANDINGAN & LATIHAN LAINNYA</h3>
+                    </div>
+                    <a href="pages/schedule.html" class="btn btn-sm btn-outline">
+                        <span>LIHAT SEMUA JADWAL</span>
+                        <span style="font-family: var(--font-pixel);">→</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-2" id="upcoming-schedule-list">
+                    <!-- Injected via home.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             07. BBC ACTIVITIES (COLORFUL CARDS)
+             ================================================== -->
+        <section class="section section--white">
+            <div class="container">
+                <div class="section-header section-header--center">
+                    <span class="section-subtitle">VARIASI KEGIATAN</span>
+                    <h2>GAK CUMA MAIN BADMINTON.</h2>
+                    <p class="text-lead" style="margin-top: 12px;">
+                        Dari latihan rutin pembinaan teknik hingga gathering silaturahmi, BBC hadir sebagai wadah
+                        kegiatan yang dinamis dan berenergi.
+                    </p>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="activity-card" style="border-top: 6px solid var(--color-primary);">
+                        <div class="activity-card__icon" style="background-color: var(--color-primary-light);">🏸</div>
+                        <h3 class="activity-card__title">LATIHAN RUTIN</h3>
+                        <p class="activity-card__desc">
+                            Digelar rutin tiap pekan (Selasa malam) untuk menjaga stamina, latihan footwork, dan rotasi
+                            pasangan ganda.
+                        </p>
+                        <span class="pixel-badge pixel-badge--green" style="margin-top: 12px;">RUTIN MINGGUAN</span>
+                    </div>
+
+                    <div class="activity-card" style="border-top: 6px solid var(--color-blue);">
+                        <div class="activity-card__icon" style="background-color: #EBF4FF;">🤝</div>
+                        <h3 class="activity-card__title">FRIENDLY MATCH</h3>
+                        <p class="activity-card__desc">
+                            Laga persahabatan bersama instansi mitra, BAZNAS daerah, maupun komunitas olahraga BUMN dan
+                            kementerian.
+                        </p>
+                        <span class="pixel-badge pixel-badge--blue" style="margin-top: 12px;">SPARING PARTNER</span>
+                    </div>
+
+                    <div class="activity-card" style="border-top: 6px solid var(--color-coral);">
+                        <div class="activity-card__icon" style="background-color: #FFEAEB;">🏆</div>
+                        <h3 class="activity-card__title">TURNAMEN INTERNAL</h3>
+                        <p class="activity-card__desc">
+                            Ajang kompetisi tahunan seperti Six Wonder Cup yang mempertemukan atlet antar direktorat
+                            BAZNAS RI.
+                        </p>
+                        <span class="pixel-badge pixel-badge--coral" style="margin-top: 12px;">COMPETITION</span>
+                    </div>
+
+                    <div class="activity-card" style="border-top: 6px solid var(--color-yellow);">
+                        <div class="activity-card__icon" style="background-color: #FFF9D9;">⚡</div>
+                        <h3 class="activity-card__title">FUN MATCH</h3>
+                        <p class="activity-card__desc">
+                            Permainan gembira santai dengan sistem rotasi acak untuk amil pemula agar tetap menikmati
+                            sensasi memukul kok.
+                        </p>
+                        <span class="pixel-badge pixel-badge--yellow" style="margin-top: 12px;">ALL LEVELS</span>
+                    </div>
+
+                    <div class="activity-card" style="border-top: 6px solid var(--color-purple);">
+                        <div class="activity-card__icon" style="background-color: #F1EDFF;">🎉</div>
+                        <h3 class="activity-card__title">GATHERING & SHARING</h3>
+                        <p class="activity-card__desc">
+                            Momen keakraban di luar lapangan, diskusi teknik badminton, nobar turnamen dunia, dan
+                            sarapan bersama.
+                        </p>
+                        <span class="pixel-badge pixel-badge--dark" style="margin-top: 12px;">COMMUNITY TIME</span>
+                    </div>
+
+                    <div class="activity-card"
+                        style="border-top: 6px solid var(--color-orange); background: linear-gradient(145deg, #FFFFFF 0%, #FFF7EE 100%);">
+                        <div class="activity-card__icon" style="background-color: #FFEFE3;">📈</div>
+                        <h3 class="activity-card__title">KLINIK TEKNIK</h3>
+                        <p class="activity-card__desc">
+                            Sesi coaching clinic singkat mengenai servis backhand, variasi drop shot, smash silang, dan
+                            pencegahan cedera.
+                        </p>
+                        <span class="pixel-badge pixel-badge--yellow" style="margin-top: 12px;">TIPS & DRILL</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             08. LATEST STORIES (BERITA & ARTIKEL)
+             ================================================== -->
+        <section class="section section--off-white" id="section-news"
+            style="border-top: var(--pixel-border-sm); border-bottom: var(--pixel-border-sm);">
+            <div class="container">
+                <div class="section-header section-header--flex">
+                    <div>
+                        <span class="section-subtitle">BBC STORIES</span>
+                        <h2>CERITA DARI LAPANGAN.</h2>
+                    </div>
+                    <a href="pages/news.html" class="btn btn-outline">
+                        <span>BACA SEMUA ARTIKEL</span>
+                        <span style="font-family: var(--font-pixel);">→</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-3" id="latest-news-grid">
+                    <!-- Injected via home.js from js/data/news.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             09. BBC MOMENTS (PHOTO GALLERY)
+             ================================================== -->
+        <section class="section section--white" id="section-gallery">
+            <div class="container">
+                <div class="section-header section-header--center">
+                    <span class="section-subtitle">GALLERY</span>
+                    <h2>BBC MOMENTS</h2>
+                    <p class="text-lead" style="margin-top: 12px;">
+                        Kumpulan ekspresi, smash keras, senyum kebersamaan, dan keringat perjuangan di atas karpet
+                        hijau.
+                    </p>
+                </div>
+
+                <div class="grid grid-4" style="gap: 16px;" id="gallery-grid">
+                    <!-- Dynamic moments rendered by home.js via BBC_STORE -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             10. FINAL CTA (INSTAGRAM SPOTLIGHT - ZERO RECRUITMENT)
+             ================================================== -->
+        <section class="section"
+            style="background-color: var(--color-off-white); padding-top: 40px; padding-bottom: 84px;">
+            <div class="container">
+                <div class="instagram-cta-card">
+                    <div>
+                        <span class="pixel-badge pixel-badge--yellow" style="margin-bottom: 18px;">OFFICIAL
+                            INSTAGRAM</span>
+
+                        <h2
+                            style="font-size: clamp(2.3rem, 4.8vw, 4rem); line-height: 0.95; margin-bottom: 18px; color: var(--color-white);">
+                            IKUTI KESERUAN<br>
+                            <span style="color: var(--color-yellow); text-shadow: 2px 2px 0 var(--color-dark);">BAZNAS
+                                BADMINTON CLUB.</span>
+                        </h2>
+
+                        <a href="https://www.instagram.com/baznas_badmintonclub/" target="_blank"
+                            rel="noopener noreferrer" class="btn btn-yellow" data-bind-instagram
+                            style="box-shadow: 4px 4px 0px var(--color-dark); font-size: 1.15rem;">
+                            <span>FOLLOW BBC ON INSTAGRAM</span>
+                            <span style="font-family: var(--font-pixel);">↗</span>
+                        </a>
+                    </div>
+
+                    <div class="instagram-visual-badge">
+                        <div class="instagram-box-graphic">
+                            <div class="smash-scene" aria-hidden="true">
+                                <img src="assets/icons/pixel-racket.svg" alt="" class="smash-scene__racket">
+                                <span class="smash-scene__trail"></span>
+                                <img src="assets/icons/pixel-shuttlecock.svg" alt="" class="smash-scene__shuttle">
+                            </div>
+
+                            <div class="pixel-badge pixel-badge--green"
+                                style="width: 100%; justify-content: center; font-size: 0.78rem;">
+                                SEE YOU ON COURT! 🏸
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Scripts: Config -> Data -> Utils -> Components -> Page Logic -> Orchestrator -->
+    <script src="js/config.js"></script>
+    <script src="js/data/players.js"></script>
+    <script src="js/data/events.js"></script>
+    <script src="js/data/news.js"></script>
+    <script src="js/data/gallery.js"></script>
+    <script src="js/data/store.js"></script>
+    <script src="js/data/live-sync.js"></script>
+    <script src="js/utils/date.js"></script>
+    <script src="js/utils/filters.js"></script>
+    <script src="js/utils/dom.js"></script>
+    <script src="js/components/navbar.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script src="js/components/player-card.js"></script>
+    <script src="js/components/event-card.js"></script>
+    <script src="js/components/news-card.js"></script>
+    <script src="js/components/hero.js"></script>
+    <script src="js/pages/home.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

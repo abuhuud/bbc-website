@@ -1,0 +1,89 @@
+/* ==================================================
+   TYPOGRAPHY SYSTEM
+   Headlines: Barlow Condensed
+   Body: Plus Jakarta Sans
+   Pixel Accents: Silkscreen
+   ================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: 0.02em;
+  color: var(--color-dark);
+}
+
+h1 {
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-weight: 900;
+}
+
+h2 {
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+}
+
+h4 {
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+}
+
+p, body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-dark);
+}
+
+.text-lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+  color: #394843;
+}
+
+.text-muted {
+  color: var(--color-grey);
+}
+
+.text-white {
+  color: var(--color-white);
+}
+
+.font-pixel {
+  font-family: var(--font-pixel);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.campaign-tagline {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  display: block;
+}
+
+.section-subtitle {
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+  display: inline-block;
+}

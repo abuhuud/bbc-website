@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pemain | BAZNAS Badminton Club</title>
+    <meta name="description" content="Detail statistik, raket, dan prestasi pemain BAZNAS Badminton Club (BBC).">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+    <main id="main-content">
+        <section class="section court-pattern-bg">
+            <div class="container">
+
+
+                <!-- Dynamic Detail Container -->
+                <div id="player-detail-container">
+                    <div style="text-align: center; padding: 40px;">
+                        <span class="pixel-badge pixel-badge--yellow">MEMUAT DATA PEMAIN...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Lightbox Modal for Player Gallery Photos -->
+    <div id="pd-lightbox" class="pd-lightbox" aria-hidden="true" role="dialog" aria-label="Pratinjau Foto Galeri">
+        <div class="pd-lightbox__backdrop" data-close-lightbox></div>
+        <div class="pd-lightbox__content">
+            <button type="button" class="pd-lightbox__close" data-close-lightbox aria-label="Tutup foto">✕</button>
+            <div class="pd-lightbox__img-box">
+                <img id="pd-lightbox-img" src="" alt="Foto Aksi Pemain BBC">
+            </div>
+            <div class="pd-lightbox__caption-bar" style="justify-content: center;">
+                <span id="pd-lightbox-counter" class="pixel-badge pixel-badge--yellow" style="font-size: 0.65rem;">1 / 1</span>
+            </div>
+            <button type="button" class="pd-lightbox__nav pd-lightbox__nav--prev" id="pd-lightbox-prev" aria-label="Foto Sebelumnya">←</button>
+            <button type="button" class="pd-lightbox__nav pd-lightbox__nav--next" id="pd-lightbox-next" aria-label="Foto Selanjutnya">→</button>
+        </div>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/data/players.js"></script>
+    <script src="../js/data/events.js"></script>
+    <script src="../js/data/news.js"></script>
+    <script src="../js/data/store.js"></script>
+    <script src="../js/data/live-sync.js"></script>
+    <script src="../js/utils/date.js"></script>
+    <script src="../js/utils/filters.js"></script>
+    <script src="../js/utils/dom.js"></script>
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/footer.js"></script>
+    <script src="../js/pages/player-detail.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

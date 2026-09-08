@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita &amp; Artikel | BAZNAS Badminton Club</title>
+    <meta name="description" content="Kumpulan berita, liputan turnamen, dan tips bulutangkis dari BAZNAS Badminton Club (BBC) BAZNAS RI.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+    <main id="main-content">
+        <!-- Hero -->
+        <section class="section section--sm court-pattern-bg" style="border-bottom: var(--pixel-border-md);">
+            <div class="container">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center;">
+                    <span class="pixel-badge pixel-badge--green">BBC EDITORIAL</span>
+                    <span class="pixel-sticker pixel-sticker--yellow sticker-tilt-right">STORIES</span>
+                </div>
+                <h1 style="margin-bottom: 8px;">BERITA &amp; ARTIKEL</h1>
+                <p class="text-lead" style="max-width: 680px;">
+                    Liputan kegiatan, catatan turnamen, dan tips bermanfaat seputar olahraga badminton dari insan BAZNAS RI.
+                </p>
+            </div>
+        </section>
+
+        <!-- Marquee Ticker -->
+        <div class="marquee-ticker marquee-ticker--green" aria-hidden="true">
+            <div class="marquee-track">
+                <span class="marquee-item">🏸 CERITA DARI LAPANGAN</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">TIPS RAKET &amp; DRILL BULUTANGKIS</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">LIPUTAN TURNAMEN INTERNAL</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">🏸 CERITA DARI LAPANGAN</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">TIPS RAKET &amp; DRILL BULUTANGKIS</span>
+                <span class="marquee-sep">✦</span>
+                <span class="marquee-item">LIPUTAN TURNAMEN INTERNAL</span>
+                <span class="marquee-sep">✦</span>
+            </div>
+        </div>
+
+        <!-- Filters & News Grid -->
+        <section class="section section--white">
+            <div class="container">
+                <div class="section-header section-header--flex">
+                    <div>
+                        <span class="section-subtitle">ARTICLES &amp; STORIES</span>
+                        <h2>CERITA DARI LAPANGAN.</h2>
+                    </div>
+
+                    <!-- Category Filters -->
+                    <div class="filter-bar" role="group" aria-label="Filter kategori berita">
+                        <button class="filter-btn active" data-news-filter="all">SEMUA</button>
+                        <button class="filter-btn" data-news-filter="Turnamen">TURNAMEN</button>
+                        <button class="filter-btn" data-news-filter="Kegiatan">KEGIATAN</button>
+                        <button class="filter-btn" data-news-filter="Tips Badminton">TIPS BADMINTON</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-3" id="news-page-grid">
+                    <!-- Injected via js/pages/news.js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/data/players.js"></script>
+    <script src="../js/data/events.js"></script>
+    <script src="../js/data/news.js"></script>
+    <script src="../js/data/store.js"></script>
+    <script src="../js/data/live-sync.js"></script>
+    <script src="../js/utils/date.js"></script>
+    <script src="../js/utils/filters.js"></script>
+    <script src="../js/utils/dom.js"></script>
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/footer.js"></script>
+    <script src="../js/components/news-card.js"></script>
+    <script src="../js/pages/news.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

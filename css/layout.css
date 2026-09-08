@@ -1,0 +1,101 @@
+/* ==================================================
+   LAYOUT & CONTAINER UTILITIES
+   ================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.section {
+  padding-top: var(--section-space);
+  padding-bottom: var(--section-space);
+  position: relative;
+}
+
+.section--sm {
+  padding-top: var(--section-space-sm);
+  padding-bottom: var(--section-space-sm);
+}
+
+.section--white {
+  background-color: var(--color-white);
+  border-top: var(--pixel-border-sm);
+  border-bottom: var(--pixel-border-sm);
+}
+
+.section--dark {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+.section--off-white {
+  background-color: var(--color-off-white);
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-header--center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 680px;
+}
+
+.section-header--flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Grids */
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: 12px; }
+.gap-md { gap: 20px; }
+.gap-lg { gap: 36px; }
+
+@media (max-width: 1024px) {
+  .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .grid-4, .grid-3, .grid-2, .grid-5 {
+    grid-template-columns: 1fr;
+  }
+  .section-header--flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,53 @@
+/**
+ * BAZNAS BADMINTON CLUB (BBC)
+ * Custom Cursor — Racket Badminton
+ * Hotspot di tengah bidang senar (12 12). Fallback ke cursor sistem bila SVG
+ * cursor tidak didukung. Field input tetap memakai caret teks agar CMS nyaman.
+ */
+:root {
+    --cursor-racket: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(-45 16 16)'><rect x='14' y='19' width='4' height='12' fill='%23FFD83D' stroke='%23161C1A' stroke-width='1.5'/><rect x='14.5' y='15' width='3' height='5' fill='%23009B63' stroke='%23161C1A' stroke-width='1.5'/><ellipse cx='16' cy='9' rx='7' ry='8.5' fill='%23FFFFFF' stroke='%23161C1A' stroke-width='2'/><line x1='16' y1='1' x2='16' y2='17' stroke='%23161C1A' stroke-width='1'/><line x1='11.5' y1='2.5' x2='11.5' y2='15.5' stroke='%23161C1A' stroke-width='1'/><line x1='20.5' y1='2.5' x2='20.5' y2='15.5' stroke='%23161C1A' stroke-width='1'/><line x1='9' y1='9' x2='23' y2='9' stroke='%23161C1A' stroke-width='1'/><line x1='10.5' y1='4.5' x2='21.5' y2='4.5' stroke='%23161C1A' stroke-width='1'/><line x1='10.5' y1='13.5' x2='21.5' y2='13.5' stroke='%23161C1A' stroke-width='1'/></g></svg>") 12 12, auto;
+    --cursor-racket-active: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(-45 16 16)'><rect x='14' y='19' width='4' height='12' fill='%23FFD83D' stroke='%23161C1A' stroke-width='1.5'/><rect x='14.5' y='15' width='3' height='5' fill='%23009B63' stroke='%23161C1A' stroke-width='1.5'/><ellipse cx='16' cy='9' rx='7' ry='8.5' fill='%2300FF87' stroke='%23161C1A' stroke-width='2'/><line x1='16' y1='1' x2='16' y2='17' stroke='%23161C1A' stroke-width='1'/><line x1='11.5' y1='2.5' x2='11.5' y2='15.5' stroke='%23161C1A' stroke-width='1'/><line x1='20.5' y1='2.5' x2='20.5' y2='15.5' stroke='%23161C1A' stroke-width='1'/><line x1='9' y1='9' x2='23' y2='9' stroke='%23161C1A' stroke-width='1'/><line x1='10.5' y1='4.5' x2='21.5' y2='4.5' stroke='%23161C1A' stroke-width='1'/><line x1='10.5' y1='13.5' x2='21.5' y2='13.5' stroke='%23161C1A' stroke-width='1'/></g></svg>") 12 12, pointer;
+}
+
+html,
+body {
+    cursor: var(--cursor-racket);
+}
+
+a,
+button,
+label,
+summary,
+[role="button"],
+[onclick],
+.btn,
+.filter-btn,
+.squad-scroll-btn,
+.cms-nav__link,
+.cms-tab,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"],
+select {
+    cursor: var(--cursor-racket-active);
+}
+
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+    cursor: text;
+}
+
+[disabled],
+.is-disabled {
+    cursor: not-allowed;
+}

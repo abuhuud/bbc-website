@@ -1,0 +1,370 @@
+/* ==================================================
+   ANIMATIONS & MICRO-INTERACTIONS (HIGH ENERGY & COOL HOVERS)
+   Respect prefers-reduced-motion
+   ================================================== */
+
+/* --------------------------------------------------
+   KEYFRAME DEFINITIONS
+   -------------------------------------------------- */
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes floatReverse {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulseNeon {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0.5); }
+  50% { box-shadow: 0 0 20px 4px rgba(0, 255, 135, 0.8); }
+}
+
+@keyframes shuttlecockBob {
+  0%, 100% { transform: rotate(-8deg) translateY(0); }
+  50% { transform: rotate(8deg) translateY(-10px); }
+}
+
+/* --- JELLY WOBBLE: Used on Activity & Schedule cards --- */
+@keyframes jellyWobble {
+  0%   { transform: scale(1,1) translateY(-6px); }
+  10%  { transform: scale(1.12, 0.88) translateY(-6px); }
+  20%  { transform: scale(0.92, 1.08) translateY(-6px); }
+  35%  { transform: scale(1.06, 0.96) translateY(-6px); }
+  50%  { transform: scale(0.98, 1.02) translateY(-6px); }
+  75%  { transform: scale(1.01, 0.99) translateY(-6px); }
+  100% { transform: scale(1,1) translateY(-6px); }
+}
+
+/* --- TILT BOUNCE: Used on Player Cards --- */
+@keyframes tiltBounce {
+  0%   { transform: translateY(-8px) rotate(0deg) scale(1.02); }
+  25%  { transform: translateY(-8px) rotate(-1.5deg) scale(1.02); }
+  50%  { transform: translateY(-8px) rotate(1.5deg) scale(1.02); }
+  75%  { transform: translateY(-8px) rotate(-0.5deg) scale(1.02); }
+  100% { transform: translateY(-8px) rotate(0deg) scale(1.02); }
+}
+
+/* --- CARD POP-SQUEEZE: Used on News Cards --- */
+@keyframes cardPopSqueeze {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(-10px) scale(1.04, 0.97); }
+  60%  { transform: translateY(-8px) scale(0.98, 1.03); }
+  80%  { transform: translateY(-8px) scale(1.01, 0.99); }
+  100% { transform: translateY(-8px) scale(1); }
+}
+
+/* --- STAMP PRESS: Used on Score Tiles & Badges --- */
+@keyframes stampPress {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.94); }
+  60%  { transform: scale(1.06); }
+  80%  { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+/* --- FOIL SWEEP: Holographic shimmer on player cards --- */
+@keyframes foilSweep {
+  0%   { transform: rotate(25deg) translateY(-100%); }
+  100% { transform: rotate(25deg) translateY(100%); }
+}
+
+/* --- SLIDE-RIGHT: Footer links & nav --- */
+@keyframes slideRight {
+  from { transform: translateX(0); }
+  to   { transform: translateX(6px); }
+}
+
+/* --- GLITCH: Pixel badge hover flash --- */
+@keyframes glitchFlash {
+  0%, 100% { clip-path: none; transform: translateY(-2px); }
+  20% { clip-path: inset(0 0 80% 0); transform: translateY(-2px) translateX(-2px); }
+  40% { clip-path: inset(80% 0 0 0); transform: translateY(-2px) translateX(2px); }
+  60% { clip-path: inset(40% 0 40% 0); transform: translateY(-4px); }
+  80% { clip-path: none; transform: translateY(-2px); }
+}
+
+/* --- BORDER CHASE: Animated border on event tickets --- */
+@keyframes borderChase {
+  0%   { box-shadow: 4px 4px 0px var(--color-dark), 0 0 0 2px var(--color-primary); }
+  50%  { box-shadow: 6px 6px 0px var(--color-primary-dark), 0 0 16px rgba(0,155,99,0.5); }
+  100% { box-shadow: 4px 4px 0px var(--color-dark), 0 0 0 2px var(--color-primary); }
+}
+
+/* --- SPIN-POP: Icon in activity card --- */
+@keyframes spinPop {
+  0%   { transform: rotate(0deg) scale(1); }
+  30%  { transform: rotate(-15deg) scale(1.2); }
+  60%  { transform: rotate(10deg) scale(1.1); }
+  80%  { transform: rotate(-5deg) scale(1.05); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+/* --------------------------------------------------
+   REUSABLE ANIMATION HELPER CLASSES
+   -------------------------------------------------- */
+.anim-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.anim-float-reverse {
+  animation: floatReverse 5s ease-in-out infinite;
+}
+
+.anim-shuttle {
+  display: inline-block;
+  animation: shuttlecockBob 2.2s ease-in-out infinite;
+}
+
+.anim-pulse-neon {
+  animation: pulseNeon 2s infinite;
+}
+
+/* --------------------------------------------------
+   CARD-SPECIFIC HOVER MICRO-ANIMATIONS
+   -------------------------------------------------- */
+
+/* PLAYER CARD: Hover & active states → handled via transition in components.css
+   (smooth cubic-bezier float-up + green glow + shimmer sweep + press-down on :active)
+   No animation: override here to prevent transition/animation conflict. */
+
+/* NEWS CARD: Smooth lift + subtle shadow — pure transition, no animation conflict */
+.news-card {
+  transition:
+    transform 0.30s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.30s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.18s ease;
+}
+.news-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 6px 12px 28px rgba(0, 0, 0, 0.12), 4px 4px 0px var(--color-dark);
+  border-color: var(--color-primary);
+}
+.news-card:active {
+  transform: translateY(-2px) scale(0.98);
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1), 2px 2px 0px var(--color-dark);
+  transition-duration: 0.08s;
+}
+
+/* ACTIVITY CARD: Smooth lift + icon spin — pure transitions */
+.activity-card {
+  transition:
+    transform 0.30s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.30s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.18s ease;
+}
+.activity-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 5px 10px 24px rgba(0, 0, 0, 0.1), 4px 4px 0px var(--color-dark);
+  border-color: var(--color-primary);
+}
+.activity-card:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1), 2px 2px 0px var(--color-dark);
+  transition-duration: 0.08s;
+}
+
+/* ACTIVITY CARD ICON: Spin pop */
+.activity-card:hover .activity-card__icon {
+  animation: spinPop 0.6s ease-in-out;
+}
+
+/* EVENT TICKET: Border chase glow */
+.event-ticket {
+  transition: transform var(--transition-bounce);
+}
+.event-ticket:hover {
+  transform: translateY(-5px);
+  animation: borderChase 1.2s ease-in-out infinite;
+}
+
+/* SCHEDULE CARD: Nudge right */
+.schedule-card {
+  transition: transform var(--transition-bounce), box-shadow var(--transition-bounce), border-color var(--transition-fast);
+}
+.schedule-card:hover {
+  transform: translateY(-4px) translateX(4px);
+  box-shadow: var(--pixel-shadow-md);
+  border-color: var(--color-primary);
+}
+
+/* SCOREBOARD TILE: Stamp press */
+.scoreboard-tile {
+  transition: transform var(--transition-bounce), border-color var(--transition-fast), box-shadow var(--transition-bounce);
+}
+.scoreboard-tile:hover {
+  animation: stampPress 0.4s ease-in-out;
+  border-color: var(--color-primary-glow);
+  box-shadow: 0 0 20px rgba(0, 255, 135, 0.4);
+}
+
+/* MOMENT GALLERY: Scale + rotate */
+.moment-item {
+  transition: transform var(--transition-bounce), box-shadow var(--transition-bounce);
+}
+.moment-item:hover {
+  transform: translateY(-6px) scale(1.04) rotate(-1deg);
+  box-shadow: var(--pixel-shadow-md);
+}
+
+/* INSTAGRAM BOX GRAPHIC: Wobble */
+.instagram-box-graphic {
+  transition: transform var(--transition-bounce);
+}
+.instagram-box-graphic:hover {
+  animation: jellyWobble 0.6s ease-in-out;
+  transform: rotate(-2deg) scale(1.05);
+}
+
+/* PIXEL STICKER: Glitch flash */
+.pixel-sticker:hover {
+  animation: glitchFlash 0.4s steps(1) forwards;
+  box-shadow: 5px 5px 0px var(--color-dark);
+}
+
+/* PIXEL BADGE: Bounce up */
+.pixel-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 3px 3px 0px var(--color-dark);
+}
+
+/* NAVBAR LOGO: Spin on hover */
+.navbar__brand:hover .navbar__logo-badge {
+  animation: spinPop 0.5s ease-in-out;
+}
+
+/* --------------------------------------------------
+   ACCESSIBILITY: Reduce motion
+   -------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================
+   SMASH SCENE — Raket memukul shuttlecock melambung jauh
+   Ukuran & jarak lambungan mengikuti lebar kartu (variabel per breakpoint)
+   agar tidak terpotong di mobile, tablet, maupun desktop.
+   ========================================================== */
+.smash-scene {
+    --sm-racket: 54px;
+    --sm-shuttle: 26px;
+    --sm-fly: 190px;
+    --sm-racket-left: 42px;
+    position: relative;
+    height: 110px;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.smash-scene__racket {
+    position: absolute;
+    left: var(--sm-racket-left);
+    bottom: 2px;
+    width: var(--sm-racket);
+    transform-origin: 50% 92%;
+    animation: bbc-racket-swing 2.6s cubic-bezier(0.34, 1.4, 0.64, 1) infinite;
+}
+
+.smash-scene__shuttle {
+    position: absolute;
+    left: calc(var(--sm-racket-left) + var(--sm-racket) * 0.62);
+    bottom: calc(var(--sm-racket) * 0.9);
+    width: var(--sm-shuttle);
+    animation: bbc-shuttle-smash 2.6s cubic-bezier(0.25, 0.5, 0.3, 1) infinite;
+}
+
+.smash-scene__trail {
+    position: absolute;
+    left: calc(var(--sm-racket-left) + var(--sm-racket) * 0.62 + var(--sm-shuttle) + 4px);
+    bottom: calc(var(--sm-racket) * 0.9 + var(--sm-shuttle) * 0.35);
+    width: 0;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--color-primary) 0 6px, transparent 6px 12px);
+    animation: bbc-smash-trail 2.6s ease-out infinite;
+}
+
+@keyframes bbc-racket-swing {
+    0%      { transform: rotate(-42deg); }
+    14%     { transform: rotate(-50deg); }
+    22%     { transform: rotate(26deg); }
+    34%     { transform: rotate(12deg); }
+    60%     { transform: rotate(-42deg); }
+    100%    { transform: rotate(-42deg); }
+}
+
+@keyframes bbc-shuttle-smash {
+    0%, 18%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    26%       { transform: translate(calc(var(--sm-fly) * 0.18), -14px) rotate(70deg); opacity: 1; }
+    46%       { transform: translate(calc(var(--sm-fly) * 0.58), -30px) rotate(150deg); opacity: 1; }
+    66%       { transform: translate(var(--sm-fly), 4px) rotate(235deg); opacity: 0; }
+    67%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+}
+
+@keyframes bbc-smash-trail {
+    0%, 20%   { width: 0; opacity: 0; }
+    30%       { width: calc(var(--sm-fly) * 0.2); opacity: 1; }
+    52%       { width: calc(var(--sm-fly) * 0.5); opacity: 0.45; }
+    66%, 100% { width: 0; opacity: 0; }
+}
+
+/* Tablet & layout bertumpuk: kartu di tengah, adegan sedikit lebih rapat */
+@media (max-width: 1024px) {
+    .instagram-visual-badge {
+        display: flex;
+        justify-content: center;
+    }
+
+    .instagram-box-graphic {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Mobile */
+@media (max-width: 560px) {
+    .smash-scene {
+        --sm-racket: 46px;
+        --sm-shuttle: 22px;
+        --sm-fly: 155px;
+        --sm-racket-left: 36px;
+        height: 98px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Mobile kecil (360px) */
+@media (max-width: 400px) {
+    .smash-scene {
+        --sm-racket: 40px;
+        --sm-shuttle: 19px;
+        --sm-fly: 125px;
+        --sm-racket-left: 30px;
+        height: 88px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .smash-scene__racket,
+    .smash-scene__shuttle,
+    .smash-scene__trail {
+        animation: none;
+    }
+}

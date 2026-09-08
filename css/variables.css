@@ -1,0 +1,74 @@
+:root {
+  /* ==================================================
+     BRAND COLOR PALETTE - BAZNAS BADMINTON CLUB (BBC)
+     Dominant: BAZNAS Green & Court Forest Green
+     ================================================== */
+  --color-primary: #009B63;          /* Signature BAZNAS Green */
+  --color-primary-dark: #025335;     /* Deep Court Forest Green */
+  --color-primary-darker: #013421;   /* Ultra-Deep Shade */
+  --color-primary-glow: #00FF87;     /* Cyber Neon Lime Accent */
+  --color-primary-tint: #EAF8F2;    /* Soft Mint Tint */
+  --color-primary-light: #D2F2E4;   /* Mint Highlight */
+  
+  /* Energetic Sports Accents */
+  --color-yellow: #FFD83D;           /* Pixel Sunshine Yellow */
+  --color-yellow-dark: #CCA510;      /* Dark Ochre Pixel Shadow */
+  --color-orange: #FF7324;           /* Sport Blaze Orange */
+  --color-coral: #FF4757;            /* Electric Smash Red/Coral */
+  --color-blue: #1E75FF;             /* Court Electric Blue */
+  --color-sky: #70D0FF;              /* Clear Sky Blue */
+  --color-purple: #8352FD;           /* Cyber Purple */
+
+  /* Neo-Brutalist Neutrals */
+  --color-dark: #121815;             /* Pitch Carbon Charcoal */
+  --color-off-white: #F4F8F5;        /* Crisp Off-White */
+  --color-white: #FFFFFF;            /* Pure Crisp White */
+  --color-grey: #5A6D65;             /* Court Grey */
+  --color-light-grey: #DEE7E2;       /* Line Grey */
+
+  /* ==================================================
+     CHUNKY NEO-PIXEL SYSTEM TOKENS
+     ================================================== */
+  --pixel-unit: 4px;
+  --pixel-border-sm: 2px solid var(--color-dark);
+  --pixel-border-md: 3px solid var(--color-dark);
+  --pixel-border-lg: 4px solid var(--color-dark);
+  --pixel-border-green: 3px solid var(--color-primary-dark);
+  
+  /* Chunky Sharp Pixel Drop-Shadows */
+  --pixel-shadow-sm: 4px 4px 0px var(--color-dark);
+  --pixel-shadow-md: 6px 6px 0px var(--color-dark);
+  --pixel-shadow-lg: 8px 8px 0px var(--color-dark);
+  --pixel-shadow-xl: 12px 12px 0px var(--color-dark);
+  --pixel-shadow-green: 6px 6px 0px var(--color-primary-dark);
+  --pixel-shadow-glow: 0 0 24px rgba(0, 255, 135, 0.45);
+  
+  /* Corner Radii - Modern sports curves with crisp pixel edges */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 9999px;
+
+  /* ==================================================
+     TYPOGRAPHY
+     ================================================== */
+  --font-heading: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-pixel: 'Silkscreen', monospace, cursive;
+
+  /* ==================================================
+     LAYOUT & SPACING
+     ================================================== */
+  --container: 1240px;
+  --container-narrow: 880px;
+  --section-space: 88px;
+  --section-space-sm: 52px;
+
+  /* ==================================================
+     TRANSITIONS
+     ================================================== */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

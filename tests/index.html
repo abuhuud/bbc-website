@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Test Runner | BAZNAS Badminton Club (BBC)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Silkscreen:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        body {
+            background-color: #0A110E;
+            color: #E2E8F0;
+            font-family: var(--font-body);
+            min-height: 100vh;
+            padding: 36px 20px 60px;
+        }
+
+        .test-dashboard {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, #02432B 0%, #009B63 100%);
+            border: 3.5px solid var(--color-dark);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            box-shadow: 6px 6px 0px var(--color-dark);
+            margin-bottom: 28px;
+            color: #FFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .test-header__title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            margin: 0 0 6px 0;
+            letter-spacing: 0.02em;
+            line-height: 1;
+        }
+
+        .test-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 640px) {
+            .test-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .test-metric-card {
+            background: #111E18;
+            border: 2.5px solid #23372F;
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .test-metric-card__val {
+            font-family: var(--font-pixel);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .test-metric-card__val--pass { color: var(--color-primary-glow); }
+        .test-metric-card__val--fail { color: var(--color-coral); }
+        .test-metric-card__val--total { color: var(--color-yellow); }
+        .test-metric-card__val--time { color: var(--color-sky); }
+
+        .test-metric-card__label {
+            font-family: var(--font-heading);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            color: #94A3B8;
+            font-weight: 800;
+        }
+
+        .suite-card {
+            background: #111E18;
+            border: 2.5px solid #23372F;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .suite-card__header {
+            background: #16261F;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #23372F;
+        }
+
+        .suite-card__title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin: 0;
+            color: #FFF;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-item {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1C2E26;
+            font-size: 0.92rem;
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-item--passed {
+            background: rgba(0, 255, 135, 0.03);
+        }
+
+        .test-item--failed {
+            background: rgba(255, 82, 56, 0.08);
+        }
+
+        .test-item__info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .test-item__icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .test-item__name {
+            color: #E2E8F0;
+            line-height: 1.4;
+        }
+
+        .test-item__error {
+            margin-top: 8px;
+            background: #200D11;
+            border-left: 3px solid var(--color-coral);
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #FF8B7B;
+            white-space: pre-wrap;
+            border-radius: 4px;
+        }
+
+        .test-item__duration {
+            font-family: var(--font-pixel);
+            font-size: 0.68rem;
+            color: #64748B;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-dashboard">
+        <!-- Header -->
+        <header class="test-header">
+            <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                    <span class="pixel-badge pixel-badge--yellow">⚡ TEST RUNNER DASHBOARD</span>
+                    <span class="pixel-sticker pixel-sticker--dark" style="font-size: 0.62rem; padding: 2px 6px;">BBC QA SUITE</span>
+                </div>
+                <h1 class="test-header__title">UNIT TEST RUNNER</h1>
+                <div style="font-size: 0.88rem; opacity: 0.9;">
+                    Validasi Otomatis Modul Store, Aturan POTM, Dummy Anime Fallback, & Komponen UI
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-yellow btn-sm" id="btn-run-tests" style="box-shadow: 3px 3px 0 #000;">
+                    <span>▶ JALANKAN ULANG TEST</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Summary Metrics -->
+        <div class="test-metrics">
+            <div class="test-metric-card">
+                <div class="test-metric-card__val test-metric-card__val--pass" id="metric-passed">0</div>
+                <div class="test-metric-card__label">TESTS PASSED</div>
+            </div>
+            <div class="test-metric-card">
+                <div class="test-metric-card__val test-metric-card__val--fail" id="metric-failed">0</div>
+                <div class="test-metric-card__label">TESTS FAILED</div>
+            </div>
+            <div class="test-metric-card">
+                <div class="test-metric-card__val test-metric-card__val--total" id="metric-total">0</div>
+                <div class="test-metric-card__label">TOTAL SPECS</div>
+            </div>
+            <div class="test-metric-card">
+                <div class="test-metric-card__val test-metric-card__val--time" id="metric-time">0 ms</div>
+                <div class="test-metric-card__label">DURASI EKSEKUSI</div>
+            </div>
+        </div>
+
+        <!-- Output Suites Container -->
+        <div id="test-results-container">
+            <div style="text-align: center; padding: 40px; color: #94A3B8;">
+                Sedang menginisialisasi dan menjalankan unit test...
+            </div>
+        </div>
+
+        <!-- Action Links -->
+        <div class="test-actions">
+            <a href="../index.html" class="btn btn-outline btn-sm">
+                <span>← KEMBALI KE BERANDA</span>
+            </a>
+            <a href="../pages/cms.html" class="btn btn-primary btn-sm">
+                <span>KE DASHBOARD CMS →</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Application Code to Test -->
+    <script src="../js/utils/date.js"></script>
+    <script src="../js/data/live-sync.js"></script>
+    <script src="../js/data/players.js"></script>
+    <script src="../js/data/events.js"></script>
+    <script src="../js/data/news.js"></script>
+    <script src="../js/data/gallery.js"></script>
+    <script src="../js/data/officials.js"></script>
+    <script src="../js/data/store.js"></script>
+    <script src="../js/components/player-card.js"></script>
+    <script src="../js/components/news-card.js"></script>
+    <script src="../js/pages/home.js"></script>
+
+    <!-- Testing Framework & Specs -->
+    <script src="test-framework.js"></script>
+    <script src="specs/store.spec.js"></script>
+    <script src="specs/components.spec.js"></script>
+
+    <!-- Visual Test Runner Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('test-results-container');
+            const elPassed = document.getElementById('metric-passed');
+            const elFailed = document.getElementById('metric-failed');
+            const elTotal = document.getElementById('metric-total');
+            const elTime = document.getElementById('metric-time');
+            const btnRun = document.getElementById('btn-run-tests');
+
+            async function executeTests() {
+                container.innerHTML = '';
+                const suiteMap = new Map();
+
+                const reporter = {
+                    onSuiteStart(suite) {
+                        const card = document.createElement('div');
+                        card.className = 'suite-card';
+                        card.id = `suite-${suite.name.replace(/\s+/g, '-')}`;
+                        card.innerHTML = `
+                            <div class="suite-card__header">
+                                <h2 class="suite-card__title">
+                                    <span>📁</span>
+                                    <span>${suite.name}</span>
+                                </h2>
+                                <span class="pixel-badge pixel-badge--dark" id="badge-${card.id}" style="font-size: 0.65rem;">
+                                    RUNNING...
+                                </span>
+                            </div>
+                            <div class="suite-card__body" id="body-${card.id}"></div>
+                        `;
+                        container.appendChild(card);
+                        suiteMap.set(suite.name, card);
+                    },
+                    onTestEnd(test) {
+                        const card = suiteMap.get(test.suiteName);
+                        if (!card) return;
+                        const body = card.querySelector('.suite-card__body');
+                        const isPass = test.status === 'passed';
+
+                        const row = document.createElement('div');
+                        row.className = `test-item ${isPass ? 'test-item--passed' : 'test-item--failed'}`;
+                        row.innerHTML = `
+                            <div class="test-item__info">
+                                <span class="test-item__icon">${isPass ? '✔' : '✖'}</span>
+                                <div>
+                                    <div class="test-item__name">${test.testName}</div>
+                                    ${test.error ? `<div class="test-item__error">${test.error.message || test.error}</div>` : ''}
+                                </div>
+                            </div>
+                            <span class="test-item__duration">${test.duration}ms</span>
+                        `;
+                        body.appendChild(row);
+                    },
+                    onSuiteEnd(suiteResult) {
+                        const card = suiteMap.get(suiteResult.suiteName);
+                        if (!card) return;
+                        const badge = card.querySelector('.pixel-badge');
+                        if (suiteResult.failed === 0) {
+                            badge.className = 'pixel-badge pixel-badge--green';
+                            badge.textContent = `PASS (${suiteResult.passed}/${suiteResult.total})`;
+                        } else {
+                            badge.className = 'pixel-badge pixel-badge--coral';
+                            badge.textContent = `FAIL (${suiteResult.failed} failed)`;
+                        }
+                    },
+                    onAllEnd(summary) {
+                        elPassed.textContent = summary.totalPassed;
+                        elFailed.textContent = summary.totalFailed;
+                        elTotal.textContent = summary.totalTests;
+                        elTime.textContent = `${summary.totalDuration} ms`;
+                    }
+                };
+
+                await BBCTest.runSuites(reporter);
+            }
+
+            if (btnRun) {
+                btnRun.addEventListener('click', () => {
+                    executeTests();
+                });
+            }
+
+            // Auto-run on load
+            executeTests();
+        });
+    </script>
+</body>
+
+</html>
