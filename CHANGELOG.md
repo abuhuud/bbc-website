@@ -5,20 +5,62 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-2. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-2. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-3. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-4. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-5. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-6. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-7. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-8. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-9. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-10. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-11. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-12. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-13. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+2. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+3. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+4. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+5. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+6. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+7. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+8. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+9. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+10. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+11. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+12. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+13. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+14. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+15. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *Saat deploy ke Vercel muncul pesan error:*
+> `"Invalid request: should NOT have additional property exportedAt. Please remove it."`
+
+### 🔍 Analisis Akar Masalah
+- File backup/export database dari CMS yang berisi property `"exportedAt"` tidak sengaja disimpan dengan nama `vercel.json` pada root directory repository.
+- Vercel mendeteksi file `vercel.json` sebagai file konfigurasi deployment resmi Vercel. Karena formatnya adalah backup JSON database (berisi properti seperti `exportedAt`, `players`, `events`, `officials`, `gallery`, `hero`), Vercel menolak file tersebut dengan pesan error validasi schema.
+- Selain itu, data CMS pengguna belum masuk ke file data statis `/data/*.json`, sehingga website di Vercel sebelumnya masih membaca data lama.
+
+### 💡 Solusi & Implementasi Teknis
+1. **Migrasi Seluruh Data CMS ke File Statis `/data/*.json` (v2):**
+   - `data/players.json`: Diperbarui dengan 27 data pemain resmi yang telah diinput via CMS, versi di-upgrade ke `_version: 2`.
+   - `data/events.json`: Diperbarui dengan 2 data event, `_version: 2`.
+   - `data/officials.json`: Diperbarui dengan 6 pengurus BBC resmi, `_version: 2`.
+   - `data/gallery.json`: Diperbarui dengan 4 momen dokumentasi beserta gambar upload & tag, `_version: 2`.
+   - `data/articles.json`: Versi dinaikkan ke `_version: 2` untuk konsistensi sinkronisasi.
+   - `data/hero.json`: Berkas baru dibuat untuk menyimpan konfigurasi kustomisasi hero section, `_version: 2`.
+2. **Hapus File `vercel.json` yang Salah Tempat:**
+   - Menghapus `vercel.json` dari root repositori agar Vercel mendeteksi proyek sebagai *Zero-Config Static Web Application*, sehingga build & deployment berjalan lancar 100% tanpa error skema.
+3. **Integrasi Sinkronisasi Hero pada `js/data/store.js`:**
+   - Menambahkan `HERO: 'bbc_json_ver_hero'` ke dalam `JSON_VERSION_KEYS`.
+   - Menambahkan task `hero.json` ke dalam fungsi `initialize()` sehingga data hero ikut di-sync otomatis ke `localStorage` saat pengunjung membuka website.
+
+### 📂 Berkas yang Dimodifikasi & Dihapus
+| Berkas | Aksi | Keterangan |
+|---|---|---|
+| `vercel.json` | **Dihapus** | Menghapus file backup database yang keliru dinamai `vercel.json` |
+| `data/players.json` | Diperbarui | 27 pemain hasil input CMS, `_version: 2` |
+| `data/events.json` | Diperbarui | 2 jadwal acara hasil input CMS, `_version: 2` |
+| `data/officials.json` | Diperbarui | 6 pengurus resmi BBC, `_version: 2` |
+| `data/gallery.json` | Diperbarui | 4 momen galeri foto hasil input CMS, `_version: 2` |
+| `data/articles.json` | Diperbarui | Upgrade `_version: 2` |
+| `data/hero.json` | **Baru** | Menyimpan pengaturan hero section dari CMS, `_version: 2` |
+| `js/data/store.js` | Diperbarui | Penambahan sinkronisasi `hero.json` di `initialize()` |
+| `CHANGELOG.md` | Diperbarui | Pencatatan riwayat pembaruan v2.13.0 |
 
 ---
 

@@ -23,7 +23,8 @@ const BBC_STORE = (function () {
         EVENTS: 'bbc_json_ver_events',
         GALLERY: 'bbc_json_ver_gallery',
         ARTICLES: 'bbc_json_ver_articles',
-        OFFICIALS: 'bbc_json_ver_officials'
+        OFFICIALS: 'bbc_json_ver_officials',
+        HERO: 'bbc_json_ver_hero'
     };
 
     // Path JSON relatif — otomatis menyesuaikan apakah di /pages/ atau root
@@ -688,7 +689,7 @@ const BBC_STORE = (function () {
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
-            return { data: json[arrayKey] || [], version: json._version || 0 };
+            return { data: json[arrayKey] !== undefined ? json[arrayKey] : [], version: json._version || 0 };
         } catch (e) {
             console.warn(`[BBC_STORE] Gagal fetch ${filename}:`, e.message);
             return null;
@@ -706,7 +707,8 @@ const BBC_STORE = (function () {
             { file: 'events.json',  key: 'events',  storageKey: STORAGE_KEYS.EVENTS,  verKey: JSON_VERSION_KEYS.EVENTS },
             { file: 'gallery.json', key: 'gallery', storageKey: STORAGE_KEYS.GALLERY, verKey: JSON_VERSION_KEYS.GALLERY },
             { file: 'articles.json',key: 'articles',storageKey: STORAGE_KEYS.ARTICLES,verKey: JSON_VERSION_KEYS.ARTICLES },
-            { file: 'officials.json',key: 'officials',storageKey: STORAGE_KEYS.OFFICIALS,verKey: JSON_VERSION_KEYS.OFFICIALS }
+            { file: 'officials.json',key: 'officials',storageKey: STORAGE_KEYS.OFFICIALS,verKey: JSON_VERSION_KEYS.OFFICIALS },
+            { file: 'hero.json',     key: 'hero',     storageKey: STORAGE_KEYS.HERO,     verKey: JSON_VERSION_KEYS.HERO }
         ];
 
         await Promise.all(tasks.map(async (task) => {
