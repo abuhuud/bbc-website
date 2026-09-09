@@ -1020,8 +1020,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rowsHtml = visibleList.map(p => {
             const genderBadge = p.gender === 'male'
-                ? `<span class="pixel-badge pixel-badge--green" style="font-size: 0.65rem; padding: 2px 8px;">🏸 AMILIN</span>`
-                : `<span class="pixel-badge pixel-badge--coral" style="font-size: 0.65rem; padding: 2px 8px;">🏸 AMILAT</span>`;
+                ? `<span class="pixel-badge pixel-badge--green" style="font-size: 0.74rem; padding: 2px 8px;">🏸 AMILIN</span>`
+                : `<span class="pixel-badge pixel-badge--coral" style="font-size: 0.74rem; padding: 2px 8px;">🏸 AMILAT</span>`;
 
             const achievements = Array.isArray(p.achievements)
                 ? p.achievements
@@ -1050,9 +1050,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="font-weight: 700; color: #1E40AF;">🏸 Main:</span>
                         <span>${stats.matches} match</span>
                     </div>
-                    <div class="cms-stat-badge-row" style="font-size: 0.72rem;">
-                        <span class="pixel-badge pixel-badge--green" style="font-size: 0.58rem; padding: 1px 4px;">W: ${stats.wins}</span>
-                        <span class="pixel-badge pixel-badge--coral" style="font-size: 0.58rem; padding: 1px 4px;">L: ${stats.losses}</span>
+                    <div class="cms-stat-badge-row" style="font-size: 0.74rem;">
+                        <span class="pixel-badge pixel-badge--green" style="font-size: 0.68rem; padding: 1px 5px;">W: ${stats.wins}</span>
+                        <span class="pixel-badge pixel-badge--coral" style="font-size: 0.68rem; padding: 1px 5px;">L: ${stats.losses}</span>
                         <span style="font-weight: 800; color: #D97706;">(${winRate}%)</span>
                     </div>
                 </div>
@@ -1638,8 +1638,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rowsHtml = visibleList.map(ev => {
             const statusBadge = ev.status === 'completed'
-                ? `<span class="pixel-badge pixel-badge--dark" style="font-size: 0.65rem;">SELESAI</span>`
-                : `<span class="pixel-badge pixel-badge--green" style="font-size: 0.65rem;">🟢 UPCOMING</span>`;
+                ? `<span class="pixel-badge pixel-badge--dark" style="font-size: 0.74rem;">SELESAI</span>`
+                : `<span class="pixel-badge pixel-badge--green" style="font-size: 0.74rem;">🟢 UPCOMING</span>`;
 
             let typeBadgeClass = 'pixel-badge--yellow';
             if (ev.type === 'tournament') typeBadgeClass = 'pixel-badge--coral';
@@ -1657,7 +1657,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <strong>${ev.title}</strong>
                                     </div>
                                     <div class="cms-accordion-meta">
-                                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.58rem;">${ev.typeName || ev.type}</span>
+                                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.70rem;">${ev.typeName || ev.type}</span>
                                         <span class="cms-accordion-subtext">${ev.dayName ? ev.dayName + ', ' : ''}${ev.date}</span>
                                     </div>
                                 </div>
@@ -1677,7 +1677,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${ev.description ? `<div style="font-size: 0.8rem; color: var(--color-grey); margin-top: 2px;">${ev.description.slice(0, 75)}...</div>` : ''}
                     </td>
                     <td data-label="Kategori" class="cms-acc-cell">
-                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.65rem;">${ev.typeName || ev.type}</span>
+                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.74rem;">${ev.typeName || ev.type}</span>
                     </td>
                     <td data-label="Lokasi" class="cms-acc-cell">
                         <strong>${ev.venue}</strong><br>
@@ -1892,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
                             <img src="${item.image}" alt="${item.alt || item.tag}" class="cms-accordion-thumb" style="width:38px; height:38px; border-radius:4px; object-fit:cover; flex-shrink:0;">
                             <div style="min-width:0; flex:1;">
-                                <span class="pixel-sticker ${badgeClass}" style="font-size: 0.62rem; padding: 2px 6px;">${item.tag}</span>
+                                <span class="pixel-sticker ${badgeClass}" style="font-size: 0.72rem; padding: 2px 6px;">${item.tag}</span>
                                 <div style="font-size: 0.8rem; font-weight: 700; color: var(--cms-dark); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     ${item.alt || 'Dokumentasi Lapangan BBC'}
                                 </div>
@@ -2047,7 +2047,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <strong>${art.title}</strong>
                                     </div>
                                     <div class="cms-accordion-meta">
-                                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.58rem;">${art.category}</span>
+                                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.70rem;">${art.category}</span>
                                         <span class="cms-accordion-subtext">📅 ${art.date}</span>
                                     </div>
                                 </div>
@@ -2068,10 +2068,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </td>
                     <td data-label="Kategori" class="cms-acc-cell">
-                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.65rem;">${art.category}</span>
+                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.74rem;">${art.category}</span>
                     </td>
                     <td data-label="Tanggal" class="cms-acc-cell">
-                        <span style="font-family: var(--font-pixel); font-size: 0.68rem; color: var(--color-grey);">📅 ${art.date}</span>
+                        <span style="font-family: var(--font-pixel); font-size: 0.74rem; color: var(--color-grey);">📅 ${art.date}</span>
                     </td>
                     <td data-label="Waktu Baca" class="cms-acc-cell">
                         <span class="cms-read-time-pill">⏱️ ${art.readTime || '-'}</span>
@@ -2336,7 +2336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <strong>${o.name}</strong>
                                 </div>
                                 <div class="cms-accordion-meta">
-                                    <span class="pixel-badge pixel-badge--green" style="font-size: 0.58rem;">${o.role || '-'}</span>
+                                    <span class="pixel-badge pixel-badge--green" style="font-size: 0.70rem;">${o.role || '-'}</span>
                                     <span class="cms-accordion-subtext">${o.period || ''}</span>
                                 </div>
                             </div>
@@ -2354,7 +2354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-weight: 800; color: var(--cms-dark);">${o.name}</div>
                 </td>
                 <td data-label="Jabatan" class="cms-acc-cell" style="font-size: 0.86rem; font-weight: 700;">${o.role || '-'}</td>
-                <td data-label="Periode" class="cms-acc-cell"><span class="pixel-badge pixel-badge--green" style="font-size: 0.62rem;">${o.period || '-'}</span></td>
+                <td data-label="Periode" class="cms-acc-cell"><span class="pixel-badge pixel-badge--green" style="font-size: 0.72rem;">${o.period || '-'}</span></td>
                 <td data-label="Aksi" class="cms-acc-cell">
                     <div class="cms-btn-group" style="justify-content: center;">
                         <button type="button" class="cms-btn-action cms-btn-action--edit" data-edit-official="${o.id}">✏️ EDIT</button>

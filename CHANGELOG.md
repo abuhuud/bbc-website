@@ -5,16 +5,66 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)](#-v418---reaktivitas-otomatis-real-time-sinkronisasi-cms-ke-indexhtml-pencegahan-overwrite-cache-multi-channel-broadcast--focus-auto-sync)
-2. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
-3. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
-4. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
-5. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-6. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-7. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-8. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-9. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-10. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.9 — Penyelarasan Proporsional Tipografi CMS, Eliminasi Teks Pengelola/Pusat Navigasi & Refinement Ikon Representatif](#-v419---penyelarasan-proporsional-tipografi-cms-eliminasi-teks-pengelolapusat-navigasi--refinement-ikon-representatif)
+2. [v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)](#-v418---reaktivitas-otomatis-real-time-sinkronisasi-cms-ke-indexhtml-pencegahan-overwrite-cache-multi-channel-broadcast--focus-auto-sync)
+3. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
+4. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
+5. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+6. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+7. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+8. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+9. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+10. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+11. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🎨 v4.1.9 — Penyelarasan Proporsional Tipografi CMS, Eliminasi Teks Pengelola/Pusat Navigasi & Refinement Ikon Representatif
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"sesuaikan ukuran font pada cms.html banyak yang tidak porporsional, take out tulisan modul pengelola, pusat navigasi modul, dan perbaiki icon2 agar lebih sesuai"*
+
+### 🔍 Analisis Akar Masalah
+1. **Ketidakseimbangan Proporsi Tipografi (Font Size Disproportion):**
+   - Terdapat banyak elemen badge dan indikator yang memiliki inline style font berukuran mikro (`0.58rem` hingga `0.65rem` / ~9-10px) dengan jenis huruf tebal (*pixel font* atau sans-serif), sehingga sulit dibaca (*illegible*) dan tampak tidak proporsional bila disandingkan dengan label form, judul kartu, ataupun isi tabel data (`0.92rem` - `1.05rem`).
+   - Label metrik kartu statistik (`.cms-stat-card__label`) menggunakan pixel font `0.65rem` yang terlalu kecil dan tidak serasi dengan nilai angka statistik yang besar (`1.95rem`).
+   - Header kolom tabel data (`.cms-table thead th`) berukuran `0.7rem` dengan letter-spacing renggang tampak terlalu kecil dibandingkan teks sel data.
+2. **Kelebihan Redundansi Frasa Teks yang Diminta Dihapus:**
+   - Bagian sidebar menu memiliki label `✦ MODUL PENGELOLA`.
+   - Widget ringkasan dasbor memiliki judul `📌 PUSAT NAVIGASI MODUL` dan badge `7 MODUL PENGELOLA`.
+   - Berbagai teks dan judul halaman masih menyematkan kata "pengelola" yang kaku.
+3. **Ketidaksesuaian Ikon (Icon Inconsistencies):**
+   - Modul struktur kepengurusan menggunakan ikon dasi (`👔`) yang terkesan birokratis/korporat dan kurang mencerminkan kebersamaan skuad pengurus klub olahraga badminton.
+   - Modul media hero beranda menggunakan ikon clapperboard film (`🎬`) yang kurang representatif dibanding ikon visual kreatif (`🎨`).
+   - Modul pencadangan data menggunakan ikon disket lama (`💾`) yang kurang modern dibanding ikon paket arsip data (`📦`).
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Penyelarasan Proporsi Tipografi & Font Scale ([`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html), [`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css), [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js)):**
+   - **Harmonisasi Badge:** Menetapkan ukuran font dasar `.cms-layout .pixel-badge` menjadi `0.74rem` dengan `line-height: 1.25` dan padding yang nyaman (`3px 8px`). Mengganti seluruh hardcoded inline style `0.58rem - 0.65rem` pada modul Pemain, Jadwal, Galeri, Berita, Media Hero, dan Pengurus menjadi `0.74rem`.
+   - **Kartu Statistik Dasbor:** Mengubah tipografi `.cms-stat-card__label` menjadi font heading modern (`0.78rem`, weight 800, tracking `0.05em`, warna kontras `#475569`) sehingga proporsional dan elegan mendampingi angka metrik utama.
+   - **Header Tabel Data:** Menaikkan ukuran font `.cms-table thead th` dari `0.7rem` menjadi `0.76rem` dengan tracking `0.05em` yang bersih dan mudah dibaca.
+   - **Sidebar Tabs & Version Badge:** Mengoptimalkan `.cms-sidebar .cms-tab-btn` (`0.85rem`), `.cms-sidebar .cms-tab-badge` (`0.72rem`), serta `.cms-sidebar__badge-version` (`0.70rem`).
+   - **Label & Tombol Aksi:** Menaikkan font aksi cepat dasbor (`.cms-dash-quick-btn` menjadi `0.82rem`, `.cms-dash-module-title` menjadi `0.90rem`, `.cms-dash-module-btn` menjadi `0.76rem`).
+2. **Eliminasi & Restrukturisasi Teks Tampilan ([`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html)):**
+   - Menghapus teks `✦ MODUL PENGELOLA` dari header sidebar dan menggantinya dengan label bersih `NAVIGASI MENU` (v4.2).
+   - Menghapus teks `📌 PUSAT NAVIGASI MODUL` dan `7 MODUL PENGELOLA` dari widget dasbor; menggantinya dengan judul elegan `⚡ AKSES CEPAT` dengan pill `PINTASAN MENU`.
+   - Meremajakan sapaan dasbor dari *"HALO PENGELOLA BBC! 🏸"* menjadi *"SELAMAT DATANG DI BBC ADMIN 🏸"*.
+   - Mengharmonisasi judul tab, modal, dan title peramban menjadi *"BBC Admin Control Center"*.
+3. **Penyempurnaan Ikon Representatif ([`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html), [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js)):**
+   - **Kepengurusan Klub:** Mengganti ikon dasi `👔` menjadi ikon tim/organisasi `👥` di sidebar, kartu metrik dasbor, daftar pintasan modul, header kartu, serta modal tambah/edit pengurus.
+   - **Media Hero Beranda:** Mengganti ikon `🎬` menjadi ikon kreatif/visual `🎨` di seluruh navigasi dan panel hero.
+   - **Backup & Database:** Mengganti ikon disket `💾` menjadi ikon paket data `📦` di navigasi dan modul pintasan.
+   - **Status & Tips Dasbor:** Mengganti ikon `ℹ️` menjadi ikon dinamis `⚡ STATUS SISTEM & PANDUAN`.
+4. **Penaikan Versi Aplikasi ([`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json)):**
+   - Menaikkan versi proyek menjadi `4.1.9`.
+
+### 📂 Berkas yang Dimodifikasi
+- [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) — Eliminasi teks 'modul pengelola' & 'pusat navigasi modul', penyesuaian font badge mikro menjadi proporsional, dan pembaruan ikon kepengurusan, media hero, serta status dasbor.
+- [`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css) — Penyesuaian aturan skala tipografi untuk badge CMS, stat card labels, headers tabel, modul akses cepat, dan sidebar.
+- [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js) — Penyelarasan ukuran font dinamis pada baris tabel pemain, jadwal, galeri, berita, dan pengurus.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penaikan versi aplikasi ke `4.1.9`.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan dokumentasi rilis v4.1.9 sesuai pedoman `AGENTS.md`.
 
 ---
 

@@ -45,6 +45,14 @@
   position: relative;
 }
 
+/* Base Proportional Sizing for Pixel Badges in CMS */
+.cms-layout .pixel-badge {
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+}
+
 /* Flex layout with Collapsible Left Sidebar */
 .cms-app-wrapper {
   display: flex;
@@ -676,13 +684,22 @@
   margin-bottom: 4px;
 }
 
+.cms-sidebar__section-title {
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--cms-yellow);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .cms-sidebar__badge-version {
   font-family: var(--font-pixel);
-  font-size: 0.58rem;
+  font-size: 0.70rem;
   background: rgba(0, 245, 212, 0.15);
   color: var(--cms-mint);
   border: 1px solid var(--cms-mint);
-  padding: 1px 5px;
+  padding: 2px 6px;
   border-radius: 3px;
 }
 
@@ -715,7 +732,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   border-radius: 6px;
   border: 2px solid rgba(255, 255, 255, 0.16);
   background: #14241C;
@@ -754,7 +771,7 @@
 
 .cms-sidebar .cms-tab-badge {
   font-family: var(--font-pixel);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   min-width: 24px;
   height: 20px;
   display: inline-flex;
@@ -1154,10 +1171,11 @@
 }
 
 .cms-stat-card__label {
-  font-family: var(--font-pixel);
-  font-size: 0.65rem;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 800;
   letter-spacing: 0.05em;
-  color: var(--color-grey);
+  color: #475569;
   margin-bottom: 3px;
   text-transform: uppercase;
 }
@@ -1172,7 +1190,7 @@
 }
 
 .cms-stat-card__sub {
-  font-size: 0.78rem;
+  font-size: 0.80rem;
   color: var(--color-grey);
   margin-top: 4px;
   display: flex;
@@ -1271,10 +1289,11 @@
 }
 
 .cms-dashboard-hero__actions-label {
-  font-family: var(--font-pixel);
-  font-size: 0.62rem;
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 800;
   color: var(--cms-yellow);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   margin-bottom: 10px;
 }
 
@@ -1285,7 +1304,8 @@
 }
 
 .cms-dash-quick-btn {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
+  font-weight: 800;
   padding: 8px 10px;
   justify-content: center;
   box-shadow: 2px 2px 0 var(--cms-dark);
@@ -1373,14 +1393,14 @@
 }
 
 .cms-dash-module-title {
-  font-size: 0.88rem;
+  font-size: 0.90rem;
   font-weight: 800;
   color: var(--cms-dark);
   margin-bottom: 2px;
 }
 
 .cms-dash-module-desc {
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   color: #64748B;
   white-space: nowrap;
   overflow: hidden;
@@ -1389,7 +1409,7 @@
 
 .cms-dash-module-btn {
   font-family: var(--font-heading);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 800;
   color: var(--cms-primary);
   background: rgba(0, 155, 99, 0.08);
@@ -1605,8 +1625,8 @@
   color: #FFFFFF;
   font-family: var(--font-pixel);
   font-weight: 700;
-  font-size: 0.7rem;
-  letter-spacing: 0.07em;
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 14px 16px;
   border-bottom: 2.5px solid var(--cms-dark);
