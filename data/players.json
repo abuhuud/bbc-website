@@ -1,587 +1,487 @@
-﻿{
-    "_version":  2,
-    "_updatedAt":  "2026-09-09",
-    "players":  [
-                    {
-                        "id":  "ikrom",
-                        "name":  "M. Arifin Purwakananta",
-                        "gender":  "male",
-                        "division":  "Kedeputian I",
-                        "isPlayerOfTheMonth":  true,
-                        "stats":  {
-                                      "attendance":  24,
-                                      "matches":  30,
-                                      "wins":  26,
-                                      "losses":  4
-                                  },
-                        "achievements":  [
-                                             "Juara 1 Internal Cup 2025",
-                                             "Top Scorer Sparring BAZNAS-BPS 2025"
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQVT9jIwiAwuhwwwczmYamBQxiIekUCuIBZehz68j1xKfZoAuN-7Mqe43yQLwYK3KMcNE-E0C77Wk4Q3mO9Ch4hAXeI6ZRTaDBODhgFsHroNUI82UgKwmYwb4LBHHVFJGojFR2dbDNhIlus1PWHr53CXWh-fik4-7Jdpr4bAEvdSfIpAIjG0ttzdW6D_MlJiL7SFueQ0pY-UlLMr9Wc-bZ94qYpQYg1yU5g13FaIsYg=w1280",
-                        "cardBg":  "var(--color-primary-light)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "m-arifin-purwakananta"
-                    },
-                    {
-                        "id":  "farhan",
-                        "name":  "Afif",
-                        "gender":  "male",
-                        "division":  "Kedeputian II",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  20,
-                                      "matches":  28,
-                                      "wins":  21,
-                                      "losses":  7
-                                  },
-                        "achievements":  [
-                                             "Semifinalis Sparring vs BPS DKI 2025",
-                                             "Best Smash Award Six Wonder Cup 2025"
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQXUL39opZjxRaSc7A_5eSVrlJxcx_UtciZOZB_72EhqoRHeb0lC-MB8q_uJsCDtohbwdLTka9EgdS9m4l1QlWxytapkqoWSEKnzSu5t-Dp-HHhWhK4DLy0LbJK69xorzyftDhuhRceHz70md-NvVwwEI3t1Ce-YDLRC14jQbeTnDxXUItb0HJ4zhndpBldzdhiYTPYx2hmHfFAb3gbXVxyq8vun4MVt0-jvYh5B=w1280",
-                        "cardBg":  "var(--color-yellow)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "afif"
-                    },
-                    {
-                        "id":  "siti",
-                        "name":  "Irsan Sanusi",
-                        "gender":  "male",
-                        "division":  "Manajemen Risiko",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  22,
-                                      "matches":  25,
-                                      "wins":  19,
-                                      "losses":  6
-                                  },
-                        "achievements":  [
-                                             "Juara 2 Ganda Campuran BBC 2026"
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUNT8iMnJ9XjgOogxZT_m5ENztGSU5TfN1VlcF-3qz6eO8-wgZp3MTLX3SSez4sK4VkdB6K8IE-ZAD03LeISDFqzna0FbVM7yR0RajlasdEdn9BoCZ0nVNi2IY3zCzHBbJQeZl7vVJKnw5yPFCRziOZAdH9X6bIKbWtfdOpUEAB-2dJAmX8A9dcFc6Mb1cM2Q-qZQHBeR71rHunGUEksUtYouaxkX2GXqnxt248Np0=w1280",
-                        "cardBg":  "var(--color-coral)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "irsan-sanusi"
-                    },
-                    {
-                        "id":  "dimas",
-                        "name":  "Ahmad Khair Asikin (AKA)",
-                        "gender":  "male",
-                        "division":  "IT \u0026 Transformasi Digital",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  18,
-                                      "matches":  22,
-                                      "wins":  15,
-                                      "losses":  7
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQX_S5f5KZYxUHOsx-r6KKPa0zqtzwPY_Z_BpYe8aKLHrQaPxTxY89-nAsZW5JS3IKKY4PdGU_J9Z6nQdY4dotgtEOOD8_dGof3iS2mK3z5OtxKncI-sa-1bBplm8BWvOno5TGRuSmOTxieooywAu2Fv4Ofq-6ccUs9PTs5MiqUtXDlGvrKeq_MLPvnNZ-t34i1zh-OVuCWbAvUN8rlOJDuUFiING8gl4bcsf4BPin8=w1280",
-                        "cardBg":  "var(--color-sky)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "ahmad-khair-asikin-aka"
-                    },
-                    {
-                        "id":  "anisa",
-                        "name":  "Neyla",
-                        "gender":  "female",
-                        "division":  "Keuangan \u0026 Akuntansi",
-                        "isPlayerOfTheMonth":  true,
-                        "stats":  {
-                                      "attendance":  26,
-                                      "matches":  29,
-                                      "wins":  25,
-                                      "losses":  4
-                                  },
-                        "achievements":  [
-                                             "Juara 1 Ganda Putri Six Wonder Cup 2025",
-                                             "Juara 2 Ganda Putri Internal Cup 2024",
-                                             "MVP Sparring Putri 2025"
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQU_I5Hta0Bnxy2_ODysX4_F1fEC9fYvsV_0BOZTXWagi-oOXcl37_VvJ46ZGEZNXfZ7dfRyBMFSUfepSB_birUuMXxTCV7yG-qW70Gz595FsKiQJfvBxpTIhDv5OQw1KQd9Vmi-fFB40Ced2jD_ihShye_nUG1emEZxfl1WA-EHbmUtupMGKG_YLUhJuDfAHtfMGGiacn57Oj8bgraprj7r8C98bUcccSk0qx900Ls=w1280",
-                        "cardBg":  "var(--color-yellow)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "neyla"
-                    },
-                    {
-                        "id":  "irsyad",
-                        "name":  "Irsyad",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQU-81kTChpUdRluLAeXEXl_Bj6VQTyqnO6x4WZY4DnrbQ33OAddBkeQDzFfOnp8Ulw7atkxTAsTspoDSCAGruZwpv155g4A4vmPB6POMUhpuLqDdqKSYHyVtKsHS6dggVOWr83in0rNAGP_mD5SEKxA1EqM4lHzJ_RWeQDvdxp_LkbLOzxjaNMuaB6dt9hlCfvRox6dQVceYIaCx6ibBT_GsJ__ES7g5Aw3BNc-n8w=w1280",
-                        "cardBg":  "var(--color-coral)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "irsyad"
-                    },
-                    {
-                        "id":  "mohan",
-                        "name":  "Mohan",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  10,
-                                      "matches":  5,
-                                      "wins":  3,
-                                      "losses":  2
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUe2WGrwQG9tGgxx6kWpPI796IVt1S2BhLuYeLCrQBScZw4EBpFpskWNVpQ4tvLUdHUeXB8ou04jGsKtkintWBgUS1h71IrFPcm0f-nYPDMDP0C0cN1jO_OlC7dhA_e7SYpOsj1zZ1Io5qXrG-5OZm7R2gzVnamXvfTPhy17A-oC6NqO4Mb1m44on2Sn3T1jRgd3DjwLDqaBN99gNlBxrnmi-A3fwn1PgbuZL1_qUk=w1280",
-                        "cardBg":  "var(--color-primary-light)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "mohan"
-                    },
-                    {
-                        "id":  "arief",
-                        "name":  "Arief",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQWwBrVRRH2xXz_BMqDmUXA6VssK8kL2Ji5v8TAISUO91AUZjYFIZ6HL03AEKAP6Jh4mDC1L9fieXkQ1VuUUO7r7qZ7fK8IsEAzblSqqCjzbsDnM2bpNDB-gdfV2SN68KriT6JUr7KG4gi5CP9VGDjeVu5TIKiRm7yfpIg-d5izr_v1mx340Qkfg2CjkM5MrKMt3xp-wyX6gZKQ5bvJGPx9jPpvkRF4MCeazKnOAJmU=w1280",
-                        "cardBg":  "var(--color-yellow)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "arief"
-                    },
-                    {
-                        "id":  "deddy",
-                        "name":  "Deddy",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  10,
-                                      "matches":  8,
-                                      "wins":  5,
-                                      "losses":  3
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQVemIQ5pmZ9lkf1AjY9waG_4Ogdl6gvbhOwwxhvyaYiwLY7Ees2NYBSnEplXl1RvrWHhYkz32_hsgH1gjeqhYlGFNvmx4PKFMeI3bDFv48yD0eg4wCi-htGIF9NfXUYspQVWNN8xvc8FK3RSu3xCSB52erV783T0ao8PgcP4wfTDFIktc_iEGmPamJ1Ckbf1efiuNhj_NFgCxmfcB0Vdl0989pRvI5MJKqq6otI=w1280",
-                        "cardBg":  "var(--color-sky)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "deddy"
-                    },
-                    {
-                        "id":  "ramadhona",
-                        "name":  "Ramadhona",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUczbQyEmEWLi0DOLTcZ0aP2Lix1kfObqd8QQKAIQHmrDGyepDXMCNUnp9IDy2K2z3g93mV9bMAq96Rz7eR6cIaBrqDiKs1164sluDO3CSNpSC7aW5aOqhxacGQVMI-wKVlKxHD3gN1yrm2xsk1zCT-dAEkDVOUarz2wyg4hcgudYkHJdEBgdQKtaLLA8qWDnR6h4FZyH8Fuk2MS7lwpcmymAnA5dksy0bvfiBH=w1280",
-                        "cardBg":  "var(--color-coral)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "ramadhona"
-                    },
-                    {
-                        "id":  "riyadh",
-                        "name":  "Riyadh",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQV2FF9CIpCI-UHgEoaOPLx7vEgd8qWnNhPqDjzdtqDhKFlAMvXgonUhHthJIE9yZ6SOhRW8WcIH6a-jbrg7bfDs-IfVfdlQeVTR2xCjsgACjNJ97cif4W1AtfAcbz-MJFVp1in98hTFS5CCg5pTtWWrmtD7VYSM9jhx0gTbT8EB-7ABwOztN_eg7e4rarJ2d2SnQ6bfeUM1f7Z8U8VHFLJU75NNu0OZTnbqmGY8=w1280",
-                        "cardBg":  "var(--color-primary-light)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "riyadh"
-                    },
-                    {
-                        "id":  "reno",
-                        "name":  "Reno",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQXC8oXgQeL6Fbpz-JFuNNXO7PMM8euDbKLQeIbUYIvI65QJEsgomCl1SukAZSam0UvGdVPps9MOu5xgniFX-5bqB1Q-E1pDtRT-6_Ym6pJQMINZsEonjC6BdPM-YibBEi3CCzZuELNJeuBMJV4ZbHsK_p3iU9jo7TY312UIp_PXpYQ-bd1t6k4VygUBOfGQw1RvzNjzW2q_l8kpI2tKl0yRaZFYGkAQL0I8Fj9FIcw=w1280",
-                        "cardBg":  "var(--color-yellow)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "reno"
-                    },
-                    {
-                        "id":  "wanto",
-                        "name":  "Wanto",
-                        "gender":  "male",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQVWcmD9IhtCH8G_roTRGHIvXmmSNyiUKwMdjw7Sl_Bt9WO2H7uiDDB9YFvny3exawc8r8SCXKvQOraaViP-0p5ORyXgjTToubaHwAy_hZvs_xKqjizxu-DWNEfDpVG11uMGKLBvyNZITeXfayWmS13GCHJpU5hHbiWNYCn1TEm2oh-t_bp0E8oSj0hn-mFChibsZT8DhTP4oUknB1sVVYcwDIWkW_aHJjpREFz48ek=w1280",
-                        "cardBg":  "var(--color-sky)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "wanto"
-                    },
-                    {
-                        "id":  "arum",
-                        "name":  "Arum",
-                        "gender":  "female",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQWP03ExMh0CEO8DmOgELFbIzya4SyEjxrhEtxvVp8yDtCqK3uLAXWO6VbrUOBFVASnV8Ifjm8TpoeuYqHyfpxoR73hHmOSHKaNjmyNiZ6EvYlMTFDpB71Udpms1vu9HW1TYft9E3xzbCIk7mPQ0d-oIh2tE85sf8HPxenxCHjltRuiRBWwopUMWXKhWS-mEKHYwIAkkC2b6rSnfMTvaP6riZSQVccnZVfSGU-h3kDg=w1280",
-                        "cardBg":  "var(--color-coral)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "arum"
-                    },
-                    {
-                        "id":  "nur",
-                        "name":  "Maya",
-                        "gender":  "female",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQW_yF3WT6ILEm4ZuJiEyMLNs3e6E_4zdtuS6aroYQrVfEyJnzgKWJV8Lqqfpf6-rgEHjTXoAVgMa4aQdkWm4ZMRt51ojb3enfamT0ihxJb9x0ShJtBwLWf4up671mHFz_oZQnuj4pl_r8gZ98wAfjwefp4XSCP2spUfBRZTllRMvlWVVZexMbUroeC6UCpLfPWujhFCIO6BcQJ0X7LFn-hwlYGpz1tZs1DlpZJTNtI=w1280",
-                        "cardBg":  "var(--color-yellow)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "maya"
-                    },
-                    {
-                        "id":  "eneng",
-                        "name":  "Adiba",
-                        "gender":  "female",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUr-x-JG0q8SlUrIKZ8P3iTSKodv96devlwpStoE6FN0WPJPqkXwfaBV1tHUUxUBje_qIOjFwRYA0xdY6R5GCHZhspFztQvZxNPP1VlaDbPTEOwNqfwYzIpWUkzKUOSOMWcyLNpo0vSnUieIrpxC029EaBXMc1CJHqskECGCTil4sFGHIROa6Ib_g5WilMAgFyp_NYwAVxjcmVgdkaD1r-0IDSO9iIxY-ND2O3J_uU=w1280",
-                        "cardBg":  "var(--color-sky)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "adiba"
-                    },
-                    {
-                        "id":  "vinda",
-                        "name":  "Nur",
-                        "gender":  "female",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUNaOHMHGfC0XE1rBsLsbpZg7ZWod2ZKCVikDcXqwa1YYf0P1ZdzI_nspogQdDEuWPznyk0K1cI1V1HEGjQtR848wTValWB_U9sS7MPvPSzt5Gk0uDroxklU_9lKvp2vmu28MLjG-xkslZj9edIx78oYhZjD2e_kYpllpJwHJrLEmle6jFpruz9czYAMAQYAouZyqOHBjalP4cx5Wb9CQrqHe5RAF-0uEVPldJAoP4=w1280",
-                        "cardBg":  "var(--color-primary-light)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "nur"
-                    },
-                    {
-                        "id":  "visty",
-                        "name":  "Visti",
-                        "gender":  "female",
-                        "division":  "BAZNAS RI",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQXs6TbuSQH5Selq8LLSnc37AfgNPRBO6fSRiyunRmJObY4BeRsloxNfKonP6GOMbGmUp--9kVsqs5oFbJ91DsZch9kG7h4pOpENfQOE6X-whpKgN0iZ9lGiqEPI029XbDZ1JSEie7fPmx9ywQ8m4EeB8zNR1upwkNYY8YZ9YssKqgodLzEf64JvrKScsw7QmOOo9ZoyBRBGApvDPhTUx5JOKUJEf88sn73Jrq2FORk=w1280",
-                        "cardBg":  "var(--color-coral)",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "visti"
-                    },
-                    {
-                        "id":  "fandhi-nur-hidayat-8171",
-                        "name":  "Fandhi Nur Hidayat",
-                        "gender":  "male",
-                        "division":  "Service Development",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  15,
-                                      "matches":  30,
-                                      "wins":  25,
-                                      "losses":  5
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUWoCIpsgRVXA2Op51JK5L6RnWXOBtBT_826kHebszzp9J8pkg9GM_Ring0LAe9qGj5ydpAktiyVQ8lLq1_IZoZWAxT9k5SsD4oG1LFzMTZaFC7f0gIEAr1yXvpMWyYHcxskLT_yGNoUP2pmXLpNKutbVFk4rCiDLpDAJIIRFbvCcKBLv_eo8VsZSLTPUGf1CI7tzl3mMU_kxz-0ran9K1GdDRGnj4Xik1uIbnkvts=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "fandhi-nur-hidayat"
-                    },
-                    {
-                        "id":  "rani-8383",
-                        "name":  "Rani",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUS2OJDiuqoPJii5xcvqG0tmQIuXTWDSZw7_HJ5lhYT7it9wllmJ5W8_7r1okFbPwEjMxJs-pxqSuqS6z39DOAhz8FKIFAxfrcmrCNcfOKR-_cgiUm7025mAxQXbJTmvofaBzVgB83atkM7tjYVouOSm2zM1-ho-mPl9W_nW5MpPH6o5VI4GOz9LK9WhfU2Ob6bZ0OfEoEimmvQtInQ0XkHPNMdTDyI0tnyPpEdFz4=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "rani"
-                    },
-                    {
-                        "id":  "safrina-0862",
-                        "name":  "Safrina",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQVZfdhJBhkFcWVMDBQs31_WWFnWoFGsqKfCdveg5mdIu2_0gsUTUhudwG6JK38Ys6Bv7Ouf9PDYcSS3FR-PNHfsvBKXDdA3QmezAGhloZv0FE-Dd3a5uFutHHNMcuIdf3QFka0ILjJq6HaDbqGqXPA9S0RyRDMi32UMQUBeWkGiWsP_2UMH0fF_pj-5MDKqVjJxPxQEzPD2KAuPOBtH2bBNXqhX8Xxbnma0-gNzIeo=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "safrina"
-                    },
-                    {
-                        "id":  "santa-8917",
-                        "name":  "Santa",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUvmde43cN8c9V0dgOGKttAftG23Sju7QCiEgPh0jE5k5wRylG0bCTyPSo8DqXnrB6B2GaoEziIAxybKP9YUjHFNKAtlB5RoQxWKTn2ca03Na3C9Mc8XIrhtBp4V4xJF-3kwPDrQ_6PnPYu37biVYZhwyXoxlAlcxHx1aisixDoEpJhgQVdNQGAhpBs4GkXVsJPKknXQxrwfAwmwqGRX13czA38zWzJyH0qdBoADAU=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "santa"
-                    },
-                    {
-                        "id":  "sarah-1539",
-                        "name":  "Sarah",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQWQiPt0vqU9ntNg4qvRN5dc3fnTa7QZmaGA6VlARS2sfCoXPvILjbYsrac2meId459nadCpsh9vl8uD7y9pphT7fdpcSm0X2a0FIQwsMG60tqvYnh9kdkuf_i4V8T_li3QrWD98t96KjKVgoNfyfUE5rSFSRCe6w9NBJ5TEySU1630NdAHmfK6G25Kmsb375MxYTlfrUCIUJh_Mm5b5Nt_TzyVezSzO6qz1AD6Rah4=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "sarah"
-                    },
-                    {
-                        "id":  "sintia-7641",
-                        "name":  "Sintia",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQXqHg91arKJnZhkyo9cc8BKfm5nexNVPHxLwROUzRJJXESk9CGDN0Oicluxlkpi78x6oxWARx6lsel0y4w-CYKmGTGU21QkfWHnHHy0w8t7yt7ghJ3-2PE6tT31e49ZfSC2AUQdfuomXrCbdB5C54zl74bHHOmfAbMG-nX4ATD7szQiv4gNoNHnw-q3LlP4dwuQk7e6e3RSaz9cVzljzVSNmeTaBcdwqI_JquXQyhg=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "sintia"
-                    },
-                    {
-                        "id":  "vinda-5225",
-                        "name":  "Vinda",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQVFmBDkRx7lZ9lVvEF_sszaMx979II500Soc9ND8V2rcgHV19A7M3nl1uRkOAUnaQn-mbNHxQh-f9tDX87hcQj7tbbcGR13zjH6DTqZ2zjXhk2rDfEx4HZa7cDOWTsm1hYqW_3bhaeZ3ZsLRKurlkB9NNsk0DwWrihaMexgT8CjJ0U0w2Dgexzc7qLoGWQin4JJwOHBv_rXpQ7oU3Cjtg8G8m-pmIedL7JC8SBH3jU=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "vinda"
-                    },
-                    {
-                        "id":  "widya-7243",
-                        "name":  "Widya",
-                        "gender":  "female",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "https://lh3.googleusercontent.com/sitesv/AG8ngQUilnfP2e27sQ0_zIfagZE_IvEgNDobtarYZI8dnADL4jg-itt9SEtGqxPoiF_8--cRTWkMo294NWbguDepZ9QW91Mh7vrSzsar9OMSf_JOSQYoFcLg4Jdk9lLpq6k8QVhjYEDxcjH12sV5_9PMxpPx249l1ndND9mvxcOz3SpeBL4Y4kJH0tqq20fADPlwbEstF6cn1lQ8ArCbTUbD0d2Fsm_N9G-iJBxfT3k9PYM=w1280",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "widya"
-                    },
-                    {
-                        "id":  "iko-3911",
-                        "name":  "iko",
-                        "gender":  "male",
-                        "isPlayerOfTheMonth":  false,
-                        "stats":  {
-                                      "attendance":  0,
-                                      "matches":  0,
-                                      "wins":  0,
-                                      "losses":  0
-                                  },
-                        "achievements":  [
-
-                                         ],
-                        "image":  "../assets/images/players/dummy-male.jpg",
-                        "gallery":  [
-
-                                    ],
-                        "slug":  "iko"
-                    }
-                ]
+{
+  "_version": 1788919776951,
+  "_updatedAt": "2026-09-09",
+  "players": [
+    {
+      "id": "ikrom",
+      "name": "M. Arifin Purwakananta",
+      "gender": "male",
+      "division": "Kedeputian I",
+      "isPlayerOfTheMonth": true,
+      "stats": {
+        "attendance": 24,
+        "matches": 30,
+        "wins": 26,
+        "losses": 4
+      },
+      "achievements": [
+        "Juara 1 Internal Cup 2025",
+        "Top Scorer Sparring BAZNAS-BPS 2025"
+      ],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQVT9jIwiAwuhwwwczmYamBQxiIekUCuIBZehz68j1xKfZoAuN-7Mqe43yQLwYK3KMcNE-E0C77Wk4Q3mO9Ch4hAXeI6ZRTaDBODhgFsHroNUI82UgKwmYwb4LBHHVFJGojFR2dbDNhIlus1PWHr53CXWh-fik4-7Jdpr4bAEvdSfIpAIjG0ttzdW6D_MlJiL7SFueQ0pY-UlLMr9Wc-bZ94qYpQYg1yU5g13FaIsYg=w1280",
+      "cardBg": "var(--color-primary-light)",
+      "gallery": [],
+      "slug": "m-arifin-purwakananta"
+    },
+    {
+      "id": "farhan",
+      "name": "Afif",
+      "gender": "male",
+      "division": "Kedeputian II",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 20,
+        "matches": 28,
+        "wins": 21,
+        "losses": 7
+      },
+      "achievements": [
+        "Semifinalis Sparring vs BPS DKI 2025",
+        "Best Smash Award Six Wonder Cup 2025"
+      ],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQXUL39opZjxRaSc7A_5eSVrlJxcx_UtciZOZB_72EhqoRHeb0lC-MB8q_uJsCDtohbwdLTka9EgdS9m4l1QlWxytapkqoWSEKnzSu5t-Dp-HHhWhK4DLy0LbJK69xorzyftDhuhRceHz70md-NvVwwEI3t1Ce-YDLRC14jQbeTnDxXUItb0HJ4zhndpBldzdhiYTPYx2hmHfFAb3gbXVxyq8vun4MVt0-jvYh5B=w1280",
+      "cardBg": "var(--color-yellow)",
+      "gallery": [],
+      "slug": "afif"
+    },
+    {
+      "id": "siti",
+      "name": "Irsan Sanusi",
+      "gender": "male",
+      "division": "Manajemen Risiko",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 22,
+        "matches": 25,
+        "wins": 19,
+        "losses": 6
+      },
+      "achievements": [
+        "Juara 2 Ganda Campuran BBC 2026"
+      ],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUNT8iMnJ9XjgOogxZT_m5ENztGSU5TfN1VlcF-3qz6eO8-wgZp3MTLX3SSez4sK4VkdB6K8IE-ZAD03LeISDFqzna0FbVM7yR0RajlasdEdn9BoCZ0nVNi2IY3zCzHBbJQeZl7vVJKnw5yPFCRziOZAdH9X6bIKbWtfdOpUEAB-2dJAmX8A9dcFc6Mb1cM2Q-qZQHBeR71rHunGUEksUtYouaxkX2GXqnxt248Np0=w1280",
+      "cardBg": "var(--color-coral)",
+      "gallery": [],
+      "slug": "irsan-sanusi"
+    },
+    {
+      "id": "dimas",
+      "name": "Ahmad Khair Asikin (AKA)",
+      "gender": "male",
+      "division": "IT & Transformasi Digital",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 18,
+        "matches": 22,
+        "wins": 15,
+        "losses": 7
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQX_S5f5KZYxUHOsx-r6KKPa0zqtzwPY_Z_BpYe8aKLHrQaPxTxY89-nAsZW5JS3IKKY4PdGU_J9Z6nQdY4dotgtEOOD8_dGof3iS2mK3z5OtxKncI-sa-1bBplm8BWvOno5TGRuSmOTxieooywAu2Fv4Ofq-6ccUs9PTs5MiqUtXDlGvrKeq_MLPvnNZ-t34i1zh-OVuCWbAvUN8rlOJDuUFiING8gl4bcsf4BPin8=w1280",
+      "cardBg": "var(--color-sky)",
+      "gallery": [],
+      "slug": "ahmad-khair-asikin-aka"
+    },
+    {
+      "id": "anisa",
+      "name": "Neyla",
+      "gender": "female",
+      "division": "Keuangan & Akuntansi",
+      "isPlayerOfTheMonth": true,
+      "stats": {
+        "attendance": 26,
+        "matches": 29,
+        "wins": 25,
+        "losses": 4
+      },
+      "achievements": [
+        "Juara 1 Ganda Putri Six Wonder Cup 2025",
+        "Juara 2 Ganda Putri Internal Cup 2024",
+        "MVP Sparring Putri 2025"
+      ],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQU_I5Hta0Bnxy2_ODysX4_F1fEC9fYvsV_0BOZTXWagi-oOXcl37_VvJ46ZGEZNXfZ7dfRyBMFSUfepSB_birUuMXxTCV7yG-qW70Gz595FsKiQJfvBxpTIhDv5OQw1KQd9Vmi-fFB40Ced2jD_ihShye_nUG1emEZxfl1WA-EHbmUtupMGKG_YLUhJuDfAHtfMGGiacn57Oj8bgraprj7r8C98bUcccSk0qx900Ls=w1280",
+      "cardBg": "var(--color-yellow)",
+      "gallery": [],
+      "slug": "neyla"
+    },
+    {
+      "id": "irsyad",
+      "name": "Irsyad",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQU-81kTChpUdRluLAeXEXl_Bj6VQTyqnO6x4WZY4DnrbQ33OAddBkeQDzFfOnp8Ulw7atkxTAsTspoDSCAGruZwpv155g4A4vmPB6POMUhpuLqDdqKSYHyVtKsHS6dggVOWr83in0rNAGP_mD5SEKxA1EqM4lHzJ_RWeQDvdxp_LkbLOzxjaNMuaB6dt9hlCfvRox6dQVceYIaCx6ibBT_GsJ__ES7g5Aw3BNc-n8w=w1280",
+      "cardBg": "var(--color-coral)",
+      "gallery": [],
+      "slug": "irsyad"
+    },
+    {
+      "id": "mohan",
+      "name": "Mohan",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 10,
+        "matches": 5,
+        "wins": 3,
+        "losses": 2
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUe2WGrwQG9tGgxx6kWpPI796IVt1S2BhLuYeLCrQBScZw4EBpFpskWNVpQ4tvLUdHUeXB8ou04jGsKtkintWBgUS1h71IrFPcm0f-nYPDMDP0C0cN1jO_OlC7dhA_e7SYpOsj1zZ1Io5qXrG-5OZm7R2gzVnamXvfTPhy17A-oC6NqO4Mb1m44on2Sn3T1jRgd3DjwLDqaBN99gNlBxrnmi-A3fwn1PgbuZL1_qUk=w1280",
+      "cardBg": "var(--color-primary-light)",
+      "gallery": [],
+      "slug": "mohan"
+    },
+    {
+      "id": "arief",
+      "name": "Arief",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQWwBrVRRH2xXz_BMqDmUXA6VssK8kL2Ji5v8TAISUO91AUZjYFIZ6HL03AEKAP6Jh4mDC1L9fieXkQ1VuUUO7r7qZ7fK8IsEAzblSqqCjzbsDnM2bpNDB-gdfV2SN68KriT6JUr7KG4gi5CP9VGDjeVu5TIKiRm7yfpIg-d5izr_v1mx340Qkfg2CjkM5MrKMt3xp-wyX6gZKQ5bvJGPx9jPpvkRF4MCeazKnOAJmU=w1280",
+      "cardBg": "var(--color-yellow)",
+      "gallery": [],
+      "slug": "arief"
+    },
+    {
+      "id": "deddy",
+      "name": "Deddy",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 10,
+        "matches": 8,
+        "wins": 5,
+        "losses": 3
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQVemIQ5pmZ9lkf1AjY9waG_4Ogdl6gvbhOwwxhvyaYiwLY7Ees2NYBSnEplXl1RvrWHhYkz32_hsgH1gjeqhYlGFNvmx4PKFMeI3bDFv48yD0eg4wCi-htGIF9NfXUYspQVWNN8xvc8FK3RSu3xCSB52erV783T0ao8PgcP4wfTDFIktc_iEGmPamJ1Ckbf1efiuNhj_NFgCxmfcB0Vdl0989pRvI5MJKqq6otI=w1280",
+      "cardBg": "var(--color-sky)",
+      "gallery": [],
+      "slug": "deddy"
+    },
+    {
+      "id": "ramadhona",
+      "name": "Ramadhona",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUczbQyEmEWLi0DOLTcZ0aP2Lix1kfObqd8QQKAIQHmrDGyepDXMCNUnp9IDy2K2z3g93mV9bMAq96Rz7eR6cIaBrqDiKs1164sluDO3CSNpSC7aW5aOqhxacGQVMI-wKVlKxHD3gN1yrm2xsk1zCT-dAEkDVOUarz2wyg4hcgudYkHJdEBgdQKtaLLA8qWDnR6h4FZyH8Fuk2MS7lwpcmymAnA5dksy0bvfiBH=w1280",
+      "cardBg": "var(--color-coral)",
+      "gallery": [],
+      "slug": "ramadhona"
+    },
+    {
+      "id": "riyadh",
+      "name": "Riyadh",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQV2FF9CIpCI-UHgEoaOPLx7vEgd8qWnNhPqDjzdtqDhKFlAMvXgonUhHthJIE9yZ6SOhRW8WcIH6a-jbrg7bfDs-IfVfdlQeVTR2xCjsgACjNJ97cif4W1AtfAcbz-MJFVp1in98hTFS5CCg5pTtWWrmtD7VYSM9jhx0gTbT8EB-7ABwOztN_eg7e4rarJ2d2SnQ6bfeUM1f7Z8U8VHFLJU75NNu0OZTnbqmGY8=w1280",
+      "cardBg": "var(--color-primary-light)",
+      "gallery": [],
+      "slug": "riyadh"
+    },
+    {
+      "id": "reno",
+      "name": "Reno",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQXC8oXgQeL6Fbpz-JFuNNXO7PMM8euDbKLQeIbUYIvI65QJEsgomCl1SukAZSam0UvGdVPps9MOu5xgniFX-5bqB1Q-E1pDtRT-6_Ym6pJQMINZsEonjC6BdPM-YibBEi3CCzZuELNJeuBMJV4ZbHsK_p3iU9jo7TY312UIp_PXpYQ-bd1t6k4VygUBOfGQw1RvzNjzW2q_l8kpI2tKl0yRaZFYGkAQL0I8Fj9FIcw=w1280",
+      "cardBg": "var(--color-yellow)",
+      "gallery": [],
+      "slug": "reno"
+    },
+    {
+      "id": "wanto",
+      "name": "Wanto",
+      "gender": "male",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQVWcmD9IhtCH8G_roTRGHIvXmmSNyiUKwMdjw7Sl_Bt9WO2H7uiDDB9YFvny3exawc8r8SCXKvQOraaViP-0p5ORyXgjTToubaHwAy_hZvs_xKqjizxu-DWNEfDpVG11uMGKLBvyNZITeXfayWmS13GCHJpU5hHbiWNYCn1TEm2oh-t_bp0E8oSj0hn-mFChibsZT8DhTP4oUknB1sVVYcwDIWkW_aHJjpREFz48ek=w1280",
+      "cardBg": "var(--color-sky)",
+      "gallery": [],
+      "slug": "wanto"
+    },
+    {
+      "id": "arum",
+      "name": "Arum",
+      "gender": "female",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQWP03ExMh0CEO8DmOgELFbIzya4SyEjxrhEtxvVp8yDtCqK3uLAXWO6VbrUOBFVASnV8Ifjm8TpoeuYqHyfpxoR73hHmOSHKaNjmyNiZ6EvYlMTFDpB71Udpms1vu9HW1TYft9E3xzbCIk7mPQ0d-oIh2tE85sf8HPxenxCHjltRuiRBWwopUMWXKhWS-mEKHYwIAkkC2b6rSnfMTvaP6riZSQVccnZVfSGU-h3kDg=w1280",
+      "cardBg": "var(--color-coral)",
+      "gallery": [],
+      "slug": "arum"
+    },
+    {
+      "id": "nur",
+      "name": "Maya",
+      "gender": "female",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQW_yF3WT6ILEm4ZuJiEyMLNs3e6E_4zdtuS6aroYQrVfEyJnzgKWJV8Lqqfpf6-rgEHjTXoAVgMa4aQdkWm4ZMRt51ojb3enfamT0ihxJb9x0ShJtBwLWf4up671mHFz_oZQnuj4pl_r8gZ98wAfjwefp4XSCP2spUfBRZTllRMvlWVVZexMbUroeC6UCpLfPWujhFCIO6BcQJ0X7LFn-hwlYGpz1tZs1DlpZJTNtI=w1280",
+      "cardBg": "var(--color-yellow)",
+      "gallery": [],
+      "slug": "maya"
+    },
+    {
+      "id": "eneng",
+      "name": "Adiba",
+      "gender": "female",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUr-x-JG0q8SlUrIKZ8P3iTSKodv96devlwpStoE6FN0WPJPqkXwfaBV1tHUUxUBje_qIOjFwRYA0xdY6R5GCHZhspFztQvZxNPP1VlaDbPTEOwNqfwYzIpWUkzKUOSOMWcyLNpo0vSnUieIrpxC029EaBXMc1CJHqskECGCTil4sFGHIROa6Ib_g5WilMAgFyp_NYwAVxjcmVgdkaD1r-0IDSO9iIxY-ND2O3J_uU=w1280",
+      "cardBg": "var(--color-sky)",
+      "gallery": [],
+      "slug": "adiba"
+    },
+    {
+      "id": "vinda",
+      "name": "Nur",
+      "gender": "female",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUNaOHMHGfC0XE1rBsLsbpZg7ZWod2ZKCVikDcXqwa1YYf0P1ZdzI_nspogQdDEuWPznyk0K1cI1V1HEGjQtR848wTValWB_U9sS7MPvPSzt5Gk0uDroxklU_9lKvp2vmu28MLjG-xkslZj9edIx78oYhZjD2e_kYpllpJwHJrLEmle6jFpruz9czYAMAQYAouZyqOHBjalP4cx5Wb9CQrqHe5RAF-0uEVPldJAoP4=w1280",
+      "cardBg": "var(--color-primary-light)",
+      "gallery": [],
+      "slug": "nur"
+    },
+    {
+      "id": "visty",
+      "name": "Visti",
+      "gender": "female",
+      "division": "BAZNAS RI",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQXs6TbuSQH5Selq8LLSnc37AfgNPRBO6fSRiyunRmJObY4BeRsloxNfKonP6GOMbGmUp--9kVsqs5oFbJ91DsZch9kG7h4pOpENfQOE6X-whpKgN0iZ9lGiqEPI029XbDZ1JSEie7fPmx9ywQ8m4EeB8zNR1upwkNYY8YZ9YssKqgodLzEf64JvrKScsw7QmOOo9ZoyBRBGApvDPhTUx5JOKUJEf88sn73Jrq2FORk=w1280",
+      "cardBg": "var(--color-coral)",
+      "gallery": [],
+      "slug": "visti"
+    },
+    {
+      "id": "fandhi-nur-hidayat-8171",
+      "name": "Fandhi Nur Hidayat",
+      "gender": "male",
+      "division": "Service Development",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 15,
+        "matches": 30,
+        "wins": 25,
+        "losses": 5
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUWoCIpsgRVXA2Op51JK5L6RnWXOBtBT_826kHebszzp9J8pkg9GM_Ring0LAe9qGj5ydpAktiyVQ8lLq1_IZoZWAxT9k5SsD4oG1LFzMTZaFC7f0gIEAr1yXvpMWyYHcxskLT_yGNoUP2pmXLpNKutbVFk4rCiDLpDAJIIRFbvCcKBLv_eo8VsZSLTPUGf1CI7tzl3mMU_kxz-0ran9K1GdDRGnj4Xik1uIbnkvts=w1280",
+      "gallery": [],
+      "slug": "fandhi-nur-hidayat"
+    },
+    {
+      "id": "rani-8383",
+      "name": "Rani",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUS2OJDiuqoPJii5xcvqG0tmQIuXTWDSZw7_HJ5lhYT7it9wllmJ5W8_7r1okFbPwEjMxJs-pxqSuqS6z39DOAhz8FKIFAxfrcmrCNcfOKR-_cgiUm7025mAxQXbJTmvofaBzVgB83atkM7tjYVouOSm2zM1-ho-mPl9W_nW5MpPH6o5VI4GOz9LK9WhfU2Ob6bZ0OfEoEimmvQtInQ0XkHPNMdTDyI0tnyPpEdFz4=w1280",
+      "gallery": [],
+      "slug": "rani"
+    },
+    {
+      "id": "safrina-0862",
+      "name": "Safrina",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQVZfdhJBhkFcWVMDBQs31_WWFnWoFGsqKfCdveg5mdIu2_0gsUTUhudwG6JK38Ys6Bv7Ouf9PDYcSS3FR-PNHfsvBKXDdA3QmezAGhloZv0FE-Dd3a5uFutHHNMcuIdf3QFka0ILjJq6HaDbqGqXPA9S0RyRDMi32UMQUBeWkGiWsP_2UMH0fF_pj-5MDKqVjJxPxQEzPD2KAuPOBtH2bBNXqhX8Xxbnma0-gNzIeo=w1280",
+      "gallery": [],
+      "slug": "safrina"
+    },
+    {
+      "id": "santa-8917",
+      "name": "Santa",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUvmde43cN8c9V0dgOGKttAftG23Sju7QCiEgPh0jE5k5wRylG0bCTyPSo8DqXnrB6B2GaoEziIAxybKP9YUjHFNKAtlB5RoQxWKTn2ca03Na3C9Mc8XIrhtBp4V4xJF-3kwPDrQ_6PnPYu37biVYZhwyXoxlAlcxHx1aisixDoEpJhgQVdNQGAhpBs4GkXVsJPKknXQxrwfAwmwqGRX13czA38zWzJyH0qdBoADAU=w1280",
+      "gallery": [],
+      "slug": "santa"
+    },
+    {
+      "id": "sarah-1539",
+      "name": "Sarah",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQWQiPt0vqU9ntNg4qvRN5dc3fnTa7QZmaGA6VlARS2sfCoXPvILjbYsrac2meId459nadCpsh9vl8uD7y9pphT7fdpcSm0X2a0FIQwsMG60tqvYnh9kdkuf_i4V8T_li3QrWD98t96KjKVgoNfyfUE5rSFSRCe6w9NBJ5TEySU1630NdAHmfK6G25Kmsb375MxYTlfrUCIUJh_Mm5b5Nt_TzyVezSzO6qz1AD6Rah4=w1280",
+      "gallery": [],
+      "slug": "sarah"
+    },
+    {
+      "id": "sintia-7641",
+      "name": "Sintia",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQXqHg91arKJnZhkyo9cc8BKfm5nexNVPHxLwROUzRJJXESk9CGDN0Oicluxlkpi78x6oxWARx6lsel0y4w-CYKmGTGU21QkfWHnHHy0w8t7yt7ghJ3-2PE6tT31e49ZfSC2AUQdfuomXrCbdB5C54zl74bHHOmfAbMG-nX4ATD7szQiv4gNoNHnw-q3LlP4dwuQk7e6e3RSaz9cVzljzVSNmeTaBcdwqI_JquXQyhg=w1280",
+      "gallery": [],
+      "slug": "sintia"
+    },
+    {
+      "id": "vinda-5225",
+      "name": "Vinda",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQVFmBDkRx7lZ9lVvEF_sszaMx979II500Soc9ND8V2rcgHV19A7M3nl1uRkOAUnaQn-mbNHxQh-f9tDX87hcQj7tbbcGR13zjH6DTqZ2zjXhk2rDfEx4HZa7cDOWTsm1hYqW_3bhaeZ3ZsLRKurlkB9NNsk0DwWrihaMexgT8CjJ0U0w2Dgexzc7qLoGWQin4JJwOHBv_rXpQ7oU3Cjtg8G8m-pmIedL7JC8SBH3jU=w1280",
+      "gallery": [],
+      "slug": "vinda"
+    },
+    {
+      "id": "widya-7243",
+      "name": "Widya",
+      "gender": "female",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQUilnfP2e27sQ0_zIfagZE_IvEgNDobtarYZI8dnADL4jg-itt9SEtGqxPoiF_8--cRTWkMo294NWbguDepZ9QW91Mh7vrSzsar9OMSf_JOSQYoFcLg4Jdk9lLpq6k8QVhjYEDxcjH12sV5_9PMxpPx249l1ndND9mvxcOz3SpeBL4Y4kJH0tqq20fADPlwbEstF6cn1lQ8ArCbTUbD0d2Fsm_N9G-iJBxfT3k9PYM=w1280",
+      "gallery": [],
+      "slug": "widya"
+    },
+    {
+      "id": "iko-3911",
+      "name": "iko",
+      "gender": "male",
+      "isPlayerOfTheMonth": false,
+      "stats": {
+        "attendance": 0,
+        "matches": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "achievements": [],
+      "image": "../assets/images/players/dummy-male.jpg",
+      "gallery": [],
+      "slug": "iko"
+    }
+  ]
 }

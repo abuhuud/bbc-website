@@ -1,34 +1,34 @@
-﻿{
-    "_version":  2,
-    "_updatedAt":  "2026-09-09",
-    "events":  [
-                   {
-                       "id":  "event-001",
-                       "type":  "training",
-                       "typeName":  "Latihan Rutin",
-                       "title":  "Latihan Rutin Mingguan BBC",
-                       "date":  "2026-09-10",
-                       "dayName":  "Kamis",
-                       "time":  "17:00 - 20.00 WIB",
-                       "venue":  "Pakko Sport Court 1,2 dan 3",
-                       "city":  "Jakarta Timur",
-                       "locationUrl":  "https://maps.app.goo.gl/QoLXqKsTGkTTxRhv6",
-                       "status":  "upcoming",
-                       "description":  "Mabar Rutin Mingguan BBC"
-                   },
-                   {
-                       "id":  "content-match-8127",
-                       "title":  "Content Match",
-                       "type":  "training",
-                       "status":  "completed",
-                       "date":  "2026-07-23",
-                       "dayName":  "Kamis",
-                       "time":  "18.00 - 20.00 WIB",
-                       "venue":  "Pakko Sport",
-                       "city":  "Jakarta Timur",
-                       "locationUrl":  "https://maps.app.goo.gl/XPYEhiDhcPz24T9u8",
-                       "description":  "",
-                       "typeName":  "Latihan Rutin"
-                   }
-               ]
+{
+  "_version": 1788919776952,
+  "_updatedAt": "2026-09-09",
+  "events": [
+    {
+      "id": "event-001",
+      "type": "training",
+      "typeName": "Latihan Rutin",
+      "title": "Latihan Rutin Mingguan BBC",
+      "date": "2026-09-10",
+      "dayName": "Kamis",
+      "time": "17:00 - 20.00 WIB",
+      "venue": "Pakko Sport Court 1,2 dan 3",
+      "city": "Jakarta Timur",
+      "locationUrl": "https://maps.app.goo.gl/QoLXqKsTGkTTxRhv6",
+      "status": "upcoming",
+      "description": "Mabar Rutin Mingguan BBC"
+    },
+    {
+      "id": "content-match-8127",
+      "title": "Content Match",
+      "type": "training",
+      "status": "completed",
+      "date": "2026-07-23",
+      "dayName": "Kamis",
+      "time": "18.00 - 20.00 WIB",
+      "venue": "Pakko Sport",
+      "city": "Jakarta Timur",
+      "locationUrl": "https://maps.app.goo.gl/XPYEhiDhcPz24T9u8",
+      "description": "",
+      "typeName": "Latihan Rutin"
+    }
+  ]
 }

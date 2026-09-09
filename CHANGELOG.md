@@ -5,21 +5,116 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-2. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-3. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-4. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-5. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-6. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-7. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-8. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-9. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-10. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-11. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-12. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-13. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-14. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-15. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+2. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+3. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+4. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+5. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+6. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+7. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+8. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+9. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+10. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+11. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+12. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+13. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+14. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+15. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+16. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"Saat ini data yang diinput dan diedit melalui CMS tersimpan ke localStorage, buat setiap data yang diinput dan diedit tersimpan ke dalam assets, sesuaikan tempatnya masing-masing berdasarkan jenis file dan kategorinya."*
+
+### ✅ Solusi & Detail Implementasi Teknis
+
+**Konteks Teknis:** Website BBC adalah website statis yang berjalan di browser. Browser tidak dapat langsung menulis file ke filesystem karena alasan keamanan. Solusi yang dipilih adalah **File System Access API** (Chrome/Edge 86+) — admin memilih folder root proyek sekali, dan browser diberi izin untuk menulis file ke folder tersebut.
+
+**Arsitektur Baru:**
+```
+CMS Save/Edit/Delete
+       │
+       ├─→ localStorage (cache, tetap ada seperti semula)
+       │
+       └─→ BBC_FS.syncToFiles() [NON-BLOCKING]
+                └─→ File System Access API
+                     ├─→ data/players.json
+                     ├─→ data/events.json
+                     ├─→ data/gallery.json
+                     ├─→ data/articles.json
+                     ├─→ data/officials.json
+                     └─→ data/hero.json
+
+CMS Image Upload
+       │
+       ├─→ (BBC_FS tersedia) BBC_FS.writeImageFile()
+       │        ├─→ assets/images/players/ (foto pemain & pengurus)
+       │        ├─→ assets/images/gallery/ (foto galeri kegiatan)
+       │        ├─→ assets/images/news/    (foto artikel/berita)
+       │        └─→ assets/images/hero/   (foto banner hero)
+       │
+       └─→ (Fallback) base64 di localStorage (perilaku lama)
+```
+
+**File Baru Dibuat:**
+- `js/utils/filesystem.js` — Module `BBC_FS` yang mengenkapsulasi File System Access API:
+  - `isAvailable()` — cek dukungan browser
+  - `requestProjectFolder()` — tampilkan dialog folder picker
+  - `tryRestoreHandle()` / `clearProjectFolder()` — persist folder handle via IndexedDB
+  - `writeJsonFile(path, data)` — tulis file JSON ke folder proyek
+  - `writeImageFile(subdir, file, filename)` — simpan file gambar, return path relatif
+  - `syncToFiles(category?)` — sync semua/satu kategori data ke file JSON
+  - `getStatus()` — kembalikan info status BBC_FS
+
+**Perubahan di `js/data/store.js`:**
+- Ditambahkan `FS_CATEGORY_MAP` — peta STORAGE_KEYS ke kategori BBC_FS
+- Ditambahkan `syncToFile(storageKey)` — dipanggil non-blocking setelah setiap write
+- Setiap fungsi `save*()` dan `delete*()` sekarang memanggil `syncToFile()` secara otomatis
+- Hero settings (`saveHeroSettings`) juga ter-sync ke `data/hero.json`
+
+**Perubahan di `js/pages/cms.js`:**
+- `setupFileUpload()` diupgrade — ketika folder dikonfigurasi via BBC_FS, foto disimpan ke `assets/images/[kategori]/` sebagai file fisik (bukan base64)
+- Ditambahkan fungsi `updateFsStatusUI()`, `handleSetupFsFolder()`, `handleFsSyncAll()`, `handleClearFsFolder()`, `initFsUI()`
+- Auto-restore folder handle dari IndexedDB saat CMS load
+- `initFsUI()` dipanggil saat tab Backup dibuka
+- Hero image upload handlers (fMainFile, fThumb1File, fThumb2File) diupgrade dengan BBC_FS support
+- Player gallery photo upload (pg-photo-file) diupgrade dengan BBC_FS support
+
+**Perubahan di `pages/cms.html`:**
+- Ditambahkan panel **"SINKRONISASI OTOMATIS KE FILE LOKAL"** di bagian atas tab Backup
+- Panel berisi: badge status, info folder terpilih, tombol Setup/Ganti Folder, Sync Semua, Lepas Folder
+- Script `../js/utils/filesystem.js` ditambahkan sebelum `store.js`
+
+**Perubahan di `css/cms.css`:**
+- Ditambahkan style `.cms-fs-status`, `.cms-fs-status--unavailable`, `.cms-fs-status--inactive`, `.cms-fs-status--active`
+- Animasi `fsPulse` untuk status aktif
+
+**Folder Baru:**
+- `assets/images/hero/` — folder untuk gambar hero section
+
+**Cara Kerja:**
+1. Admin buka CMS → masuk tab **Backup**
+2. Klik **"📂 Setup Folder Proyek"** → browser tampilkan dialog folder picker
+3. Admin pilih folder root `bbc-website/`
+4. CMS langsung melakukan full sync semua data ke file JSON
+5. Setiap kali save/edit/delete data → file JSON otomatis diperbarui
+6. Setiap kali upload foto → foto tersimpan ke folder `assets/images/[kategori]/`
+7. Admin tinggal commit & push ke GitHub → Vercel auto-deploy
+
+**Fallback Behavior:** Jika BBC_FS tidak tersedia (browser tidak mendukung/folder belum dipilih), semua data tetap tersimpan di localStorage seperti semula tanpa error.
+
+### 📁 Berkas yang Dimodifikasi
+- `js/utils/filesystem.js` ✨ **[BARU]**
+- `js/data/store.js` — Integrasi BBC_FS sync setelah setiap save/delete
+- `js/pages/cms.js` — BBC_FS UI, upgrade file upload handlers
+- `pages/cms.html` — Panel setup folder di tab Backup, tambah script filesystem.js
+- `css/cms.css` — Style status badge BBC_FS
+- `assets/images/hero/` — ✨ **[FOLDER BARU]**
+- `CHANGELOG.md` — Log perubahan ini
 
 ---
 

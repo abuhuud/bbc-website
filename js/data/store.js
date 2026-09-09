@@ -84,6 +84,40 @@ const BBC_STORE = (function () {
         }
     }
 
+    // ========================================================
+    // FILE SYSTEM ACCESS API — Auto-sync ke file JSON lokal
+    // ========================================================
+    // Peta storage key → kategori BBC_FS.syncToFiles()
+    const FS_CATEGORY_MAP = {
+        [STORAGE_KEYS.PLAYERS]:   'players',
+        [STORAGE_KEYS.EVENTS]:    'events',
+        [STORAGE_KEYS.GALLERY]:   'gallery',
+        [STORAGE_KEYS.ARTICLES]:  'articles',
+        [STORAGE_KEYS.OFFICIALS]: 'officials',
+        [STORAGE_KEYS.HERO]:      'hero'
+    };
+
+    /**
+     * Sync kategori data tertentu ke file JSON di folder proyek (via BBC_FS).
+     * Non-blocking — gagal secara silent agar tidak mengganggu UX.
+     * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
+     */
+    function syncToFile(storageKey) {
+        if (typeof BBC_FS === 'undefined' || !BBC_FS.isConfigured()) return;
+        const category = FS_CATEGORY_MAP[storageKey];
+        if (!category) return;
+        BBC_FS.syncToFiles(category).then(({ synced, failed }) => {
+            if (synced.length > 0) {
+                console.info(`[BBC_STORE] ✅ Tersinkronisasi ke file: ${synced.join(', ')}.json`);
+            }
+            if (failed.length > 0) {
+                console.warn(`[BBC_STORE] ⚠️ Gagal sync ke file: ${failed.join(', ')}`);
+            }
+        }).catch(err => {
+            console.warn('[BBC_STORE] Error saat sync ke file:', err);
+        });
+    }
+
     // Helper to generate URL-safe slugs
     function slugify(text) {
         if (!text) return '';
@@ -246,6 +280,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return true;
     }
 
@@ -305,6 +340,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return player;
     }
 
@@ -313,6 +349,7 @@ const BBC_STORE = (function () {
         list = list.filter(p => String(p.id) !== String(id));
         ensureSinglePotmPerGender(list);
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return list;
     }
 
@@ -328,6 +365,7 @@ const BBC_STORE = (function () {
         };
         p.gallery.push(newPhoto);
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return newPhoto;
     }
 
@@ -343,6 +381,7 @@ const BBC_STORE = (function () {
             caption: photoData.caption !== undefined ? photoData.caption : p.gallery[idx].caption
         };
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return p.gallery[idx];
     }
 
@@ -352,6 +391,7 @@ const BBC_STORE = (function () {
         if (!p || !Array.isArray(p.gallery)) return false;
         p.gallery = p.gallery.filter(g => String(g.id) !== String(photoId));
         writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return true;
     }
 
@@ -399,6 +439,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.EVENTS, list);
+        syncToFile(STORAGE_KEYS.EVENTS);
         return event;
     }
 
@@ -406,6 +447,7 @@ const BBC_STORE = (function () {
         let list = getEvents();
         list = list.filter(e => String(e.id) !== String(id));
         writeStorage(STORAGE_KEYS.EVENTS, list);
+        syncToFile(STORAGE_KEYS.EVENTS);
         return list;
     }
 
@@ -447,6 +489,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.GALLERY, list);
+        syncToFile(STORAGE_KEYS.GALLERY);
         return item;
     }
 
@@ -454,6 +497,7 @@ const BBC_STORE = (function () {
         let list = getGallery();
         list = list.filter(g => String(g.id) !== String(id));
         writeStorage(STORAGE_KEYS.GALLERY, list);
+        syncToFile(STORAGE_KEYS.GALLERY);
         return list;
     }
 
@@ -490,6 +534,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.ARTICLES, list);
+        syncToFile(STORAGE_KEYS.ARTICLES);
         return article;
     }
 
@@ -497,6 +542,7 @@ const BBC_STORE = (function () {
         let list = getArticles();
         list = list.filter(a => String(a.id) !== String(id));
         writeStorage(STORAGE_KEYS.ARTICLES, list);
+        syncToFile(STORAGE_KEYS.ARTICLES);
         return list;
     }
 
@@ -559,6 +605,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.OFFICIALS, list);
+        syncToFile(STORAGE_KEYS.OFFICIALS);
         return cleanOfficial;
     }
 
@@ -566,6 +613,7 @@ const BBC_STORE = (function () {
         let list = getOfficials();
         list = list.filter(o => String(o.id) !== String(id));
         writeStorage(STORAGE_KEYS.OFFICIALS, list);
+        syncToFile(STORAGE_KEYS.OFFICIALS);
         return list;
     }
 
@@ -591,6 +639,7 @@ const BBC_STORE = (function () {
             const merged = { ...current, ...settings };
             localStorage.setItem(STORAGE_KEYS.HERO, JSON.stringify(merged));
             broadcast(STORAGE_KEYS.HERO);
+            syncToFile(STORAGE_KEYS.HERO);
             return merged;
         } catch (e) {
             console.error('[BBC_STORE] Failed to save hero settings:', e);

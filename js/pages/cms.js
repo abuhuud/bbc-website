@@ -217,7 +217,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================================
     // 3. FILE UPLOAD & PREVIEW HELPER
     // ========================================================
-    function setupFileUpload(fileInputId, urlInputId, previewId) {
+
+    /**
+     * setupFileUpload — Menghubungkan file input & URL input ke preview.
+     * Jika BBC_FS dikonfigurasi, gambar disimpan sebagai file fisik ke folder assets.
+     * Jika tidak, fallback ke base64 (perilaku lama).
+     * @param {string} fileInputId
+     * @param {string} urlInputId
+     * @param {string} previewId
+     * @param {string} [assetSubdir] - folder tujuan, misal 'assets/images/players'
+     */
+    function setupFileUpload(fileInputId, urlInputId, previewId, assetSubdir) {
         const fileInput = document.getElementById(fileInputId);
         const urlInput = document.getElementById(urlInputId);
         const previewEl = document.getElementById(previewId);
@@ -235,12 +245,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // When user selects a local file
-        fileInput.addEventListener('change', () => {
+        fileInput.addEventListener('change', async () => {
             const file = fileInput.files[0];
             if (!file) return;
 
+            // Coba simpan ke folder proyek via BBC_FS jika tersedia
+            if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured() && assetSubdir) {
+                // Buat nama file yang aman dari nama file asli
+                const safeName = file.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_.]/g, '');
+                try {
+                    const result = await BBC_FS.writeImageFile(assetSubdir, file, '');
+                    if (result.success) {
+                        // Gunakan path relatif dari root proyek (cocok untuk GitHub/Vercel)
+                        const relativePath = result.relativePath;
+                        urlInput.value = relativePath;
+                        previewEl.innerHTML = `<img src="../${relativePath}" alt="Preview" onerror="this.src='${relativePath}'">`;
+                        showToast(`📁 Foto tersimpan: ${relativePath}`, 'success');
+                        return;
+                    } else {
+                        console.warn('[CMS] Gagal simpan ke folder, fallback ke base64:', result.error);
+                    }
+                } catch (err) {
+                    console.warn('[CMS] Error BBC_FS, fallback ke base64:', err);
+                }
+            }
+
+            // Fallback: base64 di localStorage (perilaku lama)
             if (file.size > 2 * 1024 * 1024) {
-                showToast('Ukuran foto terlalu besar. Maksimal 2MB disarankan.', 'error');
+                showToast('Ukuran foto terlalu besar. Maksimal 2MB disarankan.', 'warning');
             }
 
             const reader = new FileReader();
@@ -253,10 +285,153 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    setupFileUpload('player-file', 'player-image', 'player-preview');
-    setupFileUpload('gallery-file', 'gallery-image', 'gallery-preview');
-    setupFileUpload('article-file', 'article-image', 'article-preview');
-    setupFileUpload('official-file', 'official-image', 'official-preview');
+    setupFileUpload('player-file', 'player-image', 'player-preview', 'assets/images/players');
+    setupFileUpload('gallery-file', 'gallery-image', 'gallery-preview', 'assets/images/gallery');
+    setupFileUpload('article-file', 'article-image', 'article-preview', 'assets/images/news');
+    setupFileUpload('official-file', 'official-image', 'official-preview', 'assets/images/players');
+
+    // ========================================================
+    // 3B. BBC_FS — SETUP FOLDER PROYEK & STATUS UI
+    // ========================================================
+
+    /**
+     * Update semua elemen UI yang menampilkan status folder BBC_FS.
+     */
+    function updateFsStatusUI() {
+        if (typeof BBC_FS === 'undefined') return;
+        const status = BBC_FS.getStatus();
+
+        // Update badge/indicator folder di panel backup
+        const statusEl = document.getElementById('fs-folder-status');
+        const folderNameEl = document.getElementById('fs-folder-name');
+        const btnSetup = document.getElementById('btn-setup-fs-folder');
+        const btnClear = document.getElementById('btn-clear-fs-folder');
+        const btnSyncAll = document.getElementById('btn-fs-sync-all');
+
+        if (!status.apiAvailable) {
+            if (statusEl) statusEl.className = 'cms-fs-status cms-fs-status--unavailable';
+            if (folderNameEl) folderNameEl.textContent = 'Tidak didukung di browser ini (gunakan Chrome/Edge)';
+            if (btnSetup) btnSetup.disabled = true;
+            if (btnClear) btnClear.style.display = 'none';
+            if (btnSyncAll) btnSyncAll.style.display = 'none';
+            return;
+        }
+
+        if (status.folderConfigured) {
+            if (statusEl) statusEl.className = 'cms-fs-status cms-fs-status--active';
+            if (folderNameEl) folderNameEl.textContent = `✅ Folder: /${status.folderName}`;
+            if (btnSetup) btnSetup.textContent = '🔄 Ganti Folder';
+            if (btnClear) btnClear.style.display = '';
+            if (btnSyncAll) btnSyncAll.style.display = '';
+        } else {
+            if (statusEl) statusEl.className = 'cms-fs-status cms-fs-status--inactive';
+            if (folderNameEl) folderNameEl.textContent = 'Belum dikonfigurasi — klik Setup Folder untuk mulai';
+            if (btnSetup) btnSetup.textContent = '📂 Setup Folder Proyek';
+            if (btnClear) btnClear.style.display = 'none';
+            if (btnSyncAll) btnSyncAll.style.display = 'none';
+        }
+    }
+
+    /**
+     * Tangani klik tombol Setup Folder Proyek.
+     */
+    async function handleSetupFsFolder() {
+        if (typeof BBC_FS === 'undefined' || !BBC_FS.isAvailable()) {
+            showToast('Browser Anda tidak mendukung File System Access API. Gunakan Chrome atau Edge.', 'error');
+            return;
+        }
+        showToast('📂 Membuka dialog pemilihan folder...', 'info');
+        const result = await BBC_FS.requestProjectFolder();
+        if (result.success) {
+            updateFsStatusUI();
+            showToast(`✅ Folder "/${result.folderName}" terpilih! Data akan otomatis tersinkronisasi.`, 'success');
+            // Lakukan full sync segera setelah folder dikonfigurasi
+            showToast('⏳ Melakukan sinkronisasi awal semua data ke file...', 'info');
+            const { synced, failed } = await BBC_FS.syncToFiles();
+            if (synced.length > 0) {
+                showToast(`✅ Sync berhasil: ${synced.length} file JSON diperbarui!`, 'success');
+            }
+            if (failed.length > 0) {
+                showToast(`⚠️ ${failed.length} file gagal disync. Periksa console untuk detail.`, 'warning');
+            }
+        } else {
+            showToast(result.error || 'Gagal memilih folder.', 'error');
+        }
+    }
+
+    /**
+     * Tangani klik tombol Sync Semua ke File.
+     */
+    async function handleFsSyncAll() {
+        if (typeof BBC_FS === 'undefined' || !BBC_FS.isConfigured()) {
+            showToast('Folder proyek belum dikonfigurasi.', 'error');
+            return;
+        }
+        const btnSyncAll = document.getElementById('btn-fs-sync-all');
+        if (btnSyncAll) btnSyncAll.disabled = true;
+        showToast('⏳ Sinkronisasi semua data ke file JSON...', 'info');
+        try {
+            const { synced, failed } = await BBC_FS.syncToFiles();
+            if (synced.length > 0) {
+                showToast(`✅ Sync selesai! ${synced.length} file JSON diperbarui: ${synced.join(', ')}`, 'success');
+            }
+            if (failed.length > 0) {
+                showToast(`⚠️ ${failed.length} file gagal: ${failed.join(', ')}`, 'error');
+            }
+            if (synced.length === 0 && failed.length === 0) {
+                showToast('Tidak ada data untuk disinkronisasi.', 'info');
+            }
+        } catch (e) {
+            showToast('Gagal melakukan sinkronisasi: ' + e.message, 'error');
+        } finally {
+            if (btnSyncAll) btnSyncAll.disabled = false;
+        }
+    }
+
+    /**
+     * Tangani klik tombol Lepas Folder.
+     */
+    async function handleClearFsFolder() {
+        if (typeof BBC_FS !== 'undefined') {
+            await BBC_FS.clearProjectFolder();
+            updateFsStatusUI();
+            showToast('🔓 Folder proyek dilepas. Data hanya tersimpan di localStorage.', 'info');
+        }
+    }
+
+    // Pasang event listeners untuk tombol BBC_FS di panel backup
+    // (dipanggil setelah DOM selesai & saat panel backup aktif)
+    function initFsUI() {
+        const btnSetup = document.getElementById('btn-setup-fs-folder');
+        const btnClear = document.getElementById('btn-clear-fs-folder');
+        const btnSyncAll = document.getElementById('btn-fs-sync-all');
+
+        if (btnSetup && !btnSetup._fsWired) {
+            btnSetup._fsWired = true;
+            btnSetup.addEventListener('click', handleSetupFsFolder);
+        }
+        if (btnClear && !btnClear._fsWired) {
+            btnClear._fsWired = true;
+            btnClear.addEventListener('click', handleClearFsFolder);
+        }
+        if (btnSyncAll && !btnSyncAll._fsWired) {
+            btnSyncAll._fsWired = true;
+            btnSyncAll.addEventListener('click', handleFsSyncAll);
+        }
+
+        updateFsStatusUI();
+    }
+
+    // Auto-restore folder handle saat CMS load (jika tersimpan di IDB)
+    if (typeof BBC_FS !== 'undefined' && BBC_FS.isAvailable()) {
+        BBC_FS.tryRestoreHandle().then((restored) => {
+            if (restored) {
+                console.info(`[CMS] BBC_FS: Folder proyek dipulihkan: /${BBC_FS.getFolderName()}`);
+            }
+            updateFsStatusUI();
+        });
+    }
+
 
     // ========================================================
     // 4. COLLAPSIBLE LEFT SIDEBAR & TAB SWITCHING (DESKTOP, TABLET & MOBILE)
@@ -462,6 +637,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target === 'hero' && typeof initHeroSettings === 'function') {
             initHeroSettings();
+        }
+
+        if (target === 'backup') {
+            initFsUI();
         }
 
         // Close mobile drawer if opened on mobile devices
@@ -1102,12 +1281,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // File upload for gallery photo with FileReader
+    // File upload for gallery photo with FileReader (BBC_FS aware)
     const pgFileInput = document.getElementById('pg-photo-file');
     if (pgFileInput) {
-        pgFileInput.addEventListener('change', (e) => {
+        pgFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
+
+            // Coba simpan ke folder proyek via BBC_FS
+            if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
+                try {
+                    const result = await BBC_FS.writeImageFile('assets/images/players', file, '');
+                    if (result.success) {
+                        document.getElementById('pg-photo-url').value = result.relativePath;
+                        const previewBox = document.getElementById('pg-preview-box');
+                        if (previewBox) {
+                            previewBox.innerHTML = `<img src="../${result.relativePath}" alt="Preview" onerror="this.src='${result.relativePath}'">`;
+                        }
+                        showToast(`📁 Foto tersimpan: ${result.relativePath}`, 'success');
+                        return;
+                    }
+                } catch (err) {
+                    console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
+                }
+            }
+
+            // Fallback: base64
             const reader = new FileReader();
             reader.onload = (evt) => {
                 const dataUrl = evt.target.result;
@@ -2468,12 +2667,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Wire file inputs with automatic image compression
+            // Wire file inputs with automatic image compression (BBC_FS aware)
             if (fMainFile) {
                 fMainFile.addEventListener('change', async () => {
                     const file = fMainFile.files[0];
                     if (!file) return;
                     applyMediaTypeToggle('image');
+
+                    // Prioritas: simpan ke folder proyek jika BBC_FS tersedia
+                    if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
+                        showToast('⏳ Menyimpan foto utama ke folder proyek...');
+                        try {
+                            const result = await BBC_FS.writeImageFile('assets/images/hero', file, 'hero-main');
+                            if (result.success) {
+                                if (fMainUrl) fMainUrl.value = result.relativePath;
+                                updatePreview();
+                                showToast(`✅ Foto utama tersimpan: ${result.relativePath}`);
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
+                        }
+                    }
+
+                    // Fallback: base64 dengan kompresi
                     showToast('⏳ Mengompres foto utama...');
                     try {
                         const base64 = await compressHeroImageFile(file, 1280, 1280, 0.82);
@@ -2490,6 +2707,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 fThumb1File.addEventListener('change', async () => {
                     const file = fThumb1File.files[0];
                     if (!file) return;
+
+                    if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
+                        showToast('⏳ Menyimpan foto mini 1 ke folder proyek...');
+                        try {
+                            const result = await BBC_FS.writeImageFile('assets/images/hero', file, 'hero-thumb1');
+                            if (result.success) {
+                                if (fThumb1Url) fThumb1Url.value = result.relativePath;
+                                updatePreview();
+                                showToast(`✅ Foto mini 1 tersimpan: ${result.relativePath}`);
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
+                        }
+                    }
+
                     showToast('⏳ Mengompres foto mini 1...');
                     try {
                         const base64 = await compressHeroImageFile(file, 640, 640, 0.82);
@@ -2506,6 +2739,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 fThumb2File.addEventListener('change', async () => {
                     const file = fThumb2File.files[0];
                     if (!file) return;
+
+                    if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
+                        showToast('⏳ Menyimpan foto mini 2 ke folder proyek...');
+                        try {
+                            const result = await BBC_FS.writeImageFile('assets/images/hero', file, 'hero-thumb2');
+                            if (result.success) {
+                                if (fThumb2Url) fThumb2Url.value = result.relativePath;
+                                updatePreview();
+                                showToast(`✅ Foto mini 2 tersimpan: ${result.relativePath}`);
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
+                        }
+                    }
+
                     showToast('⏳ Mengompres foto mini 2...');
                     try {
                         const base64 = await compressHeroImageFile(file, 640, 640, 0.82);

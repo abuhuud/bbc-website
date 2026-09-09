@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -700,6 +700,74 @@
                  TAB 6: BACKUP & DATABASE
                  ========================================== -->
             <section id="pane-backup" class="cms-tab-pane" style="display: none;">
+
+                <!-- ============================================================
+                     PANEL: SIMPAN KE FOLDER PROYEK (File System Access API)
+                     ============================================================ -->
+                <div class="cms-card" style="border-top: 6px solid #059669; background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); margin-bottom: 0;">
+                    <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 260px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div class="pixel-badge" style="background: #059669; color: white;">
+                                    📁 SIMPAN KE FOLDER PROYEK
+                                </div>
+                                <span class="pixel-badge" id="fs-folder-status" style="font-size: 0.6rem; padding: 2px 8px; background: #9CA3AF; color: white;">
+                                    ⏳ MENDETEKSI...
+                                </span>
+                            </div>
+                            <h3 class="cms-backup-title" style="color: #065F46;">SINKRONISASI OTOMATIS KE FILE LOKAL</h3>
+                            <p class="cms-backup-desc" style="color: #064E3B; font-weight: 500;">
+                                Dengan <strong>File System Access API</strong>, setiap data yang diinput/diedit di CMS
+                                dapat otomatis tersimpan langsung ke file di komputer Anda — tanpa perlu tombol Export manual.
+                                Cukup klik <strong>"Setup Folder Proyek"</strong> sekali, lalu commit &amp; push ke GitHub.
+                            </p>
+
+                            <!-- Status folder yang dipilih -->
+                            <div id="fs-folder-name" style="font-size: 0.82rem; font-weight: 700; color: #064E3B; background: white; border: 2px solid #059669; border-radius: 8px; padding: 8px 12px; margin: 12px 0; word-break: break-all;">
+                                ⏳ Mendeteksi status folder...
+                            </div>
+
+                            <!-- Tombol aksi -->
+                            <div class="cms-btn-group" style="flex-wrap: wrap; gap: 8px; justify-content: flex-start;">
+                                <button type="button" class="btn btn-primary" id="btn-setup-fs-folder"
+                                    style="background: #059669; border-color: #064E3B; box-shadow: 3px 3px 0 #064E3B;">
+                                    <span>📂 Setup Folder Proyek</span>
+                                </button>
+                                <button type="button" class="btn btn-primary" id="btn-fs-sync-all"
+                                    style="display: none; background: #1D4ED8; border-color: #1E3A8A; box-shadow: 3px 3px 0 #1E3A8A;">
+                                    <span>🔄 Sync Semua ke File</span>
+                                </button>
+                                <button type="button" class="btn btn-sm" id="btn-clear-fs-folder"
+                                    style="display: none; background: white; color: #6B7280; border: 2px solid #D1D5DB; box-shadow: 2px 2px 0 #9CA3AF; font-weight: 700;">
+                                    <span>🔓 Lepas Folder</span>
+                                </button>
+                            </div>
+
+                            <div style="margin-top: 10px; font-size: 0.75rem; color: #6B7280; font-weight: 500;">
+                                ⚠️ Fitur ini membutuhkan <strong>Chrome / Edge versi terbaru</strong>. Firefox belum mendukung File System Access API.
+                            </div>
+                        </div>
+
+                        <!-- Info struktur file yang akan disimpan -->
+                        <div style="background: white; border: 3px solid #059669; border-radius: 10px; padding: 16px; min-width: 200px; max-width: 260px;">
+                            <div style="font-size: 0.7rem; font-weight: 800; color: #059669; letter-spacing: 0.05em; margin-bottom: 8px;">📋 FILE YANG TERSIMPAN OTOMATIS</div>
+                            <pre style="font-size: 0.72rem; color: #374151; margin: 0; line-height: 1.8; font-family: 'Courier New', monospace;">bbc-website/
+├── data/           📄
+│   ├── players.json
+│   ├── events.json
+│   ├── gallery.json
+│   ├── articles.json
+│   ├── officials.json
+│   └── hero.json
+└── assets/
+    └── images/     🖼️
+        ├── players/
+        ├── gallery/
+        └── news/</pre>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-2">
                     <div class="cms-card cms-card--backup">
                         <div class="pixel-badge pixel-badge--green" style="margin-bottom: 8px;">DATA BACKUP</div>
@@ -1586,6 +1654,7 @@
     <script src="../js/data/gallery.js"></script>
     <script src="../js/data/news.js"></script>
     <script src="../js/data/officials.js"></script>
+    <script src="../js/utils/filesystem.js"></script>
     <script src="../js/data/store.js"></script>
     <script src="../js/data/live-sync.js"></script>
     <script src="../js/pages/cms.js"></script>
