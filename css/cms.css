@@ -2137,34 +2137,55 @@
    -------------------------------------------------- */
 .cms-form-group {
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cms-label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 0.92rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   color: #0D1612 !important;
+  line-height: 1.35;
 }
 
 .cms-input,
 .cms-select,
 .cms-textarea {
   width: 100%;
-  padding: 12px 15px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  min-height: 46px;
   font-family: var(--font-body);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 600;
   border: 2.5px solid #0D1612;
   background: #FFFFFF;
   box-shadow: 2.5px 2.5px 0 rgba(0, 0, 0, 0.12);
   color: #0D1612 !important;
   outline: none;
-  border-radius: 0;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  border-radius: 4px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.cms-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230D1612' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 15px 15px;
+  padding-right: 40px;
+  cursor: pointer;
+  background-color: #FFFFFF;
 }
 
 .cms-input:focus,
@@ -2175,43 +2196,155 @@
   background: #FAFFFD;
 }
 
+.cms-textarea {
+  resize: vertical;
+  min-height: 85px;
+  line-height: 1.55;
+}
+
+.cms-input[type="date"] {
+  min-height: 46px;
+  cursor: pointer;
+}
+
+.cms-input[type="file"] {
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border: 2px dashed #64748B;
+  cursor: pointer;
+  font-size: 0.86rem;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.cms-input[type="file"]:hover {
+  border-color: #009B63;
+  background: #F0FDF4;
+}
+
+.cms-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.cms-input[type="number"]::-webkit-outer-spin-button,
+.cms-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: inner-spin-button;
+}
+
 .cms-form-hint {
-  font-size: 0.84rem;
-  color: #334155 !important;
+  font-size: 0.82rem;
+  color: #475569 !important;
   font-weight: 600;
   margin-top: 6px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .cms-image-preview-wrapper {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   margin-top: 10px;
   background: #F5F9F6;
-  padding: 10px;
+  padding: 12px;
   border: 2px solid var(--cms-dark);
+  border-radius: 6px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 .cms-image-preview {
   width: 76px;
   height: 76px;
-  border: 2px dashed var(--cms-dark);
+  border: 2.5px dashed var(--cms-dark);
+  border-radius: 4px;
   background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
   color: var(--color-grey);
   text-align: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .cms-image-preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Modal Form Grids Responsive Tuning */
+.cms-modal .grid,
+.cms-modal-body .grid {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.cms-modal .grid-2,
+.cms-modal-body .grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.cms-modal .grid-3,
+.cms-modal-body .grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+/* Hero Media & Form Action Containers */
+.cms-hero-toggle-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.cms-hero-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.cms-player-stats-card {
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 640px) {
+  .cms-form-group {
+    margin-bottom: 16px;
+  }
+
+  .cms-label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .cms-input,
+  .cms-select,
+  .cms-textarea {
+    font-size: 0.92rem;
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+
+  .cms-modal .grid-2,
+  .cms-modal .grid-3,
+  .cms-modal-body .grid-2,
+  .cms-modal-body .grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .cms-image-preview-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
 /* --------------------------------------------------
@@ -4239,6 +4372,12 @@ body:not(.cms-auth-required) .cms-auth-screen {
     padding: 6px 12px;
   }
 
+  .cms-hero-toggle-group {
+    width: 100% !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+  }
+
   #btn-toggle-hero-image,
   #btn-toggle-hero-video {
     flex: 1 1 50% !important;
@@ -4250,14 +4389,24 @@ body:not(.cms-auth-required) .cms-auth-screen {
     justify-content: center !important;
   }
 
+  .cms-hero-form-actions {
+    flex-direction: column-reverse !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
   #btn-hero-preview,
   #btn-hero-save {
     width: 100% !important;
     justify-content: center !important;
-    min-height: 38px !important;
+    min-height: 42px !important;
     font-size: 0.82rem !important;
     padding: 7px 14px !important;
     text-align: center !important;
+  }
+
+  .cms-player-stats-card {
+    padding: 12px !important;
   }
 
   /* Backup Pane on Mobile */
@@ -4283,21 +4432,24 @@ body:not(.cms-auth-required) .cms-auth-screen {
 
   /* Form Elements & Inputs on Mobile */
   .cms-label {
-    font-size: 0.78rem;
-    margin-bottom: 3px;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
   }
 
   .cms-input,
   .cms-select,
   .cms-textarea {
-    font-size: 15px;
-    /* Comfortable legible input that prevents auto zoom */
-    padding: 8px 10px;
+    font-size: 16px !important;
+    /* 16px strictly prevents iOS Safari viewport auto-zoom */
+    padding: 10px 12px;
+    min-height: 46px;
+    border-radius: 4px;
+    box-sizing: border-box;
   }
 
   .cms-form-hint {
-    font-size: 0.72rem;
-    line-height: 1.35;
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
 
   /* Bottom Sheet Modal on Mobile */
@@ -4444,10 +4596,17 @@ body:not(.cms-auth-required) .cms-auth-screen {
     font-size: 0.92rem !important;
   }
 
+  .cms-modal__footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+  }
+
   .cms-modal__footer button,
   .cms-modal__footer .btn {
-    font-size: 0.78rem !important;
-    min-height: 36px !important;
-    padding: 6px 10px;
+    font-size: 0.82rem !important;
+    min-height: 42px !important;
+    padding: 8px 12px;
+    flex: 1 1 120px;
   }
 }

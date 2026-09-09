@@ -5,13 +5,58 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
-2. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-3. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-4. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-5. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-6. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-7. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
+2. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+3. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+4. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+5. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+6. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+7. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+8. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"hapus informasi id dan password pada cms.html sebelum login, dan perbaiki tata letak dan responsive pada isian cms.html"*
+
+### 🔍 Analisis Kebutuhan
+1. **Keamanan & Estetika Halaman Login CMS:**
+   - Pada versi sebelumnya, terdapat kotak informasi kredensial login publik (`.cms-auth-hint-box`) dan tombol 1-klik (`#btn-quick-fill-login`) yang membeberkan akun demo (`admin` / `adminbbc` dan sandi `admin` / `adminbbc2026`). Hal ini perlu dihilangkan agar tampilan login profesional, bersih, dan tidak mengekspos kredensial secara kasat mata, tanpa merusak verifikasi login fleksibel di sisi script [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js).
+2. **Tata Letak & Responsivitas Form Isian Modul CMS:**
+   - Modal input form untuk data pemain, jadwal, foto galeri, kepengurusan, artikel berita, dan hero media memiliki beberapa kendala pada layar smartphone/tablet:
+     - Input field pada perangkat iOS Safari sering memicu auto-zoom otomatis jika ukuran font kurang dari 16px.
+     - Kontainer `.grid-2` dan `.grid-3` di dalam modal seringkali memadatkan form isian menjadi sempit pada layar mobile.
+     - Kontainer tombol toggle media hero dan aksi simpan hero media berisiko meluap (*overflow*) pada viewport kecil.
+     - Elemen upload file dan preview thumbnail memerlukan pembungkus responsif yang rapi.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Pembersihan Halaman Login CMS ([`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html)):**
+   - Menghapus blok elemen kartu petunjuk kredensial login publik (`.cms-auth-hint-box`).
+   - Menghapus tombol `#btn-quick-fill-login` ("⚡ 1-KLIK ISI OTOMATIS & MASUK").
+   - Menjaga integritas form autentikasi standar: input Admin ID, input Password dengan toggle show/hide (mata), tombol submit "MASUK KE DASHBOARD", dan tombol navigasi kembali ke website utama.
+2. **Standardisasi Kontrol Form Universal ([`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css)):**
+   - Menetapkan `box-sizing: border-box`, `min-height: 46px`, `border-radius: 4px`, dan transisi fokus dengan border hijau serta drop-shadow retro arcade pada `.cms-input`, `.cms-select`, dan `.cms-textarea`.
+   - Mengimplementasikan custom dropdown arrow chevron SVG encode data-URI pada `.cms-select` (`appearance: none;`) untuk tampilan konsisten di seluruh platform OS/browser.
+   - Menambahkan gaya visual modern dashed border interaktif pada input tipe berkas (`.cms-input[type="file"]`).
+3. **Optimasi Grid Form Modal Responsif ([`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css)):**
+   - Mengonfigurasi `.cms-modal .grid-2` dan `.cms-modal .grid-3` dengan `grid-template-columns: repeat(auto-fit, minmax(220px/150px, 1fr))` pada desktop.
+   - Pada breakpoint mobile `<= 640px`, secara otomatis mengonversi seluruh modal grid menjadi satu kolom penuh (`1fr !important; gap: 12px !important;`) sehingga seluruh field isian mudah dibaca dan diisi.
+4. **Pencegahan iOS Safari Auto-Zoom:**
+   - Menetapkan font size `16px !important` untuk semua elemen form (`.cms-input`, `.cms-select`, `.cms-textarea`) pada media query `@media (max-width: 768px)`, yang secara permanen mencegah zoom otomatis saat input difokuskan pada perangkat iPhone.
+5. **Penyempurnaan Form Media Hero & Player Stats ([`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) & [`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css)):**
+   - Menambahkan kelas `.cms-hero-toggle-group` dan `.cms-hero-form-actions` dengan flex layout yang secara adaptif beralih menjadi full-width dan susunan vertikal (`flex-direction: column-reverse;`) pada viewport mobile.
+   - Memastikan tombol `SIMPAN MEDIA HERO` dan `PREVIEW` mudah di-tap dengan `min-height: 42px !important;`.
+   - Menambahkan kelas `.cms-player-stats-card` dengan padding adaptif dan `flex-wrap: wrap;` pada header indikator Win Rate pemain.
+   - Mengoptimalkan pembungkus preview gambar (`.cms-image-preview-wrapper`) agar membungkus dengan rapi (`flex-wrap: wrap;`).
+
+### 📂 Berkas yang Dimodifikasi
+- [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) — Penghapusan hint credential box & tombol 1-klik, penambahan class responsif pada hero form dan player stats card.
+- [`css/cms.css`](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css) — Styling kontrol form, custom select arrow, mobile font 16px iOS anti-zoom, modal grid auto-fit, dan responsivitas hero/player stats.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Pembaruan versi aplikasi menjadi `4.1.6`.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.6 sesuai pedoman `AGENTS.md`.
 
 ---
 
