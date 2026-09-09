@@ -11,7 +11,8 @@ const BBC_LIVE = (function () {
         'bbc_data_gallery_v1',
         'bbc_data_articles_v1',
         'bbc_data_officials_v1',
-        'bbc_data_hero_v1'
+        'bbc_data_hero_v1',
+        'bbc_last_mutation_timestamp'
     ];
 
     const subscribers = [];
@@ -95,19 +96,30 @@ function BBC_onReady(render) {
     }
 
     if (typeof BBC_LIVE !== 'undefined') {
-        // Saat data berubah via CMS (di tab yang sama), langsung re-render tanpa fetch JSON
-        BBC_LIVE.onChange(() => render());
+        // Saat data berubah via CMS (lintas tab / broadcast / storage), langsung re-render seketika
+        BBC_LIVE.onChange(() => {
+            render();
+            if (typeof BBC_applyHero === 'function') {
+                BBC_applyHero();
+            }
+        });
     }
 
-    // Auto-sync data dari cloud Vercel Blob saat tab aktif kembali
+    // Auto-sync data saat tab aktif kembali atau jendela browser difokuskan
     if (typeof document !== 'undefined') {
         document.addEventListener('visibilitychange', async () => {
-            if (document.visibilityState === 'visible' && typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
-                try {
-                    await BBC_STORE.initialize();
-                    render();
-                } catch (e) {}
+            if (document.visibilityState === 'visible') {
+                if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
+                    try { await BBC_STORE.initialize(); } catch (e) {}
+                }
+                render();
+                if (typeof BBC_applyHero === 'function') BBC_applyHero();
             }
+        });
+
+        window.addEventListener('focus', () => {
+            render();
+            if (typeof BBC_applyHero === 'function') BBC_applyHero();
         });
     }
 }

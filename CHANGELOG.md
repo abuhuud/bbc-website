@@ -5,15 +5,55 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
-2. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
-3. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
-4. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-5. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-6. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-7. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-8. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-9. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)](#-v418---reaktivitas-otomatis-real-time-sinkronisasi-cms-ke-indexhtml-pencegahan-overwrite-cache-multi-channel-broadcast--focus-auto-sync)
+2. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
+3. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
+4. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+5. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+6. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+7. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+8. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+9. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+10. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"buat secara otomatis apabila ada penambahan, perubahan dan hapus pada cms maka akan berpengaruh langsung ke index.htmlnya"*
+
+### 🔍 Analisis Akar Masalah
+1. **Penimpaan Data Lokal CMS oleh Berkas Statis Server ([`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js)):**
+   - Ketika admin menambahkan, mengedit, atau menghapus data pemain/jadwal/foto/artikel di CMS, data tersebut tersimpan rapi ke dalam `localStorage`.
+   - Namun, ketika admin beralih membuka `index.html`, fungsi `BBC_STORE.initialize()` secara otomatis membandingkan data server dengan `localStorage`. Karena server masih memiliki data statis bawaan, perbedaan data (`contentChanged`) secara keliru menimpa penambahan/perubahan/penghapusan baru di `localStorage` dengan data lama server, sehingga perubahan CMS tampak "hilang" atau tidak berpengaruh di `index.html`.
+2. **Ketiadaan Sinyal Mutasi Global Lintas-Tab/Jendela:**
+   - Jika admin membuka CMS di satu tab dan `index.html` di tab lain, event `storage` bawaan peramban membutuhkan kunci yang selalu berubah secara dinamis agar terpicu dengan andal di seluruh browser.
+3. **Penyelarasan Re-render Dinamis di [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js):**
+   - Saat pemain dihapus hingga tersisa sedikit atau kosong, kontainer lintasan amilin/amilat memerlukan pembersihan DOM yang bersih agar tidak menyisakan kartu yang sudah dihapus.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Pencegahan Overwrite Cache di [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js):**
+   - Memperbaiki kondisi penimpaan pada fungsi `initialize()`: Data server statis **HANYA** boleh menimpa `localStorage` jika data lokal belum ada (`!existingData`), atau jika versi file server secara nyata lebih baru dari mutasi CMS lokal (`result.version > storedVersion`), atau berasal dari Vercel Blob cloud (`isFromCloud && result.version >= storedVersion`).
+   - Apabila admin baru saja mengubah data di CMS, timestamp lokal (`storedVersion`) selalu lebih baru daripada file statis server (`storedVersion >= result.version`), sehingga seluruh penambahan, pengubahan, dan penghapusan data CMS **100% aman dan langsung aktif di `index.html`**.
+   - Menambahkan sinyal mutasi global `bbc_last_mutation_timestamp` di dalam fungsi `writeStorage()`.
+2. **Multi-Channel Broadcast & Focus Auto-Sync di [`js/data/live-sync.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/live-sync.js):**
+   - Menambahkan `bbc_last_mutation_timestamp` ke dalam daftar `WATCHED_KEYS`.
+   - Menambahkan listener `window.addEventListener('focus')` dan `visibilitychange` agar ketika admin kembali ke tab `index.html`, halaman langsung me-render ulang seluruh komponen serta media hero secara otomatis tanpa perlu refresh manual.
+   - Memastikan `BBC_LIVE.onChange()` memanggil `render()` dan `BBC_applyHero()` secara instan.
+3. **Penyempurnaan Re-render Homepage di [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js):**
+   - Memperbarui perenderan baris skuad Amilin dan Amilat agar secara reaktif menyesuaikan penambahan kartu baru, pengubahan nama/foto/win rate, maupun penghapusan pemain dengan pesan empty-state yang rapi jika data kosong.
+   - Menjamin Player of the Month (POTM), agenda terdekat (Next Play Ticket & jadwal 7 hari), galeri BBC Moments, berita/artikel, dan banner media hero (foto/video) ter-update seketika saat ada perubahan dari CMS.
+4. **Penaikan Versi Aplikasi ([`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json)):**
+   - Menaikkan versi proyek menjadi `4.1.8`.
+
+### 📂 Berkas yang Dimodifikasi
+- [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js) — Logika proteksi mutasi CMS pada `initialize()` dan sinyal mutasi `bbc_last_mutation_timestamp` pada `writeStorage()`.
+- [`js/data/live-sync.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/live-sync.js) — Penambahan kunci mutasi di `WATCHED_KEYS` dan event listener tab focus & visibilitychange re-render.
+- [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js) — Penanganan reaktif penambahan, pengubahan, dan penghapusan skuad pemain dan komponen beranda.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penaikan versi aplikasi ke `4.1.8`.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.8 sesuai pedoman `AGENTS.md`.
 
 ---
 

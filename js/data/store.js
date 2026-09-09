@@ -94,6 +94,11 @@ const BBC_STORE = (function () {
                 localStorage.setItem(verKey, String(Date.now()));
             }
 
+            // Memicu sinyal mutasi lintas-jendela / lintas-tab browser
+            try {
+                localStorage.setItem('bbc_last_mutation_timestamp', String(Date.now()));
+            } catch (tsErr) {}
+
             broadcast(key);
             return true;
         } catch (e) {
@@ -952,16 +957,18 @@ const BBC_STORE = (function () {
             const storedVersion = parseInt(localStorage.getItem(task.verKey) || '0', 10);
             const existingData = localStorage.getItem(task.storageKey);
 
-            // Override localStorage jika:
-            // 1. Belum ada data di localStorage
-            // 2. Konten data di Vercel JSON berbeda dari data localStorage (perubahan langsung di Vercel JSON!)
-            // 3. Data berasal dari Vercel Blob dan versinya >= versi lokal
-            // 4. Versi cloud/JSON lebih baru dari versi yang tersimpan
+            // Override localStorage HANYA jika:
+            // 1. Belum ada data di localStorage sama sekali (kunjungan pertama)
+            // 2. Data berasal dari Vercel Blob cloud dan versinya >= versi lokal
+            // 3. Versi file JSON server secara nyata lebih baru dari mutasi CMS lokal (result.version > storedVersion)
+            // Catatan: Jika storedVersion >= result.version, data di browser ini baru saja diubah melalui CMS,
+            // sehingga mutasi lokal (tambah/edit/hapus) TIDAK BOLEH ditimpa oleh file statis bawaan server!
             const isFromCloud = result.source === 'vercel-blob';
-            const dataString = JSON.stringify(result.data);
-            const contentChanged = !existingData || (existingData !== dataString);
+            const shouldOverride = !existingData || 
+                                   (isFromCloud && result.version >= storedVersion) || 
+                                   (result.version > storedVersion);
 
-            if (!existingData || contentChanged || (isFromCloud && result.version >= storedVersion) || result.version > storedVersion) {
+            if (shouldOverride) {
                 if (task.key === 'hero' && result.data && typeof result.data === 'object') {
                     memoryHeroCache = result.data;
                     let ok = writeStorage(task.storageKey, result.data);
@@ -975,7 +982,9 @@ const BBC_STORE = (function () {
                 }
                 localStorage.setItem(task.verKey, String(result.version || Date.now()));
                 const srcLabel = isFromCloud ? 'Vercel Blob ☁️' : 'Vercel JSON 📁';
-                console.info(`[BBC_STORE] Data '${task.key}' langsung terupdate dari ${srcLabel} (v${result.version}).`);
+                console.info(`[BBC_STORE] Data '${task.key}' disinkronkan dari ${srcLabel} (v${result.version}).`);
+            } else {
+                console.info(`[BBC_STORE] Perubahan CMS untuk '${task.key}' aktif (v${storedVersion} >= server v${result.version}).`);
             }
         }));
     }
