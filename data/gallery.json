@@ -1,5 +1,5 @@
 {
-  "_version": 1788952718680,
+  "_version": 1788952723730,
   "_updatedAt": "2026-09-09",
   "gallery": [
     {
@@ -17,22 +17,6 @@
       "tag": "GOOD GAME! 🤝",
       "badgeColor": "yellow",
       "tilt": "sticker-tilt-wild"
-    },
-    {
-      "id": "moment-003",
-      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600",
-      "alt": "Senyum amilat BBC",
-      "tag": "NICE SHOT! ⭐",
-      "badgeColor": "green",
-      "tilt": "sticker-tilt-left"
-    },
-    {
-      "id": "moment-004",
-      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
-      "alt": "Selebrasi tim BBC",
-      "tag": "BBC SOLID! 🏆",
-      "badgeColor": "blue",
-      "tilt": "sticker-tilt-right"
     }
   ]
 }
