@@ -1,51 +1,78 @@
 /**
  * BAZNAS BADMINTON CLUB (BBC)
- * BBC_GITHUB — GitHub Contents API Sync Module
+ * BBC_GITHUB — GitHub Auto-Deploy Sync Module (Secure Proxy Edition)
  *
- * Memungkinkan CMS untuk melakukan push file JSON langsung ke GitHub repository
- * tanpa perlu download/upload manual. Setelah push, Vercel otomatis redeploy.
- *
- * Prasyarat:
- *   - GitHub Personal Access Token (PAT) dengan scope: repo (atau contents:write)
- *   - Repository dan branch yang benar
+ * Arsitektur Keamanan:
+ *   - Token GitHub PAT TIDAK disimpan di browser/localStorage
+ *   - Semua push ke GitHub dilakukan melalui /api/github-push (serverless proxy Vercel)
+ *   - Token hanya ada di Vercel server-side Environment Variables
+ *   - Browser hanya tahu: owner, repo, branch (info publik, tidak sensitif)
  *
  * Cara Kerja:
- *   1. Admin masukkan GitHub Token, owner, repo, branch sekali di panel Backup
- *   2. Klik "🚀 Deploy ke Vercel" → semua file JSON di-push ke GitHub
- *   3. Vercel otomatis redeploy dalam ±1–2 menit
+ *   1. CMS menyimpan perubahan ke BBC_STORE (localStorage)
+ *   2. BBC_GITHUB.triggerAutoDeploy(category) dipanggil otomatis setelah setiap save
+ *   3. Dengan debounce 2 detik, modul push ke /api/github-push
+ *   4. Server proxy meneruskan ke GitHub API menggunakan GITHUB_TOKEN (aman)
+ *   5. Vercel otomatis redeploy setelah ada commit baru di repo
  *
- * Keamanan:
- *   - Token disimpan di localStorage (hanya tersimpan di browser lokal admin)
- *   - Tidak dikirim ke pihak ketiga selain api.github.com via HTTPS
- *   - Admin dapat menghapus token kapan saja
+ * Setup:
+ *   - Tambahkan GITHUB_TOKEN di Vercel Dashboard → Project Settings → Environment Variables
+ *   - Tidak perlu konfigurasi apapun di browser/CMS — sudah otomatis untuk semua device
  */
 const BBC_GITHUB = (function () {
     'use strict';
 
-    const GITHUB_API = 'https://api.github.com';
-    const LS_CONFIG_KEY = 'bbc_github_config';
+    // ====================================================
+    // KONFIGURASI DEFAULT (info publik, bukan sensitif)
+    // Token disimpan di Vercel server-side, TIDAK di sini
+    // ====================================================
+    const DEFAULT_CONFIG = {
+        owner:  'abuhuud',
+        repo:   'bbc-website',
+        branch: 'main'
+    };
+
+    // Endpoint proxy serverless Vercel (relatif — otomatis pakai domain yang sama)
+    const PROXY_PUSH_ENDPOINT   = '/api/github-push';
+    const PROXY_STATUS_ENDPOINT = '/api/github-push?action=status';
+
+    const LS_CONFIG_KEY     = 'bbc_github_config';
+    const LS_AUTODEPLOY_KEY = 'bbc_github_autodeploy_enabled';
 
     // ====================================================
-    // 1. KONFIGURASI
+    // 1. KONFIGURASI (hanya owner/repo/branch — tanpa token)
     // ====================================================
+
     /**
-     * Simpan konfigurasi GitHub ke localStorage.
-     * @param {{owner: string, repo: string, branch: string, token: string}} config
+     * Auto-inisialisasi konfigurasi default saat pertama kali dijalankan.
+     * Dipanggil sekali saat modul dimuat — tidak menimpa konfigurasi yang sudah ada.
+     */
+    function initDefaultConfig() {
+        const existing = getConfig();
+        if (!existing || !existing.owner || !existing.repo) {
+            saveConfig(DEFAULT_CONFIG);
+            console.info('[BBC_GITHUB] Konfigurasi default diinisialisasi:', DEFAULT_CONFIG);
+        }
+    }
+
+    /**
+     * Simpan konfigurasi (owner/repo/branch) ke localStorage.
+     * Token TIDAK disimpan di sini — ada di Vercel env var.
+     * @param {{owner: string, repo: string, branch: string}} config
      */
     function saveConfig(config) {
         const clean = {
-            owner: (config.owner || '').trim(),
-            repo: (config.repo || '').trim(),
-            branch: (config.branch || 'main').trim(),
-            token: (config.token || '').trim()
+            owner:  (config.owner  || DEFAULT_CONFIG.owner).trim(),
+            repo:   (config.repo   || DEFAULT_CONFIG.repo).trim(),
+            branch: (config.branch || DEFAULT_CONFIG.branch).trim()
         };
         localStorage.setItem(LS_CONFIG_KEY, JSON.stringify(clean));
         return clean;
     }
 
     /**
-     * Baca konfigurasi GitHub dari localStorage.
-     * @returns {{owner: string, repo: string, branch: string, token: string}|null}
+     * Baca konfigurasi dari localStorage.
+     * @returns {{owner: string, repo: string, branch: string}|null}
      */
     function getConfig() {
         try {
@@ -58,114 +85,66 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Hapus konfigurasi GitHub dari localStorage.
+     * Reset konfigurasi ke default.
+     */
+    function resetToDefault() {
+        saveConfig(DEFAULT_CONFIG);
+    }
+
+    /**
+     * Hapus konfigurasi (jarang dipakai — config tidak mengandung token sensitif).
      */
     function clearConfig() {
         localStorage.removeItem(LS_CONFIG_KEY);
     }
 
     /**
-     * Cek apakah konfigurasi sudah lengkap.
+     * Selalu terkonfigurasi karena token ada di server.
+     * Menggunakan endpoint status untuk verifikasi server-side.
      * @returns {boolean}
      */
     function isConfigured() {
-        const c = getConfig();
-        return !!(c && c.owner && c.repo && c.branch && c.token);
+        // Selalu true — konfigurasi tidak bergantung pada localStorage client
+        // Token dicek server-side saat push dilakukan
+        return true;
     }
 
     // ====================================================
-    // 2. GITHUB API HELPERS
+    // 2. PROXY PUSH — via /api/github-push
     // ====================================================
-    /**
-     * Buat header autentikasi GitHub.
-     * @param {string} token
-     * @returns {Headers}
-     */
-    function makeHeaders(token) {
-        return {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json'
-        };
-    }
 
     /**
-     * Dapatkan SHA file saat ini di GitHub (diperlukan untuk update).
-     * @param {string} owner
-     * @param {string} repo
-     * @param {string} path - path file di repo, misal 'data/players.json'
-     * @param {string} branch
-     * @param {string} token
-     * @returns {Promise<string|null>} SHA atau null jika file belum ada
-     */
-    async function getFileSha(owner, repo, path, branch, token) {
-        try {
-            const resp = await fetch(
-                `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
-                { headers: makeHeaders(token) }
-            );
-            if (resp.status === 404) return null; // File belum ada, akan dibuat baru
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                throw new Error(err.message || `HTTP ${resp.status}`);
-            }
-            const data = await resp.json();
-            return data.sha || null;
-        } catch (e) {
-            if (e.message && e.message.includes('404')) return null;
-            throw e;
-        }
-    }
-
-    /**
-     * Push satu file ke GitHub (create or update).
-     * @param {string} owner
-     * @param {string} repo
-     * @param {string} path - path file di repo
-     * @param {string} branch
-     * @param {string} token
-     * @param {object|Array} data - data JavaScript yang akan di-stringify
-     * @param {string} commitMessage
+     * Push satu file ke GitHub melalui server-side proxy.
+     * Token tidak pernah keluar dari server Vercel.
+     *
+     * @param {string} filePath     - Path file di repo: 'data/players.json'
+     * @param {object|Array} data   - Data JavaScript yang akan di-stringify
+     * @param {string} commitMsg    - Pesan commit
      * @returns {Promise<{success: boolean, url: string|null, error: string|null}>}
      */
-    async function pushFile(owner, repo, path, branch, token, data, commitMessage) {
+    async function pushFile(filePath, data, commitMsg) {
         try {
-            // 1. Ambil SHA file yang ada (jika file sudah ada)
-            const sha = await getFileSha(owner, repo, path, branch, token);
-
-            // 2. Encode konten JSON ke base64
+            // Encode ke base64 (diperlukan oleh GitHub Contents API)
             const jsonStr = JSON.stringify(data, null, 2);
             const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
-            // 3. Push ke GitHub
-            const body = {
-                message: commitMessage,
-                content: base64Content,
-                branch: branch
-            };
-            if (sha) body.sha = sha; // Diperlukan untuk update (bukan create)
+            const resp = await fetch(PROXY_PUSH_ENDPOINT, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({
+                    path:          filePath,
+                    content:       base64Content,
+                    commitMessage: commitMsg
+                })
+            });
 
-            const resp = await fetch(
-                `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`,
-                {
-                    method: 'PUT',
-                    headers: makeHeaders(token),
-                    body: JSON.stringify(body)
-                }
-            );
+            const result = await resp.json().catch(() => ({}));
 
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                throw new Error(err.message || `HTTP ${resp.status}`);
+            if (!resp.ok || !result.success) {
+                throw new Error(result.error || `HTTP ${resp.status}`);
             }
 
-            const result = await resp.json();
-            return {
-                success: true,
-                url: result.content ? result.content.html_url : null,
-                error: null
-            };
+            return { success: true, url: result.url || null, error: null };
 
         } catch (e) {
             return { success: false, url: null, error: e.message };
@@ -173,105 +152,109 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Verifikasi token GitHub dengan memanggil endpoint user.
-     * @param {string} token
-     * @returns {Promise<{valid: boolean, username: string|null, error: string|null}>}
+     * Cek status konfigurasi server-side (apakah GITHUB_TOKEN sudah diset di Vercel).
+     * @returns {Promise<{configured: boolean, owner: string, repo: string, branch: string, message: string}>}
      */
-    async function verifyToken(token) {
+    async function checkServerStatus() {
         try {
-            const resp = await fetch(`${GITHUB_API}/user`, {
-                headers: makeHeaders(token)
-            });
-            if (!resp.ok) {
-                if (resp.status === 401) return { valid: false, username: null, error: 'Token tidak valid atau sudah kadaluarsa.' };
-                return { valid: false, username: null, error: `HTTP ${resp.status}` };
-            }
-            const data = await resp.json();
-            return { valid: true, username: data.login, error: null };
+            const resp = await fetch(PROXY_STATUS_ENDPOINT, { cache: 'no-store' });
+            if (!resp.ok) return { configured: false, message: `HTTP ${resp.status}` };
+            return await resp.json();
         } catch (e) {
-            return { valid: false, username: null, error: e.message };
+            return { configured: false, message: e.message };
         }
     }
 
-    // ====================================================
-    // 3. SYNC SEMUA DATA KE GITHUB
-    // ====================================================
     /**
-     * Mapping kategori data ke path file JSON di repository.
+     * Verifikasi koneksi ke GitHub (via proxy server — tidak ada token di browser).
+     * @returns {Promise<{valid: boolean, username: string|null, error: string|null}>}
      */
+    async function verifyToken() {
+        const status = await checkServerStatus();
+        if (status.configured) {
+            return { valid: true, username: `${status.owner} (proxy)`, error: null };
+        }
+        return {
+            valid:    false,
+            username: null,
+            error:    status.message || 'GITHUB_TOKEN belum dikonfigurasi di server Vercel.'
+        };
+    }
+
+    // ====================================================
+    // 3. MAPPING DATA FILES
+    // ====================================================
+
     const DATA_FILES = [
         {
-            key: 'players',
-            path: 'data/players.json',
+            key:     'players',
+            path:    'data/players.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                players: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getPlayers() : [])
+                players:    (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getPlayers()      : [])
             })
         },
         {
-            key: 'events',
-            path: 'data/events.json',
+            key:     'events',
+            path:    'data/events.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                events: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getEvents() : [])
+                events:     (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getEvents()       : [])
             })
         },
         {
-            key: 'gallery',
-            path: 'data/gallery.json',
+            key:     'gallery',
+            path:    'data/gallery.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                gallery: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getGallery() : [])
+                gallery:    (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getGallery()      : [])
             })
         },
         {
-            key: 'articles',
-            path: 'data/articles.json',
+            key:     'articles',
+            path:    'data/articles.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                articles: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getArticles() : [])
+                articles:   (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getArticles()     : [])
             })
         },
         {
-            key: 'officials',
-            path: 'data/officials.json',
+            key:     'officials',
+            path:    'data/officials.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                officials: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getOfficials() : [])
+                officials:  (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getOfficials()    : [])
             })
         },
         {
-            key: 'hero',
-            path: 'data/hero.json',
+            key:     'hero',
+            path:    'data/hero.json',
             getData: () => ({
-                _version: Date.now(),
+                _version:   Date.now(),
                 _updatedAt: new Date().toISOString().split('T')[0],
-                hero: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getHeroSettings() : {})
+                hero:       (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getHeroSettings() : {})
             })
         }
     ];
 
+    // ====================================================
+    // 4. DEPLOY SEMUA / SEBAGIAN FILE KE GITHUB
+    // ====================================================
+
     /**
-     * Push semua file data JSON ke GitHub, satu per satu.
+     * Push semua (atau sebagian) file data JSON ke GitHub via proxy.
      *
-     * @param {object} [options]
-     * @param {string[]} [options.categories] - Kategori spesifik ('players','events', dll).
-     *                                          Kosong = push semua.
-     * @param {function} [options.onProgress] - Callback (kategori, status, error) per file
+     * @param {object}   [options]
+     * @param {string[]} [options.categories] - Kategori spesifik atau kosong = semua
+     * @param {function} [options.onProgress] - Callback(category, status, error)
      * @returns {Promise<{success: number, failed: number, errors: string[]}>}
      */
     async function deployToGitHub(options = {}) {
-        const config = getConfig();
-        if (!config || !isConfigured()) {
-            return { success: 0, failed: 0, errors: ['Konfigurasi GitHub belum diatur.'] };
-        }
-
-        const { owner, repo, branch, token } = config;
         const { categories, onProgress } = options;
 
         const targets = categories && categories.length
@@ -279,8 +262,8 @@ const BBC_GITHUB = (function () {
             : DATA_FILES;
 
         let successCount = 0;
-        let failedCount = 0;
-        const errors = [];
+        let failedCount  = 0;
+        const errors     = [];
 
         const timestamp = new Date().toLocaleString('id-ID', {
             timeZone: 'Asia/Jakarta',
@@ -292,8 +275,8 @@ const BBC_GITHUB = (function () {
         for (const file of targets) {
             if (onProgress) onProgress(file.key, 'uploading', null);
             try {
-                const data = file.getData();
-                const result = await pushFile(owner, repo, file.path, branch, token, data, commitMsg);
+                const data   = file.getData();
+                const result = await pushFile(file.path, data, commitMsg);
                 if (result.success) {
                     successCount++;
                     if (onProgress) onProgress(file.key, 'success', null);
@@ -313,16 +296,16 @@ const BBC_GITHUB = (function () {
     }
 
     // ====================================================
-    // 4. AUTO-DEPLOY BACKGROUND SCHEDULER
+    // 5. AUTO-DEPLOY BACKGROUND SCHEDULER (Debounced)
     // ====================================================
-    const LS_AUTODEPLOY_KEY = 'bbc_github_autodeploy_enabled';
-    let autoDeployTimer = null;
-    const pendingCategories = new Set();
-    const statusListeners = [];
+
+    let   autoDeployTimer    = null;
+    const pendingCategories  = new Set();
+    const statusListeners    = [];
 
     /**
-     * Cek apakah auto-deploy otomatis diaktifkan.
-     * Default: true (aktif) jika GitHub sudah dikonfigurasi.
+     * Cek apakah auto-deploy diaktifkan.
+     * Default: true.
      * @returns {boolean}
      */
     function isAutoDeployEnabled() {
@@ -331,20 +314,20 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Set preferensi auto-deploy (aktif/nonaktif).
+     * Set preferensi auto-deploy.
      * @param {boolean} enabled
      */
     function setAutoDeployEnabled(enabled) {
         localStorage.setItem(LS_AUTODEPLOY_KEY, enabled ? 'true' : 'false');
         notifyStatusListeners({
-            type: 'autodeploy_toggle',
+            type:    'autodeploy_toggle',
             enabled: enabled,
             message: enabled ? 'Auto-deploy ke Vercel diaktifkan.' : 'Auto-deploy ke Vercel dinonaktifkan.'
         });
     }
 
     /**
-     * Daftarkan pendengar perubahan status sync / deploy.
+     * Daftarkan listener perubahan status sync/deploy.
      * @param {function(object):void} callback
      */
     function onStatusChange(callback) {
@@ -364,35 +347,27 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Picu auto-deploy ke GitHub & Vercel secara otomatis dengan debounce 2 detik.
-     * Jika terjadi beberapa kali perubahan data secara berturut-turut,
-     * kategori yang diubah dikumpulkan dan di-push sekaligus dalam satu batch.
+     * Picu auto-deploy ke GitHub & Vercel dengan debounce 2 detik.
+     * Perubahan beruntun dalam 2 detik akan di-batch menjadi satu push.
      *
-     * @param {string} category - Kategori data ('players' | 'events' | 'gallery' | 'articles' | 'officials' | 'hero')
+     * @param {string} category - 'players' | 'events' | 'gallery' | 'articles' | 'officials' | 'hero'
      */
     function triggerAutoDeploy(category) {
-        if (!isConfigured()) return;
         if (!isAutoDeployEnabled()) {
-            console.info('[BBC_GITHUB] Auto-deploy dilewati (fitur dinonaktifkan oleh admin).');
+            console.info('[BBC_GITHUB] Auto-deploy dilewati (dinonaktifkan oleh admin).');
             return;
         }
 
-        if (category) {
-            pendingCategories.add(category);
-        }
+        if (category) pendingCategories.add(category);
 
         const currentPending = Array.from(pendingCategories);
-
         notifyStatusListeners({
-            type: 'queued',
+            type:       'queued',
             categories: currentPending,
-            message: `Menunggu jeda perubahan (${currentPending.join(', ')})...`
+            message:    `Menunggu jeda perubahan (${currentPending.join(', ')})...`
         });
 
-        // Reset timer jika ada mutasi baru dalam 2 detik
-        if (autoDeployTimer) {
-            clearTimeout(autoDeployTimer);
-        }
+        if (autoDeployTimer) clearTimeout(autoDeployTimer);
 
         autoDeployTimer = setTimeout(async () => {
             const categoriesToDeploy = Array.from(pendingCategories);
@@ -401,80 +376,84 @@ const BBC_GITHUB = (function () {
 
             if (categoriesToDeploy.length === 0) return;
 
-            console.info(`[BBC_GITHUB] 🚀 Memulai auto-push ke GitHub untuk: ${categoriesToDeploy.join(', ')}`);
+            console.info(`[BBC_GITHUB] 🚀 Auto-push ke GitHub via proxy: ${categoriesToDeploy.join(', ')}`);
             notifyStatusListeners({
-                type: 'deploying',
+                type:       'deploying',
                 categories: categoriesToDeploy,
-                message: `☁️ Mendorong ${categoriesToDeploy.join(', ')} ke GitHub & Vercel...`
+                message:    `☁️ Mendorong ${categoriesToDeploy.join(', ')} ke GitHub & Vercel...`
             });
 
             try {
                 const result = await deployToGitHub({ categories: categoriesToDeploy });
+
                 if (result.success > 0 && result.failed === 0) {
-                    console.info(`[BBC_GITHUB] ✅ Auto-deploy berhasil untuk: ${categoriesToDeploy.join(', ')}`);
+                    console.info(`[BBC_GITHUB] ✅ Auto-deploy berhasil: ${categoriesToDeploy.join(', ')}`);
                     notifyStatusListeners({
-                        type: 'success',
+                        type:       'success',
                         categories: categoriesToDeploy,
-                        message: `✅ Berhasil sinkron ke Vercel (${categoriesToDeploy.join(', ')}). Vercel sedang redeploy!`,
+                        message:    `✅ Berhasil sinkron ke Vercel (${categoriesToDeploy.join(', ')}). Vercel sedang redeploy!`,
                         result
                     });
                 } else if (result.failed > 0) {
-                    console.warn(`[BBC_GITHUB] ⚠️ Sebagian file gagal di-push:`, result.errors);
+                    console.warn('[BBC_GITHUB] ⚠️ Sebagian file gagal:', result.errors);
                     notifyStatusListeners({
-                        type: 'error',
+                        type:       'error',
                         categories: categoriesToDeploy,
-                        message: `⚠️ Gagal auto-deploy: ${result.errors.join('; ')}`,
+                        message:    `⚠️ Gagal auto-deploy: ${result.errors.join('; ')}`,
                         result
                     });
                 }
             } catch (err) {
                 console.error('[BBC_GITHUB] Auto-deploy error:', err);
                 notifyStatusListeners({
-                    type: 'error',
+                    type:       'error',
                     categories: categoriesToDeploy,
-                    message: `⚠️ Gagal auto-deploy: ${err.message}`,
-                    error: err
+                    message:    `⚠️ Gagal auto-deploy: ${err.message}`,
+                    error:      err
                 });
             }
-        }, 2000);
+        }, 2000); // debounce 2 detik
     }
 
     // ====================================================
-    // 5. STATUS INFO
+    // 6. STATUS INFO
     // ====================================================
+
     function getStatus() {
-        const c = getConfig();
-        if (!c || !c.token) {
-            return {
-                configured: false,
-                owner: null,
-                repo: null,
-                branch: null,
-                autoDeployEnabled: isAutoDeployEnabled()
-            };
-        }
+        const c = getConfig() || DEFAULT_CONFIG;
         return {
-            configured: isConfigured(),
-            owner: c.owner,
-            repo: c.repo,
-            branch: c.branch,
+            configured:        true, // selalu true — token di server
+            owner:             c.owner  || DEFAULT_CONFIG.owner,
+            repo:              c.repo   || DEFAULT_CONFIG.repo,
+            branch:            c.branch || DEFAULT_CONFIG.branch,
             autoDeployEnabled: isAutoDeployEnabled(),
-            tokenMasked: c.token ? ('••••••••' + c.token.slice(-4)) : null
+            tokenMasked:       '••••••••[server-side]'
         };
     }
 
+    // ====================================================
+    // 7. INISIALISASI OTOMATIS saat modul pertama kali dimuat
+    // ====================================================
+    initDefaultConfig();
+
+    // ====================================================
+    // PUBLIC API
+    // ====================================================
     return {
         saveConfig,
         getConfig,
         clearConfig,
+        resetToDefault,
         isConfigured,
         isAutoDeployEnabled,
         setAutoDeployEnabled,
         triggerAutoDeploy,
         onStatusChange,
         verifyToken,
+        checkServerStatus,
         deployToGitHub,
         getStatus,
-        DATA_FILES
+        DATA_FILES,
+        DEFAULT_CONFIG
     };
 })();

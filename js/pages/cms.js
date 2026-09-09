@@ -1388,6 +1388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     showToast(`Status POTM untuk "${p.name}" dinonaktifkan.`, 'info');
                 }
+                if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('players');
             });
         });
 
@@ -1418,6 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderPlayersTable();
                         updateTabCounts();
                         showToast(`Pemain "${p.name}" berhasil dihapus.`);
+                        if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('players');
                     });
                 }
             });
@@ -1654,6 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const updatedPlayer = BBC_STORE.getPlayerById(playerId);
                     renderPlayerModalGalleryPreview(updatedPlayer);
                     showToast('Foto galeri berhasil dihapus.', 'info');
+                    if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('players');
                 });
             });
         });
@@ -1738,6 +1741,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 BBC_STORE.addPlayerGalleryPhoto(playerId, { url, caption });
                 showToast('Foto baru berhasil ditambahkan ke galeri pemain!', 'success');
             }
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('players');
 
             resetPlayerGalleryForm();
             renderPlayerGalleryModalGrid(playerId);
@@ -1819,6 +1823,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPlayersTable();
             updateTabCounts();
             showToast(id ? `Data ${name} berhasil diperbarui!` : `Pemain ${name} berhasil ditambahkan!`);
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('players');
         });
     }
 
@@ -1967,6 +1972,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderEventsTable();
                         updateTabCounts();
                         showToast(`Jadwal "${ev.title}" berhasil dihapus.`);
+                        if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('events');
                     });
                 }
             });
@@ -2037,6 +2043,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderEventsTable();
             updateTabCounts();
             showToast(id ? 'Jadwal berhasil diperbarui!' : 'Jadwal baru berhasil ditambahkan!');
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('events');
         });
     }
 
@@ -2120,6 +2127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderGalleryGrid();
                         updateTabCounts();
                         showToast('Foto galeri berhasil dihapus.');
+                        if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('gallery');
                     });
                 }
             });
@@ -2178,6 +2186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             BBC_STORE.saveGalleryItem(itemData);
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('gallery');
             closeModal('modal-gallery');
             renderGalleryGrid();
             updateTabCounts();
@@ -2323,6 +2332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderArticlesTable();
                         updateTabCounts();
                         showToast(`Artikel "${art.title}" berhasil dihapus.`);
+                        if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('articles');
                     });
                 }
             });
@@ -2400,6 +2410,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             BBC_STORE.saveArticle(articleData);
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('articles');
             closeModal('modal-article');
             renderArticlesTable();
             updateTabCounts();
@@ -2556,6 +2567,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderOfficialsTable();
                         updateTabCounts();
                         showToast('Data pengurus berhasil dihapus.');
+                        if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('officials');
                     });
                 }
             });
@@ -2656,6 +2668,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderOfficialsTable();
             updateTabCounts();
             showToast(id ? 'Data pengurus diperbarui!' : 'Pengurus baru ditambahkan!');
+            if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('officials');
         });
     }
 
@@ -2955,6 +2968,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
                 showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan! Tampilan beranda langsung diperbarui.`);
                 if (loadHeroFormFn) loadHeroFormFn();
+                if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('hero');
             } else {
                 showToast('❌ Gagal menyimpan! Ukuran file melebihi kapasitas memori browser (5MB). Gunakan link URL gambar/video.', 'error');
             }
@@ -3003,6 +3017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 BBC_STORE.resetHeroSettings();
                 if (loadHeroFormFn) loadHeroFormFn();
                 showToast('↩ Media hero berhasil direset ke foto default bawaan.');
+                if (typeof BBC_GITHUB !== 'undefined') BBC_GITHUB.triggerAutoDeploy('hero');
             });
         }
 

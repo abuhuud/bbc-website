@@ -5,23 +5,86 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-2. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-3. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-4. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-5. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-6. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-7. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-8. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-9. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-10. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-11. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-12. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-13. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-14. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-15. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-16. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-17. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+1. [v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang](#-v2170---github-token-diamankan-via-vercel-server-side-proxy--auto-deploy-tanpa-konfigurasi-ulang)
+2. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+
+---
+
+## 🔒 v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"Sembunyikan token dalam variabel agar aman. Buat agar dapat melakukan update di semua device yang login ke CMS tanpa harus konfigurasi ulang."*
+
+**Masalah sebelumnya:** Token GitHub PAT disimpan di `localStorage` browser masing-masing — visible di DevTools dan harus diisi ulang di setiap device/browser baru yang login CMS.
+
+### ✅ Solusi & Detail Implementasi Teknis
+
+**Arsitektur Keamanan Baru (Server-Side Proxy):**
+
+```
+CMS Browser → POST /api/github-push → Vercel Serverless → GitHub API
+                  (tanpa token)         (token server-side)
+```
+
+Token **TIDAK PERNAH** dikirim ke browser. Semua operasi GitHub dilakukan di server Vercel menggunakan `GITHUB_TOKEN` Environment Variable.
+
+1. **[NEW] `api/github-push.js` — Serverless Proxy Endpoint:**
+   - Endpoint `POST /api/github-push` menerima `{ path, content (base64), commitMessage }` dari browser CMS.
+   - Membaca `GITHUB_TOKEN` dari `process.env` (server-side Vercel env var) — tidak pernah dikirim ke client.
+   - **Path whitelist**: hanya mengizinkan 6 path yang valid (`data/*.json`) untuk mencegah abuse.
+   - Menangani: ambil SHA → push create/update ke GitHub API dalam satu serverless call.
+   - Endpoint `GET /api/github-push?action=status` untuk verifikasi konfigurasi server tanpa membocorkan token.
+
+2. **[MODIFIED] `js/utils/github-sync.js` — Migrasi ke Proxy:**
+   - Fungsi `pushFile()` diubah dari memanggil `api.github.com` langsung menjadi `fetch('/api/github-push')`.
+   - Fungsi `verifyToken()` sekarang memanggil `/api/github-push?action=status` (server-side check).
+   - `DEFAULT_CONFIG` hardcode: `owner: 'abuhuud'`, `repo: 'bbc-website'`, `branch: 'main'` (info publik, bukan sensitif).
+   - `initDefaultConfig()` auto-seed `localStorage` saat pertama kali diload di device baru — **nol konfigurasi manual**.
+   - Token dihapus dari semua operasi client-side — `isConfigured()` selalu `true`.
+   - Field `tokenMasked` menampilkan `'••••••••[server-side]'` di UI (bukan token asli).
+
+3. **[MODIFIED] `js/pages/cms.js` — Auto-Deploy Hook di Semua 15 Titik Mutasi Data:**
+   - `triggerAutoDeploy('players')` dipanggil setelah: `savePlayer`, `deletePlayer`, `setPlayerOfTheMonth`, `addPlayerGalleryPhoto`, `updatePlayerGalleryPhoto`, `deletePlayerGalleryPhoto`.
+   - `triggerAutoDeploy('events')` dipanggil setelah: `saveEvent`, `deleteEvent`.
+   - `triggerAutoDeploy('gallery')` dipanggil setelah: `saveGalleryItem`, `deleteGalleryItem`.
+   - `triggerAutoDeploy('articles')` dipanggil setelah: `saveArticle`, `deleteArticle`.
+   - `triggerAutoDeploy('officials')` dipanggil setelah: `saveOfficial`, `deleteOfficial`.
+   - `triggerAutoDeploy('hero')` dipanggil setelah: `saveHeroSettings`, `resetHeroSettings`.
+   - Semua pemanggilan menggunakan guard `typeof BBC_GITHUB !== 'undefined'` agar aman jika modul tidak ter-load.
+
+### 🔑 Setup yang Diperlukan (Satu Kali)
+1. Buka **Vercel Dashboard** → Project `bbc-website` → **Settings** → **Environment Variables**
+2. Tambahkan variabel: `GITHUB_TOKEN` = `<token-github-anda>` *(lihat di pesan WhatsApp admin)*
+
+3. Pilih environment: **Production, Preview, Development**
+4. Klik **Save** → Klik **Redeploy**
+
+Setelah itu, **semua device yang login CMS akan otomatis terhubung ke GitHub & Vercel** tanpa perlu konfigurasi apapun.
+
+### 📁 Berkas yang Dimodifikasi
+- **[NEW]** `api/github-push.js` — Serverless proxy GitHub push
+- **[MODIFIED]** `js/utils/github-sync.js` — Migrasi ke proxy, auto-init default config
+- **[MODIFIED]** `js/pages/cms.js` — 15 auto-deploy trigger hooks di semua operasi save/delete
+
+
+3. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+4. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+5. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+6. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+7. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+8. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+9. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+10. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+11. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+12. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+13. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+14. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+15. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+16. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+17. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+18. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+
 18. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
 19. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
 
