@@ -39,18 +39,13 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 1. **Eliminasi Blok `"functions"` di [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json):**
    - Menghapus konfigurasi `"functions": { "api/**/*.js": { "runtime": "nodejs20.x" } }` agar Vercel menggunakan native Node.js Serverless Function runtime otomatis.
    - Mempertahankan aturan rute (`routes`) dan header anti-cache serta charset UTF-8 yang diperlukan.
-2. **Spesifikasi Engine Node Resmi di [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json):**
-   - Menetapkan target versi engine:
-     ```json
-     "engines": {
-       "node": "20.x"
-     }
-     ```
+2. **Penyelarasan Dashboard Vercel & Penghapusan `engines` Override di [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json):**
+   - Menghapus field `"engines"` dari `package.json` agar pengaturan Node.js Version di dashboard Vercel (`Settings -> Build & Development -> Node.js Version: 20.x / 24.x`) dapat dikontrol langsung tanpa memicu peringatan *"Project setting overridden by package.json"*.
    - Menaikkan versi proyek ke `4.1.5`.
 
 ### 📂 Berkas yang Dimodifikasi
 - [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) — Penghapusan blok `"functions"` yang menyebabkan konflik parser runtime Vercel.
-- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penyelarasan engine `"node": "20.x"` dan bump versi `4.1.5`.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penghapusan field `engines` untuk menghormati dashboard settings Vercel dan bump versi `4.1.5`.
 - [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.5 sesuai aturan `AGENTS.md`.
 
 ---
