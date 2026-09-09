@@ -98,4 +98,16 @@ function BBC_onReady(render) {
         // Saat data berubah via CMS (di tab yang sama), langsung re-render tanpa fetch JSON
         BBC_LIVE.onChange(() => render());
     }
+
+    // Auto-sync data dari cloud Vercel Blob saat tab aktif kembali
+    if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible' && typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
+                try {
+                    await BBC_STORE.initialize();
+                    render();
+                } catch (e) {}
+            }
+        });
+    }
 }

@@ -249,7 +249,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = fileInput.files[0];
             if (!file) return;
 
-            // Coba simpan ke folder proyek via BBC_FS jika tersedia
+            // 1. Coba upload langsung ke Vercel Blob CDN jika online / serverless aktif
+            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
+                try {
+                    const uploadFolder = assetSubdir ? assetSubdir.split('/').pop() : 'media';
+                    const uploadResult = await BBC_STORE.uploadToBlob(file, uploadFolder);
+                    if (uploadResult && uploadResult.success && uploadResult.url) {
+                        urlInput.value = uploadResult.url;
+                        previewEl.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
+                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
+                        return;
+                    }
+                } catch (uploadErr) {
+                    console.info('[CMS] Vercel upload fallback:', uploadErr);
+                }
+            }
+
+            // 2. Coba simpan ke folder proyek via BBC_FS jika tersedia
             if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured() && assetSubdir) {
                 // Buat nama file yang aman dari nama file asli
                 const safeName = file.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_.]/g, '');
@@ -439,17 +455,29 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Update badge status Storage di topbar header CMS.
      */
-    function updateStorageTopbarBadge() {
+    async function updateStorageTopbarBadge() {
         const badge = document.getElementById('cloud-sync-topbar-badge');
         const label = document.getElementById('cloud-sync-topbar-text');
         if (!badge || !label) return;
+
+        // Cek status Vercel Blob Cloud
+        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.checkBlobStatus) {
+            try {
+                const status = await BBC_STORE.checkBlobStatus();
+                if (status && status.connected) {
+                    badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
+                    label.textContent = '🟢 Vercel Real-time Sync: Aktif';
+                    return;
+                }
+            } catch (e) {}
+        }
 
         if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
             badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
             label.textContent = `📁 File: /${BBC_FS.getFolderName() || 'Terkonfigurasi'}`;
         } else {
             badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
-            label.textContent = '💾 Storage: Aktif';
+            label.textContent = '💾 Storage & Vercel Sync';
         }
     }
 
@@ -464,17 +492,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Auto-upload hook untuk semua form media (File System API + Base64 fallback)
+        // Auto-upload hook untuk semua form media (Vercel Blob + File System API + Base64 fallback)
         attachMediaAutoUpload('player-file', 'player-image', 'player-preview', 'players');
         attachMediaAutoUpload('gallery-file', 'gallery-image', 'gallery-preview', 'gallery');
         attachMediaAutoUpload('official-file', 'official-image', 'official-preview', 'officials', () => {
             if (typeof updateOfficialPreview === 'function') updateOfficialPreview();
         });
-        attachMediaAutoUpload('article-file', 'article-image', 'article-preview', 'articles');
+        attachMediaAutoUpload('article-file', 'article-image', 'article-preview', 'news');
     }
 
     /**
-     * Helper universal untuk upload media lokal (BBC_FS / Base64 Data URL)
+     * Helper universal untuk upload media (Vercel Blob CDN / BBC_FS / Base64 Data URL)
      */
     function attachMediaAutoUpload(fileInputId, urlInputId, previewElId, folder, onDone) {
         const fileInput = document.getElementById(fileInputId);
@@ -486,7 +514,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = e.target.files && e.target.files[0];
             if (!file) return;
 
-            // 1. Coba simpan ke folder proyek jika BBC_FS aktif
+            // 1. Coba upload langsung ke Vercel Blob CDN jika online
+            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
+                try {
+                    showToast(`⏳ Mengunggah "${file.name}" ke Vercel Blob CDN...`, 'info');
+                    const uploadResult = await BBC_STORE.uploadToBlob(file, folder);
+                    if (uploadResult && uploadResult.success && uploadResult.url) {
+                        urlInput.value = uploadResult.url;
+                        const previewEl = document.getElementById(previewElId);
+                        if (previewEl) {
+                            previewEl.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
+                        }
+                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
+                        if (typeof onDone === 'function') onDone(uploadResult.url);
+                        return;
+                    }
+                } catch (uploadErr) {
+                    console.info('[MediaAutoUpload] Cloud upload fallback:', uploadErr);
+                }
+            }
+
+            // 2. Coba simpan ke folder proyek jika BBC_FS aktif
             if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
                 try {
                     showToast(`⏳ Menyimpan "${file.name}" ke folder proyek...`);
@@ -506,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 2. Fallback: Base64 data URL
+            // 3. Fallback: Base64 data URL
             const reader = new FileReader();
             reader.onload = (evt) => {
                 const dataUrl = evt.target.result;

@@ -1,11 +1,14 @@
 {
   "name": "bbc-website",
-  "version": "4.0.0",
-  "description": "Website Resmi BAZNAS Badminton Club (BBC) — Pure HTML, CSS, & JavaScript",
+  "version": "4.1.0",
+  "description": "Website Resmi BAZNAS Badminton Club (BBC) — Pure HTML, CSS, JavaScript with Real-time Vercel Cloud Sync",
   "type": "module",
   "main": "index.html",
   "scripts": {
     "test": "node tests/run-tests.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.27.1"
   },
   "engines": {
     "node": ">=18.x"

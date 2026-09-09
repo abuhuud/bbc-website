@@ -35,6 +35,14 @@ const BBC_STORE = (function () {
         return './data/';
     }
 
+    // Path API relatif — otomatis menyesuaikan apakah di /pages/ atau root
+    function getApiBasePath() {
+        if (typeof window !== 'undefined' && window.location.pathname.includes('/pages/')) {
+            return '../api/';
+        }
+        return './api/';
+    }
+
     // Default Hero Settings (Supports Photo or Video)
     const DEFAULT_HERO = {
         mediaType: 'image', // 'image' | 'video'
@@ -115,14 +123,92 @@ const BBC_STORE = (function () {
     };
 
     /**
-     * Sinkronisasi mutasi data (LocalStorage + File System Access API)
+     * Sinkronisasi data realtime ke Vercel Blob (Serverless Node.js API)
+     * Dipanggil otomatis saat ada penambahan, pengubahan, atau penghapusan data di CMS.
+     * @param {string} category - 'players' | 'events' | 'gallery' | 'articles' | 'officials' | 'hero'
+     * @param {*} [data=null] - data yang akan disimpan (opsional)
+     */
+    async function syncToVercel(category, data = null) {
+        if (!category) return null;
+        try {
+            const base = getApiBasePath();
+            let payload = data;
+            if (!payload) {
+                if (category === 'players') payload = getPlayers();
+                else if (category === 'events') payload = getEvents();
+                else if (category === 'gallery') payload = getGallery();
+                else if (category === 'articles') payload = getArticles();
+                else if (category === 'officials') payload = getOfficials();
+                else if (category === 'hero') payload = getHeroSettings();
+            }
+            if (!payload) return null;
+
+            const res = await fetch(`${base}data?category=${encodeURIComponent(category)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                const json = await res.json();
+                console.info(`[BBC_STORE] ☁️ Terupdate secara realtime di Vercel: ${category}`, json);
+                return json;
+            }
+        } catch (e) {
+            // Graceful fallback for offline / preview
+            console.warn(`[BBC_STORE] syncToVercel warning for ${category}:`, e.message);
+        }
+        return null;
+    }
+
+    /**
+     * Upload file media langsung ke Vercel Blob CDN (public access)
+     * @param {File|Blob} file - File binary yang diupload
+     * @param {string} [folder='media'] - Folder kategori ('players', 'gallery', 'news', 'officials', dll)
+     */
+    async function uploadToBlob(file, folder = 'media') {
+        if (!file) return null;
+        try {
+            const base = getApiBasePath();
+            const filename = encodeURIComponent(file.name || `file-${Date.now()}`);
+            const res = await fetch(`${base}upload?filename=${filename}&folder=${encodeURIComponent(folder)}`, {
+                method: 'POST',
+                body: file
+            });
+            if (res.ok) {
+                return await res.json();
+            }
+        } catch (e) {
+            console.warn('[BBC_STORE] uploadToBlob failed:', e.message);
+        }
+        return null;
+    }
+
+    /**
+     * Cek status koneksi Vercel Blob store (bbc-baznas-db)
+     */
+    async function checkBlobStatus() {
+        try {
+            const base = getApiBasePath();
+            const res = await fetch(`${base}status?t=${Date.now()}`);
+            if (!res.ok) return { success: false, connected: false, error: `HTTP ${res.status}` };
+            return await res.json();
+        } catch (e) {
+            return { success: false, connected: false, error: e.message };
+        }
+    }
+
+    /**
+     * Sinkronisasi mutasi data (Realtime Vercel Blob + LocalStorage + File System Access API)
      * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
      */
     function syncToFile(storageKey) {
         const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
 
-        // Otomatis sinkronisasi ke file lokal jika File System Access API aktif di CMS
+        // 1. Sinkronisasi realtime langsung ke Vercel Blob (Cloud)
+        syncToVercel(category);
+
+        // 2. Otomatis sinkronisasi ke file lokal jika File System Access API aktif di CMS
         if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
             try {
                 let data = null;
@@ -786,11 +872,35 @@ const BBC_STORE = (function () {
     }
 
     // ========================================================
-    // STATIC JSON SYNC — fetch data dari /data/*.json
-    // Dipanggil sekali saat halaman load. Jika JSON lebih baru
-    // dari versi di localStorage, data di-override secara otomatis.
+    // REAL-TIME VERCEL BLOB & STATIC JSON SYNC
+    // Dipanggil saat halaman load.
+    // Memprioritaskan data realtime dari /api/data?category=... (Vercel Blob),
+    // dengan fallback ke file JSON statis lokal (/data/*.json).
     // ========================================================
-    async function fetchJsonData(filename, arrayKey) {
+    async function fetchCloudOrJsonData(filename, arrayKey) {
+        const category = filename.replace('.json', '');
+
+        // 1. Coba fetch dari Serverless Real-time API (/api/data?category=...)
+        try {
+            const apiBase = getApiBasePath();
+            const res = await fetch(`${apiBase}data?category=${encodeURIComponent(category)}&t=${Date.now()}`, {
+                cache: 'no-store'
+            });
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.success && json.data !== undefined) {
+                    return {
+                        data: json.data,
+                        version: json.version || Date.now(),
+                        source: json.source || 'vercel-blob'
+                    };
+                }
+            }
+        } catch (apiErr) {
+            // Lanjutkan ke fallback JSON statis lokal
+        }
+
+        // 2. Fallback: fetch dari file JSON statis lokal (/data/*.json)
         try {
             const base = getJsonBasePath();
             const res = await fetch(`${base}${filename}?v=${Date.now()}`, {
@@ -798,16 +908,20 @@ const BBC_STORE = (function () {
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
-            return { data: json[arrayKey] !== undefined ? json[arrayKey] : [], version: json._version || 0 };
+            return {
+                data: json[arrayKey] !== undefined ? json[arrayKey] : [],
+                version: json._version || 0,
+                source: 'local-static-json'
+            };
         } catch (e) {
-            console.warn(`[BBC_STORE] Gagal fetch ${filename}:`, e.message);
+            console.warn(`[BBC_STORE] Gagal fetch data ${filename}:`, e.message);
             return null;
         }
     }
 
     /**
      * initialize() — Harus dipanggil satu kali sebelum render halaman.
-     * Sinkronkan data dari JSON statis (/data/*.json) ke LocalStorage jika ada pembaruan versi.
+     * Sinkronkan data dari Cloud Realtime Vercel Blob / JSON statis ke LocalStorage jika ada pembaruan versi.
      * @returns {Promise<void>}
      */
     async function initialize() {
@@ -821,14 +935,18 @@ const BBC_STORE = (function () {
         ];
 
         await Promise.all(tasks.map(async (task) => {
-            const result = await fetchJsonData(task.file, task.key);
-            if (!result) return; // gagal fetch, pakai data localStorage
+            const result = await fetchCloudOrJsonData(task.file, task.key);
+            if (!result) return; // gagal fetch, pakai data localStorage yang ada
 
             const storedVersion = parseInt(localStorage.getItem(task.verKey) || '0', 10);
             const existingData = localStorage.getItem(task.storageKey);
 
-            // Override localStorage jika: (1) belum ada data, atau (2) versi JSON lebih baru
-            if (!existingData || result.version > storedVersion) {
+            // Override localStorage jika:
+            // 1. Data berasal dari Vercel Blob dan versinya >= versi lokal
+            // 2. Belum ada data di localStorage
+            // 3. Versi cloud/JSON lebih baru dari versi yang tersimpan
+            const isFromCloud = result.source === 'vercel-blob';
+            if (!existingData || (isFromCloud && result.version >= storedVersion) || result.version > storedVersion) {
                 if (task.key === 'hero' && result.data && typeof result.data === 'object') {
                     memoryHeroCache = result.data;
                     let ok = writeStorage(task.storageKey, result.data);
@@ -841,7 +959,8 @@ const BBC_STORE = (function () {
                     writeStorage(task.storageKey, result.data);
                 }
                 localStorage.setItem(task.verKey, String(result.version));
-                console.info(`[BBC_STORE] Data '${task.key}' diperbarui dari JSON (v${result.version}).`);
+                const srcLabel = isFromCloud ? 'Vercel Blob ☁️' : 'JSON Statis 📁';
+                console.info(`[BBC_STORE] Data '${task.key}' tersinkronisasi dari ${srcLabel} (v${result.version}).`);
             }
         }));
     }
@@ -997,6 +1116,11 @@ const BBC_STORE = (function () {
         setMediaBlob,
         getMediaBlob,
         deleteMediaBlob,
+
+        // Vercel Real-time Cloud Helpers
+        syncToVercel,
+        uploadToBlob,
+        checkBlobStatus,
 
         // Static JSON sync
         initialize,

@@ -5,35 +5,81 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
-2. [v3.3.0 — Refaktor Menyeluruh Seluruh Halaman HTML Menjadi PHP (.php) & Harmonisasi Sistem](#-v330---refaktor-menyeluruh-seluruh-halaman-html-menjadi-php-php--harmonisasi-sistem)
-3. [v3.2.1 — Pengalihan Penuh ke Vercel Blob Public Access (`access: 'public'`) & Direct CDN URLs](#-v321---pengalihan-penuh-ke-vercel-blob-public-access-access-public--direct-cdn-urls)
-4. [v3.2.0 — Integrasi Vercel Blob SDK (@vercel/blob) & Cloud Storage Database "bbc-baznas-db"](#-v320---integrasi-vercel-blob-sdk-vercelblob--cloud-storage-database-bbc-baznas-db)
-5. [v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine](#-v310---optimalisasi--dukungan-penuh-database-mariadb-mariadb-10x--11x--deteksi-otomatis-engine)
-6. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
-7. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
-8. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
-9. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
-10. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
-11. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-12. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-13. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-14. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-15. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-16. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-17. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-18. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-19. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-20. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-21. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-22. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-23. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-24. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-25. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-26. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-27. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-28. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-29. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+2. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+3. [v3.3.0 — Refaktor Menyeluruh Seluruh Halaman HTML Menjadi PHP (.php) & Harmonisasi Sistem](#-v330---refaktor-menyeluruh-seluruh-halaman-html-menjadi-php-php--harmonisasi-sistem)
+4. [v3.2.1 — Pengalihan Penuh ke Vercel Blob Public Access (`access: 'public'`) & Direct CDN URLs](#-v321---pengalihan-penuh-ke-vercel-blob-public-access-access-public--direct-cdn-urls)
+5. [v3.2.0 — Integrasi Vercel Blob SDK (@vercel/blob) & Cloud Storage Database "bbc-baznas-db"](#-v320---integrasi-vercel-blob-sdk-vercelblob--cloud-storage-database-bbc-baznas-db)
+6. [v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine](#-v310---optimalisasi--dukungan-penuh-database-mariadb-mariadb-10x--11x--deteksi-otomatis-engine)
+7. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
+8. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
+9. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
+10. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
+11. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+12. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+13. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+14. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+15. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+16. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+17. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+18. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+19. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+20. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+21. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+22. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+23. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+24. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+25. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+26. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+27. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+28. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+29. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+30. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"refactor, setiap data yang di input, di edit dan dihapus akan secara realtime berubah di vercel"*
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Serverless Function Vercel untuk Mutasi Real-time (`api/data.js`):**
+   - Menggunakan SDK resmi `@vercel/blob` terhubung ke store `bbc-baznas-db` dengan akses publik (`access: 'public'`).
+   - Mendukung metode `POST`: Menerima mutasi data utuh (tambah, edit, atau hapus) dari CMS dan menyimpannya secara instan ke cloud Blob (`data/{category}.json`) dengan opsi `addRandomSuffix: false` serta metadata `_version` dan `_updatedAt`.
+   - Mendukung metode `GET`: Mengambil data teranyar langsung dari Vercel Blob dengan header anti-caching (`Cache-Control: no-cache, no-store, must-revalidate, max-age=0`), dengan fallback ke data statis lokal jika token Blob belum terkonfigurasi.
+2. **Serverless Upload Media ke Vercel Blob CDN (`api/upload.js`):**
+   - Menerima file biner dari input foto CMS (pemain, galeri, berita, pengurus) dan menyimpannya langsung ke Vercel Blob CDN.
+   - Mengembalikan URL permanen publik berkecepatan tinggi (`https://...public.blob.vercel-storage.com/...`) untuk langsung disematkan pada data entitas.
+3. **Endpoint Health & Monitoring Vercel Blob (`api/status.js`):**
+   - Memvalidasi keterhubungan serverless function dengan Vercel Blob store secara real-time.
+4. **Integrasi Client-Side Store Reaktif (`js/data/store.js`):**
+   - Menambahkan fungsi `syncToVercel(category, data)` yang otomatis memicu `POST /api/data?category=...` di latar belakang secara asinkron tanpa mengganggu responsivitas UI CMS.
+   - Menghubungkan `syncToVercel` ke fungsi `syncToFile()`, sehingga seluruh operasi penambahan, perubahan, dan penghapusan data (`savePlayer`, `deletePlayer`, `setPlayerOfTheMonth`, `saveEvent`, `deleteEvent`, `saveGalleryItem`, `deleteGalleryItem`, `saveArticle`, `deleteArticle`, `saveOfficial`, `deleteOfficial`, `saveHeroSettings`, `resetHeroSettings`) langsung tersinkronisasi ke Vercel secara real-time.
+   - Mengembangkan fungsi inisialisasi `initialize()` dan `fetchCloudOrJsonData()` agar memprioritaskan pengambilan data live dari Vercel Blob saat halaman pertama kali dimuat oleh pengunjung manapun di seluruh dunia.
+   - Menyediakan helper global: `BBC_STORE.syncToVercel`, `BBC_STORE.uploadToBlob`, dan `BBC_STORE.checkBlobStatus`.
+5. **Reaktivitas Antarmuka CMS & Tab Pengunjung (`js/pages/cms.js`, `pages/cms.html`, `js/data/live-sync.js`):**
+   - Form upload media di CMS mengunggah file langsung ke Vercel Blob CDN dengan fallback lokal.
+   - Menambahkan pengecekan status di topbar CMS sehingga menampilkan lencana `🟢 Vercel Real-time Sync: Aktif`.
+   - Menambahkan event listener `visibilitychange` pada `live-sync.js` agar halaman otomatis me-refresh data teranyar dari cloud saat tab browser kembali aktif.
+6. **Konfigurasi Proyek & Runtime Vercel (`package.json` & `vercel.json`):**
+   - Menambahkan dependensi `@vercel/blob: "^0.27.1"` pada `package.json` (versi `4.1.0`).
+   - Mengonfigurasi runtime serverless Node.js 20 (`"api/**/*.js": { "runtime": "nodejs20.x" }`) dan routing API tanpa cache pada `vercel.json`.
+
+### 📂 Berkas yang Dimodifikasi & Dibuat
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penambahan dependensi `@vercel/blob` & update versi ke `4.1.0`.
+- [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) — Konfigurasi runtime serverless Node.js 20, routes `/api/(.*)`, dan header anti-cache.
+- [`api/data.js`](file:///e:/Ikrom%20Docs/bbc-website/api/data.js) [BARU] — Endpoint CRUD real-time Vercel Blob untuk semua kategori data.
+- [`api/upload.js`](file:///e:/Ikrom%20Docs/bbc-website/api/upload.js) [BARU] — Endpoint upload media foto ke CDN publik Vercel Blob.
+- [`api/status.js`](file:///e:/Ikrom%20Docs/bbc-website/api/status.js) [BARU] — Endpoint pemantauan status koneksi Vercel Blob.
+- [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js) — Implementasi `syncToVercel`, `uploadToBlob`, `checkBlobStatus`, auto-sync pada `syncToFile`, dan cloud priority pada `initialize()`.
+- [`js/data/live-sync.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/live-sync.js) — Penambahan auto-sync background saat tab browser aktif kembali (`visibilitychange`).
+- [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js) — Integrasi upload Vercel Blob pada form media dan pembaruan deteksi status realtime.
+- [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) — Pembaruan teks dan styling badge topbar CMS untuk real-time Vercel sync.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Dokumentasi riwayat perubahan versi v4.1.0 sesuai aturan `AGENTS.md`.
+
+---
 
 ---
 
