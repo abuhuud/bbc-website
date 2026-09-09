@@ -218,7 +218,94 @@ const BBC_STORE = (function () {
     }
 
     /**
-     * Sinkronisasi data ke backend PHP MySQL REST API dan fallback lokal
+     * Sinkronisasi data kategori utuh ke Vercel Blob store bbc-baznas-db
+     */
+    async function syncToBlob(category, data = null) {
+        if (!category) return null;
+        try {
+            const base = getApiBasePath();
+            let payload = data;
+            if (!payload) {
+                if (category === 'players') payload = getPlayers();
+                else if (category === 'events') payload = getEvents();
+                else if (category === 'gallery') payload = getGallery();
+                else if (category === 'articles') payload = getArticles();
+                else if (category === 'officials') payload = getOfficials();
+                else if (category === 'hero') payload = getHeroSettings();
+            }
+            if (!payload) return null;
+
+            const res = await fetch(`${base}blob/data?category=${encodeURIComponent(category)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                const json = await res.json();
+                console.info(`[BBC_STORE] ☁️ Terupdate di Vercel Blob (bbc-baznas-db): ${category}`);
+                return json;
+            }
+        } catch (e) {
+            // Background enhancement
+        }
+        return null;
+    }
+
+    /**
+     * Upload file media langsung ke Vercel Blob (bbc-baznas-db)
+     * @param {File|Blob} file
+     * @param {string} folder - 'avatars' | 'gallery' | 'articles' | 'hero'
+     * @param {'public'|'private'} access
+     * @returns {Promise<{url: string, pathname: string, contentType: string}|null>}
+     */
+    async function uploadToBlob(file, folder = 'avatars', access = 'public') {
+        if (!file) return null;
+        try {
+            const base = getApiBasePath();
+            const filename = encodeURIComponent(file.name || `file-${Date.now()}`);
+            const res = await fetch(`${base}avatar/upload?filename=${filename}&folder=${folder}&access=${access}`, {
+                method: 'POST',
+                body: file
+            });
+            if (res.ok) {
+                return await res.json();
+            }
+        } catch (e) {
+            console.warn('[BBC_STORE] uploadToBlob failed:', e);
+        }
+        return null;
+    }
+
+    /**
+     * Cek status koneksi Vercel Blob store bbc-baznas-db
+     */
+    async function checkBlobStatus() {
+        try {
+            const base = getApiBasePath();
+            const res = await fetch(`${base}blob/status?t=${Date.now()}`);
+            if (!res.ok) return { success: false, status: 'error' };
+            return await res.json();
+        } catch (e) {
+            return { success: false, status: 'error', error: e.message };
+        }
+    }
+
+    /**
+     * Jalankan seeder data ke Vercel Blob store bbc-baznas-db
+     */
+    async function triggerBlobSeed() {
+        try {
+            const base = getApiBasePath();
+            const res = await fetch(`${base}blob/seed?t=${Date.now()}`, { method: 'POST' });
+            if (!res.ok) return { success: false, error: `HTTP ${res.status}` };
+            return await res.json();
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Sinkronisasi data ke backend PHP MySQL/MariaDB REST API, Vercel Blob, dan fallback lokal
      * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
      * @param {string} [action='SAVE'] - 'SAVE' | 'DELETE' | 'POTM'
      * @param {object} [payload=null] - objek data spesifik yang dimutasi
@@ -227,10 +314,13 @@ const BBC_STORE = (function () {
         const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
 
-        // 1. Sinkronisasi langsung ke Database MySQL via PHP REST API
+        // 1. Sinkronisasi langsung ke Database MariaDB/MySQL via PHP REST API
         syncToApi(category, action, payload);
 
-        // 2. Auto-Deploy Vercel jika konfigurasi GitHub aktif
+        // 2. Sinkronisasi langsung ke Vercel Blob (bbc-baznas-db)
+        syncToBlob(category);
+
+        // 3. Auto-Deploy Vercel jika konfigurasi GitHub aktif
         if (typeof BBC_GITHUB !== 'undefined' && typeof BBC_GITHUB.triggerAutoDeploy === 'function') {
             BBC_GITHUB.triggerAutoDeploy(category);
         }
@@ -1136,6 +1226,12 @@ const BBC_STORE = (function () {
         callApi,
         checkApiHealth,
         triggerSeed,
+
+        // Vercel Blob (bbc-baznas-db) helpers
+        syncToBlob,
+        uploadToBlob,
+        checkBlobStatus,
+        triggerBlobSeed,
 
         // Static JSON sync (DEPLOYMENT FIX)
         initialize,

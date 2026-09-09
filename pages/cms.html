@@ -887,6 +887,87 @@
                     </div>
                 </div>
 
+                <!-- ============================================================
+                     PANEL: VERCEL BLOB DATABASE & MEDIA STORAGE (bbc-baznas-db)
+                     ============================================================ -->
+                <div class="cms-card" id="vercel-blob-panel"
+                    style="border-top: 6px solid #0284C7; background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); margin-top: 18px; box-shadow: 4px 4px 0 var(--cms-dark);">
+
+                    <!-- Header -->
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+                        <div class="pixel-badge" style="background: #0284C7; color: white; font-size: 0.75rem;">
+                            ☁️ VERCEL BLOB (bbc-baznas-db)
+                        </div>
+                        <span class="pixel-badge" id="blob-status-badge"
+                            style="font-size: 0.65rem; padding: 3px 10px; background: #64748B; color: white;">
+                            ⏳ MEMERIKSA VERCEL BLOB...
+                        </span>
+                        <span class="pixel-badge pixel-badge--yellow" id="blob-store-badge"
+                            style="font-size: 0.65rem;">
+                            STORE: bbc-baznas-db
+                        </span>
+                    </div>
+
+                    <h3 class="cms-backup-title" style="color: #0369A1; font-size: 1.25rem;">PENYIMPANAN DATA &amp; MEDIA CLOUD VERCEL BLOB</h3>
+                    <p class="cms-backup-desc" style="color: #0284C7; font-weight: 500; line-height: 1.6;">
+                        Terkoneksi langsung ke Vercel Blob store <strong><code>bbc-baznas-db</code></strong> menggunakan SDK resmi <code>@vercel/blob</code>. Seluruh file gambar avatar, foto aksi pemain, cover artikel, dan file data JSON tersimpan secara permanen pada CDN global Vercel tanpa batasan ukuran payload memori lokal.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0;">
+                        <!-- Status Card -->
+                        <div style="background: white; border: 2.5px solid #0284C7; border-radius: 10px; padding: 16px; box-shadow: 2.5px 2.5px 0 var(--cms-dark);">
+                            <div style="font-size: 0.72rem; font-weight: 800; color: #0369A1; letter-spacing: 0.05em; margin-bottom: 10px;">
+                                📊 STATUS VERCEL BLOB STORE
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+                                    <span style="color: #64748B;">Blob Store Name:</span>
+                                    <strong style="color: #0D1612;">bbc-baznas-db</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+                                    <span style="color: #64748B;">Status Koneksi:</span>
+                                    <strong id="blob-info-connected" style="color: #D97706;">Memeriksa...</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 6px;">
+                                    <span style="color: #64748B;">Total File Tersimpan:</span>
+                                    <strong id="blob-info-count" style="color: #0D1612;">-</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #64748B;">Endpoint Status:</span>
+                                    <a href="../api/blob/status" target="_blank" rel="noopener" style="color: #0284C7; font-weight: 700; text-decoration: underline;">/api/blob/status ↗</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Card -->
+                        <div style="background: white; border: 2.5px solid #0D1612; border-radius: 10px; padding: 16px; box-shadow: 2.5px 2.5px 0 var(--cms-dark); display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <div style="font-size: 0.72rem; font-weight: 800; color: #0D1612; letter-spacing: 0.05em; margin-bottom: 8px;">
+                                    ⚡ SINKRONKAN SEMUA DATA KE BLOB
+                                </div>
+                                <p style="font-size: 0.78rem; color: #475569; line-height: 1.5; margin: 0 0 12px 0;">
+                                    Unggah seluruh database JSON lokal (pemain, jadwal, pengurus, galeri, berita, hero) sekaligus ke Vercel Blob store <code>bbc-baznas-db</code> dalam 1-klik.
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" id="btn-seed-blob" class="btn btn-primary btn-sm"
+                                    style="flex: 1; min-width: 170px; justify-content: center; background: #0284C7; border-color: #0D1612; box-shadow: 3px 3px 0 #0D1612; font-size: 0.82rem; padding: 10px 14px;">
+                                    <span>⚡ SEED KE VERCEL BLOB</span>
+                                </button>
+                                <button type="button" id="btn-test-blob" class="btn btn-outline btn-sm"
+                                    style="border-color: #0D1612; font-size: 0.8rem; padding: 10px 14px;">
+                                    <span>🔄 CEK STATUS</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #E0F2FE; border: 2px solid #38BDF8; border-radius: 8px; padding: 12px 14px; font-size: 0.75rem; color: #0369A1; line-height: 1.6;">
+                        <strong>💡 Konfigurasi Vercel Blob:</strong> Pastikan Anda telah mengaitkan store <code>bbc-baznas-db</code> di Vercel Dashboard (Storage → Blob → Connect to Project). Variabel <code>BLOB_READ_WRITE_TOKEN</code> dan <code>db_STORE_ID</code> otomatis terkonfigurasi.
+                    </div>
+                </div>
+
                 <!-- Panel Export JSON lama (tetap ada sebagai alternatif) -->
                 <details style="margin: 0;">
                     <summary style="cursor: pointer; padding: 12px 16px; background: #F8FAFC; border: 2px solid #E2E8F0; border-radius: 8px; font-size: 0.82rem; font-weight: 700; color: #475569; list-style: none; display: flex; align-items: center; gap: 8px;">

@@ -592,7 +592,182 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ========================================================
+    /**
+     * Update UI status Vercel Blob storage (bbc-baznas-db)
+     */
+    async function updateBlobStatusUI(forceRefresh = false) {
+        const badge = document.getElementById('blob-connection-badge');
+        const storeBadge = document.getElementById('blob-store-id-badge');
+        const infoConnected = document.getElementById('blob-info-connected');
+        const infoStoreId = document.getElementById('blob-info-store-id');
+        const infoCount = document.getElementById('blob-info-count');
+
+        try {
+            const status = await BBC_STORE.checkBlobStatus(forceRefresh);
+
+            if (status && status.success && status.connected) {
+                if (badge) {
+                    badge.textContent = '🟢 TERHUBUNG KE VERCEL BLOB';
+                    badge.style.background = '#059669';
+                    badge.style.color = '#FFFFFF';
+                }
+                if (storeBadge) {
+                    storeBadge.style.display = '';
+                    storeBadge.textContent = `STORE: ${status.storeId || 'bbc-baznas-db'}`;
+                }
+                if (infoConnected) {
+                    infoConnected.innerHTML = `<span style="color:#059669;font-weight:800;">✅ Terhubung (${status.storeName || 'bbc-baznas-db'})</span>`;
+                }
+                if (infoStoreId) {
+                    infoStoreId.textContent = status.storeId || 'bbc-baznas-db';
+                }
+                if (infoCount) {
+                    infoCount.textContent = `${status.blobCount || 0} file tersimpan di bbc-baznas-db`;
+                }
+                return true;
+            } else {
+                if (badge) {
+                    badge.textContent = '⚪ STANDBY (LOCAL FALLBACK)';
+                    badge.style.background = '#F59E0B';
+                    badge.style.color = '#1E1B4B';
+                }
+                if (storeBadge) {
+                    storeBadge.style.display = 'none';
+                }
+                if (infoConnected) {
+                    const reason = (status && status.error) ? ` (${status.error})` : '';
+                    infoConnected.innerHTML = `<span style="color:#D97706;font-weight:700;">⚠️ Standby / Token belum diset${reason}</span>`;
+                }
+                if (infoStoreId) {
+                    infoStoreId.textContent = 'BLOB_READ_WRITE_TOKEN / db_STORE_ID belum diset di Vercel';
+                }
+                if (infoCount) {
+                    infoCount.textContent = '0 file (offline / fallback)';
+                }
+                return false;
+            }
+        } catch (err) {
+            if (badge) {
+                badge.textContent = '⚠️ GAGAL CEK BLOB';
+                badge.style.background = '#EF4444';
+                badge.style.color = '#FFFFFF';
+            }
+            if (infoConnected) {
+                infoConnected.innerHTML = `<span style="color:#DC2626;font-weight:700;">❌ Terputus (${err.message || 'Network Error'})</span>`;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Inisialisasi event listener panel Vercel Blob di tab Backup
+     */
+    function initBlobUI() {
+        updateBlobStatusUI();
+
+        // Tombol Test Koneksi Vercel Blob
+        const btnTestBlob = document.getElementById('btn-test-blob');
+        if (btnTestBlob && !btnTestBlob._blobWired) {
+            btnTestBlob._blobWired = true;
+            btnTestBlob.addEventListener('click', async () => {
+                btnTestBlob.disabled = true;
+                btnTestBlob.innerHTML = '<span>⏳ Memeriksa Blob...</span>';
+                const isOnline = await updateBlobStatusUI(true);
+                btnTestBlob.disabled = false;
+                btnTestBlob.innerHTML = '<span>🔄 CEK KONEKSI BLOB</span>';
+                if (isOnline) {
+                    showToast('✅ Berhasil terhubung ke Vercel Blob (bbc-baznas-db)!');
+                } else {
+                    showToast('⚠️ Vercel Blob belum terhubung. Pastikan BLOB_READ_WRITE_TOKEN sudah diatur di Vercel.', 'warning');
+                }
+            });
+        }
+
+        // Tombol Seed / Sinkronkan Seluruh Data ke Vercel Blob
+        const btnSeedBlob = document.getElementById('btn-seed-blob');
+        if (btnSeedBlob && !btnSeedBlob._blobWired) {
+            btnSeedBlob._blobWired = true;
+            btnSeedBlob.addEventListener('click', async () => {
+                const confirmed = confirm('Apakah Anda yakin ingin menyinkronkan seluruh data (Pemain, Jadwal, Galeri, Berita, Pengurus, Hero) ke Vercel Blob database "bbc-baznas-db"?');
+                if (!confirmed) return;
+
+                btnSeedBlob.disabled = true;
+                btnSeedBlob.innerHTML = '<span>⏳ Menyinkronkan ke Blob...</span>';
+
+                try {
+                    const result = await BBC_STORE.triggerBlobSeed();
+                    if (result && result.success) {
+                        showToast('🎉 Berhasil! Seluruh data telah disinkronkan ke Vercel Blob (bbc-baznas-db).');
+                        await updateBlobStatusUI(true);
+                    } else {
+                        const errMsg = (result && result.error) ? result.error : 'Gagal seed ke Vercel Blob.';
+                        showToast(`❌ Sinkronisasi gagal: ${errMsg}`, 'error');
+                    }
+                } catch (err) {
+                    showToast(`❌ Error sinkronisasi Blob: ${err.message}`, 'error');
+                } finally {
+                    btnSeedBlob.disabled = false;
+                    btnSeedBlob.innerHTML = '<span>☁️ SINKRONKAN SELURUH DATA KE VERCEL BLOB</span>';
+                }
+            });
+        }
+
+        // Auto-upload hook untuk semua form media
+        attachBlobAutoUpload('player-file', 'player-image', 'player-preview', 'players');
+        attachBlobAutoUpload('gallery-file', 'gallery-image', 'gallery-preview', 'gallery');
+        attachBlobAutoUpload('official-file', 'official-image', 'official-preview', 'officials', () => {
+            if (typeof updateOfficialPreview === 'function') updateOfficialPreview();
+        });
+        attachBlobAutoUpload('article-file', 'article-image', 'article-preview', 'articles');
+    }
+
+    /**
+     * Helper universal untuk upload file langsung ke Vercel Blob (bbc-baznas-db)
+     * dengan fallback otomatis ke Data URL (Base64).
+     */
+    function attachBlobAutoUpload(fileInputId, urlInputId, previewElId, folder, onDone) {
+        const fileInput = document.getElementById(fileInputId);
+        const urlInput = document.getElementById(urlInputId);
+        if (!fileInput || !urlInput || fileInput._blobAutoWired) return;
+        fileInput._blobAutoWired = true;
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            // 1. Coba upload langsung ke Vercel Blob (bbc-baznas-db)
+            try {
+                showToast(`⏳ Mengunggah "${file.name}" ke Vercel Blob...`);
+                const res = await BBC_STORE.uploadToBlob(file, folder, 'public');
+                if (res && res.success && res.url) {
+                    urlInput.value = res.url;
+                    const previewEl = document.getElementById(previewElId);
+                    if (previewEl) {
+                        previewEl.innerHTML = `<img src="${res.url}" alt="Preview">`;
+                    }
+                    showToast(`☁️ File tersimpan di Vercel Blob (bbc-baznas-db)!`, 'success');
+                    if (typeof onDone === 'function') onDone(res.url);
+                    return;
+                }
+            } catch (err) {
+                console.warn('[BlobAutoUpload] Gagal upload ke Blob, fallback ke Base64:', err);
+            }
+
+            // 2. Fallback: Base64 data URL
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const dataUrl = evt.target.result;
+                urlInput.value = dataUrl;
+                const previewEl = document.getElementById(previewElId);
+                if (previewEl) {
+                    previewEl.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
+                }
+                showToast('ℹ️ Foto dimuat sebagai Data URL (Lokal/Standby).', 'info');
+                if (typeof onDone === 'function') onDone(dataUrl);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
     // 4. COLLAPSIBLE LEFT SIDEBAR & TAB SWITCHING (DESKTOP, TABLET & MOBILE)
     // ========================================================
     const tabPanes = document.querySelectorAll('.cms-tab-pane');
@@ -801,6 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target === 'backup') {
             initFsUI();
             initDatabaseUI();
+            initBlobUI();
         }
 
         // Close mobile drawer if opened on mobile devices
@@ -1466,6 +1642,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Coba upload ke Vercel Blob (bbc-baznas-db)
+            try {
+                showToast(`⏳ Mengunggah foto aksi ke Vercel Blob...`);
+                const res = await BBC_STORE.uploadToBlob(file, 'players/gallery', 'public');
+                if (res && res.success && res.url) {
+                    document.getElementById('pg-photo-url').value = res.url;
+                    const previewBox = document.getElementById('pg-preview-box');
+                    if (previewBox) {
+                        previewBox.innerHTML = `<img src="${res.url}" alt="Preview">`;
+                    }
+                    showToast(`☁️ Foto tersimpan di Vercel Blob!`, 'success');
+                    return;
+                }
+            } catch (err) {
+                console.warn('[CMS] Blob upload error, fallback ke base64:', err);
+            }
+
             // Fallback: base64
             const reader = new FileReader();
             reader.onload = (evt) => {
@@ -1475,6 +1668,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (previewBox) {
                     previewBox.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
                 }
+                showToast(`ℹ️ Foto dimuat sebagai Data URL (Lokal/Standby).`, 'info');
             };
             reader.readAsDataURL(file);
         });
@@ -1511,24 +1705,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // File upload for main player photo with FileReader
-    const playerFileInput = document.getElementById('player-file');
-    if (playerFileInput) {
-        playerFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const dataUrl = evt.target.result;
-                document.getElementById('player-image').value = dataUrl;
-                const previewEl = document.getElementById('player-preview');
-                if (previewEl) {
-                    previewEl.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    // File upload for main player photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
 
     if (formPlayer) {
         formPlayer.addEventListener('submit', (e) => {
@@ -2423,18 +2600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (officialGenderInput) {
         officialGenderInput.addEventListener('change', updateOfficialPreview);
     }
-    if (officialFileInput) {
-        officialFileInput.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                if (officialImageInput) officialImageInput.value = evt.target.result;
-                updateOfficialPreview();
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    // File upload for official photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
 
     if (formOfficial) {
         formOfficial.addEventListener('submit', (e) => {
@@ -2894,6 +3060,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
+                    // Coba upload ke Vercel Blob (bbc-baznas-db)
+                    try {
+                        const res = await BBC_STORE.uploadToBlob(file, 'hero', 'public');
+                        if (res && res.success && res.url) {
+                            if (fMainUrl) fMainUrl.value = res.url;
+                            updatePreview();
+                            showToast('☁️ Foto utama tersimpan di Vercel Blob!', 'success');
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn('[CMS] Blob upload error, fallback ke kompresi:', err);
+                    }
+
                     // Fallback: base64 dengan kompresi optimal
                     showToast('⏳ Mengompres foto utama...');
                     try {
@@ -2925,6 +3104,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         } catch (err) {
                             console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
                         }
+                    }
+
+                    // Coba upload ke Vercel Blob
+                    try {
+                        const res = await BBC_STORE.uploadToBlob(file, 'hero', 'public');
+                        if (res && res.success && res.url) {
+                            if (fThumb1Url) fThumb1Url.value = res.url;
+                            updatePreview();
+                            showToast('☁️ Foto mini 1 tersimpan di Vercel Blob!', 'success');
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn('[CMS] Blob upload error, fallback ke kompresi:', err);
                     }
 
                     showToast('⏳ Mengompres foto mini 1...');
@@ -2959,6 +3151,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
+                    // Coba upload ke Vercel Blob
+                    try {
+                        const res = await BBC_STORE.uploadToBlob(file, 'hero', 'public');
+                        if (res && res.success && res.url) {
+                            if (fThumb2Url) fThumb2Url.value = res.url;
+                            updatePreview();
+                            showToast('☁️ Foto mini 2 tersimpan di Vercel Blob!', 'success');
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn('[CMS] Blob upload error, fallback ke kompresi:', err);
+                    }
+
                     showToast('⏳ Mengompres foto mini 2...');
                     try {
                         const base64 = await compressHeroImageFile(file, 480, 300, 0.72);
@@ -2982,6 +3187,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     applyMediaTypeToggle('video');
                     showToast('⏳ Memproses file video...');
+
+                    // Coba upload ke Vercel Blob jika ukuran <= 4.5MB (limit server upload Vercel)
+                    if (file.size <= 4.5 * 1024 * 1024) {
+                        try {
+                            showToast('⏳ Mengunggah video ke Vercel Blob...');
+                            const res = await BBC_STORE.uploadToBlob(file, 'hero/videos', 'public');
+                            if (res && res.success && res.url) {
+                                if (fVideoUrl) fVideoUrl.value = res.url;
+                                updatePreview(file);
+                                showToast('☁️ Video hero berhasil diunggah ke Vercel Blob!', 'success');
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('[CMS] Video upload to Blob failed, fallback ke Base64/IndexedDB:', err);
+                        }
+                    }
+
                     try {
                         // Jika ukuran <= 10MB, simpan sebagai Data URL agar kompatibel penuh dengan Vercel & pengunjung online!
                         if (file.size <= 10 * 1024 * 1024) {
@@ -3075,6 +3297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAll();
         initHeroSettings();
         initDatabaseUI();
+        initBlobUI();
         switchTab('dashboard');
     } else {
         document.body.classList.add('cms-auth-required');
