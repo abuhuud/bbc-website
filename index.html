@@ -73,26 +73,26 @@
                             style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
                             <a href="pages/schedule.html" class="btn btn-primary" id="hero-schedule-cta">
                                 <span>LIHAT JADWAL</span>
-                                <span style="font-family: var(--font-pixel);">🏸</span>
+                                <span class="btn-arrow">🏸</span>
                             </a>
                             <a href="pages/players.html" class="btn btn-outline" id="hero-players-cta">
                                 <span>KENALI PEMAIN</span>
-                                <span style="font-family: var(--font-pixel);">→</span>
+                                <span class="btn-arrow">→</span>
                             </a>
                             <a href="https://www.instagram.com/baznas_badmintonclub/" target="_blank"
                                 rel="noopener noreferrer" class="btn btn-sm btn-yellow" data-bind-instagram
                                 id="hero-ig-link" style="gap: 8px;">
                                 <span>FOLLOW BBC</span>
-                                <span style="font-family: var(--font-pixel);">↗</span>
+                                <span class="btn-arrow btn-arrow--up-right">↗</span>
                             </a>
                         </div>
-                    </div>           </div>
+                    </div>
 
                     <!-- Right Hero Visual Collage -->
                     <div class="hero-collage" style="position: relative;">
                         <!-- Isometric Court Green Lines Accent -->
                         <div
-                            style="position: absolute; -inset: 14px; border: 3px dashed var(--color-primary); border-radius: var(--radius-xl); pointer-events: none; opacity: 0.45;">
+                            style="position: absolute; inset: -14px; border: 3px dashed var(--color-primary); border-radius: var(--radius-xl); pointer-events: none; opacity: 0.45;">
                         </div>
 
                         <!-- Main Collage Box -->
@@ -144,13 +144,13 @@
                             </div>
 
                             <!-- Decorative Floating Pixel Badges -->
-                            <div class="anim-float" style="position: absolute; -top: 18px; -right: 16px; z-index: 3;">
+                            <div class="anim-float" style="position: absolute; top: -18px; right: -16px; z-index: 3;">
                                 <div class="pixel-sticker pixel-sticker--yellow sticker-tilt-right"
                                     style="font-size: 0.9rem; padding: 8px 16px; box-shadow: 4px 4px 0px var(--color-dark);">
                                     PLAY! 🏸
                                 </div>
                             </div>
-                            <div style="position: absolute; -bottom: 16px; -left: 14px; z-index: 3;">
+                            <div style="position: absolute; bottom: -16px; left: -14px; z-index: 3;">
                                 <div class="pixel-badge pixel-badge--green"
                                     style="box-shadow: 4px 4px 0px var(--color-dark); font-size: 0.75rem;">
                                     #BBC_BAZNAS
@@ -209,7 +209,7 @@
                         <span class="pixel-badge pixel-badge--green" id="agenda-period-badge">JANGAN LEWATKAN JADWAL
                             🏸</span>
                         <a href="pages/schedule.html" class="btn btn-sm btn-outline">SEMUA JADWAL <span
-                                style="font-family: var(--font-pixel);">→</span></a>
+                                class="btn-arrow">→</span></a>
                     </div>
                 </div>
 
@@ -281,7 +281,7 @@
                         </p>
                         <a href="pages/profile.html" class="btn btn-outline">
                             <span>KENALAN DENGAN BBC</span>
-                            <span style="font-family: var(--font-pixel);">→</span>
+                            <span class="btn-arrow">→</span>
                         </a>
                     </div>
 
@@ -335,7 +335,7 @@
                     </div>
                     <a href="pages/players.html" class="btn btn-outline">
                         <span>LIHAT SEMUA PEMAIN</span>
-                        <span style="font-family: var(--font-pixel);">→</span>
+                        <span class="btn-arrow">→</span>
                     </a>
                 </div>
 
@@ -373,7 +373,10 @@
                                 aria-label="Geser Kiri Amilat">←</button>
                             <button type="button" class="squad-scroll-btn"
                                 onclick="document.getElementById('amilat-track').scrollBy({left: 300, behavior: 'smooth'})"
-                                aria-label="Ges                    <div class="squad-row__track" id="amilat-track">
+                                aria-label="Geser Kanan Amilat">→</button>
+                        </div>
+                    </div>
+                    <div class="squad-row__track" id="amilat-track">
                         <!-- Injected by home.js -->
                     </div>
                 </div>
@@ -392,7 +395,7 @@
                     </div>
                     <a href="pages/schedule.html" class="btn btn-sm btn-outline">
                         <span>LIHAT SEMUA JADWAL</span>
-                        <span style="font-family: var(--font-pixel);">→</span>
+                        <span class="btn-arrow">→</span>
                     </a>
                 </div>
 
@@ -494,7 +497,7 @@
                     </div>
                     <a href="pages/news.html" class="btn btn-outline">
                         <span>BACA SEMUA ARTIKEL</span>
-                        <span style="font-family: var(--font-pixel);">→</span>
+                        <span class="btn-arrow">→</span>
                     </a>
                 </div>
 
@@ -546,7 +549,7 @@
                             rel="noopener noreferrer" class="btn btn-yellow" data-bind-instagram
                             style="box-shadow: 4px 4px 0px var(--color-dark); font-size: 1.15rem;">
                             <span>FOLLOW BBC ON INSTAGRAM</span>
-                            <span style="font-family: var(--font-pixel);">↗</span>
+                            <span class="btn-arrow btn-arrow--up-right">↗</span>
                         </a>
                     </div>
 

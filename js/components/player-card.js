@@ -58,7 +58,7 @@ function createPlayerCard(player, options) {
                        style="width: 100%; justify-content: center; box-shadow: 2px 2px 0 var(--color-dark);"
                        aria-label="Lihat profil ${player.name}">
                         <span>LIHAT PROFIL</span>
-                        <span style="font-family: var(--font-pixel);">→</span>
+                        <span class="btn-arrow">→</span>
                     </a>
                 </div>
             </div>

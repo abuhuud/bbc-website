@@ -384,7 +384,7 @@ function createPotmCard(player, isAmilin) {
                 </div>
                 <a href="pages/player-detail.html?slug=${encodeURIComponent(player.slug || (typeof BBC_STORE !== 'undefined' && BBC_STORE.slugify ? BBC_STORE.slugify(player.name) : (typeof BBC_slugify === 'function' ? BBC_slugify(player.name) : player.id)))}" class="btn btn-sm ${isAmilin ? 'btn-primary' : 'btn-coral'}" style="box-shadow: 3px 3px 0 var(--color-dark);">
                     <span>LIHAT PROFIL</span>
-                    <span style="font-family: var(--font-pixel);">→</span>
+                    <span class="btn-arrow">→</span>
                 </a>
             </div>
         </div>

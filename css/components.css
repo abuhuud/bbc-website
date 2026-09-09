@@ -94,13 +94,21 @@
 
 /* Arrow Slide Micro-interaction inside buttons */
 .btn .btn-arrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-pixel);
+  font-size: 0.95em;
+  line-height: 1;
   transition: transform var(--transition-bounce);
 }
 
 .btn:hover .btn-arrow {
   transform: translateX(4px);
+}
+
+.btn:hover .btn-arrow--up-right {
+  transform: translate(3px, -3px);
 }
 
 /* --------------------------------------------------

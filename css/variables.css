@@ -56,7 +56,7 @@
      ================================================== */
   --font-heading: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-pixel: 'Silkscreen', monospace, cursive;
+  --font-pixel: 'Silkscreen', 'Press Start 2P', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', monospace;
 
   /* ==================================================
      LAYOUT & SPACING

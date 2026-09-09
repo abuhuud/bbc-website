@@ -42,11 +42,11 @@ function createNextPlayTicket(event) {
         ? (isCompleted
             ? `<a href="${locationUrl}" target="_blank" rel="noopener noreferrer" class="btn" style="white-space:nowrap; background:#C0392B; color:#fff; border:2px solid #7B1A13; box-shadow:4px 4px 0 #7B1A13;">
                    <span>LIHAT LOKASI</span>
-                   <span style="font-family:var(--font-pixel);">↗</span>
+                   <span class="btn-arrow btn-arrow--up-right">↗</span>
                </a>`
             : `<a href="${locationUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="white-space:nowrap; box-shadow:4px 4px 0px var(--color-dark);">
                    <span>PETUNJUK LOKASI</span>
-                   <span style="font-family:var(--font-pixel);">↗</span>
+                   <span class="btn-arrow btn-arrow--up-right">↗</span>
                </a>`)
         : `<span class="btn btn-disabled" style="white-space:nowrap; opacity:0.6; cursor:default;">
                <span>📍 LOKASI GOR</span>

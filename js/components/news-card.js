@@ -42,7 +42,7 @@ function createNewsCard(article) {
             <div style="margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--color-light-grey);">
                 <a href="${detailBase}article-detail.html?id=${article.id}" class="btn btn-outline btn-sm" aria-label="Baca selengkapnya artikel ${article.title}">
                     <span>BACA CERITA</span>
-                    <span style="font-family: var(--font-pixel);">→</span>
+                    <span class="btn-arrow">→</span>
                 </a>
             </div>
         </div>

@@ -5,9 +5,47 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-2. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-3. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+2. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+3. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+4. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"perbaiki icon2 yang ada"*
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Sanitasi & Optimasi Vektor SVG Icon (`assets/icons/`):**
+   - Membersihkan blok manifest biner C2PA metadata yang membengkak (>8KB) pada [`pixel-racket.svg`](file:///e:/Ikrom%20Docs/bbc-website/assets/icons/pixel-racket.svg) dan [`pixel-shuttlecock.svg`](file:///e:/Ikrom%20Docs/bbc-website/assets/icons/pixel-shuttlecock.svg) agar parsing XML SVG di browser berjalan cepat, bersih, dan bebas dari peringatan keamanan atau kegagalan render.
+2. **Perbaikan Tombol Scroll Icon Amilat yang Terpotong (`index.html`):**
+   - Memperbaiki tombol panah kanan pada deretan squad amilat yang sebelumnya terpotong pada `aria-label="Ges` sehingga ikon panah `→` dan struktur penutup tag `squad-row__controls` hilang.
+3. **Perbaikan Tag Penutup Ganda Layout Hero (`index.html`):**
+   - Mengeliminasi tag penutup `</div>` ekstra pada baris 89 yang sebelumnya menutup container grid `.grid-2` secara prematur dan melempar hero photo collage keluar dari tata letak grid dua kolom.
+4. **Perbaikan Properti CSS Posisi Negatif Hero Floating Badges:**
+   - Memperbaiki `-inset: 14px;`, `-top: 18px; -right: 16px;`, dan `-bottom: 16px; -left: 14px;` menjadi nilai CSS standar yang valid (`inset: -14px;`, `top: -18px; right: -16px;`, `bottom: -16px; left: -14px;`). Lencana floating `PLAY! 🏸` dan `#BBC_BAZNAS` kini tampil presisi dan mengambang di atas frame hero.
+5. **Dukungan Emoji Multi-Platform pada `--font-pixel` (`css/variables.css`):**
+   - Menambahkan font stack emoji resmi (`'Segoe UI Emoji'`, `'Apple Color Emoji'`, `'Noto Color Emoji'`) sebagai fallback pada `--font-pixel` agar emoji bulutangkis (`🏸`, `⚡`, `🔥`, `👑`) tidak tampil sebagai kotak tahu (*tofu*) pada Windows.
+6. **Integrasi Standardisasi `.btn-arrow` Beranimasi Halus:**
+   - Menyelaraskan seluruh ikon panah tombol (`→`, `↗`, `←`, `🏸`) menggunakan class `.btn-arrow` dan `.btn-arrow--up-right` dengan micro-animation interaktif (*slide bounce on hover*) di `index.html`, `js/components/navbar.js`, `js/components/player-card.js`, `js/components/news-card.js`, `js/components/event-card.js`, `js/pages/home.js`, `js/pages/player-detail.js`, dan `pages/cms.html`.
+
+### 📂 Berkas yang Dimodifikasi
+- [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html) — Perbaikan tombol scroll amilat, eliminasi div penutup ekstra hero grid, perbaikan CSS positioning minus, dan standardisasi `.btn-arrow`.
+- [`assets/icons/pixel-racket.svg`](file:///e:/Ikrom%20Docs/bbc-website/assets/icons/pixel-racket.svg) — Pembersihan metadata biner C2PA menjadi vektor murni.
+- [`assets/icons/pixel-shuttlecock.svg`](file:///e:/Ikrom%20Docs/bbc-website/assets/icons/pixel-shuttlecock.svg) — Pembersihan metadata biner C2PA menjadi vektor murni.
+- [`css/variables.css`](file:///e:/Ikrom%20Docs/bbc-website/css/variables.css) — Penambahan fallback Segoe UI Emoji / Apple Color Emoji pada `--font-pixel`.
+- [`css/components.css`](file:///e:/Ikrom%20Docs/bbc-website/css/components.css) — Peningkatan alignment dan micro-interaction `.btn-arrow` & `.btn-arrow--up-right`.
+- [`js/components/navbar.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/navbar.js) — Penerapan `.btn-arrow--up-right` pada CTA Instagram.
+- [`js/components/player-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/player-card.js) — Penerapan `.btn-arrow` pada tombol lihat profil.
+- [`js/components/news-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/news-card.js) — Penerapan `.btn-arrow` pada tombol baca artikel.
+- [`js/components/event-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/event-card.js) — Penerapan `.btn-arrow--up-right` pada tombol petunjuk lokasi.
+- [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js) — Penerapan `.btn-arrow` pada tombol lihat profil POTM.
+- [`js/pages/player-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/player-detail.js) — Penerapan `.btn-arrow` pada tombol navigasi kembali & prev/next.
+- [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) — Penerapan `.btn-arrow` pada tombol login CMS.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.2 sesuai aturan `AGENTS.md`.
 4. [v3.3.0 — Refaktor Menyeluruh Seluruh Halaman HTML Menjadi PHP (.php) & Harmonisasi Sistem](#-v330---refaktor-menyeluruh-seluruh-halaman-html-menjadi-php-php--harmonisasi-sistem)
 5. [v3.2.1 — Pengalihan Penuh ke Vercel Blob Public Access (`access: 'public'`) & Direct CDN URLs](#-v321---pengalihan-penuh-ke-vercel-blob-public-access-access-public--direct-cdn-urls)
 6. [v3.2.0 — Integrasi Vercel Blob SDK (@vercel/blob) & Cloud Storage Database "bbc-baznas-db"](#-v320---integrasi-vercel-blob-sdk-vercelblob--cloud-storage-database-bbc-baznas-db)

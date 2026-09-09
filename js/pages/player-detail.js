@@ -146,7 +146,7 @@ BBC_onReady(() => {
         <!-- ===== TOP NAVIGATION BAR ===== -->
         <div class="pd-top-nav">
             <a href="players.html" class="btn btn-outline btn-sm">
-                <span style="font-family: var(--font-pixel);">←</span>
+                <span class="btn-arrow" style="transform: none;">←</span>
                 <span>KEMBALI KE DAFTAR PEMAIN</span>
             </a>
             <div class="pd-top-nav__counter">
@@ -330,7 +330,7 @@ BBC_onReady(() => {
                     <!-- Bottom Navigation Inside Card -->
                     <div class="pd-card-footer">
                         <a href="player-detail.html?slug=${encodeURIComponent(prevSlug)}" class="btn btn-outline btn-sm">
-                            <span style="font-family: var(--font-pixel);">←</span>
+                            <span class="btn-arrow" style="transform: none;">←</span>
                             <span>${prevPlayer.name.split(' ')[0]}</span>
                         </a>
                         <a href="players.html" class="btn btn-outline btn-sm">
@@ -338,7 +338,7 @@ BBC_onReady(() => {
                         </a>
                         <a href="player-detail.html?slug=${encodeURIComponent(nextSlug)}" class="btn btn-primary btn-sm">
                             <span>${nextPlayer.name.split(' ')[0]}</span>
-                            <span style="font-family: var(--font-pixel);">→</span>
+                            <span class="btn-arrow">→</span>
                         </a>
                     </div>
 
