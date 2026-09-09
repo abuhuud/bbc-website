@@ -120,7 +120,7 @@ BBC_onReady(() => {
         `).join('')
         : `
             <li class="pd-achievement-item pd-achievement-item--empty">
-                <span class="pd-achievement-icon">🏸</span>
+                <span class="pd-achievement-icon"><span class="bbc-icon-shuttle"></span></span>
                 <span class="pd-achievement-text">Pemain aktif skuad resmi BBC musim 2026.</span>
             </li>
         `;
@@ -160,11 +160,11 @@ BBC_onReady(() => {
             <!-- Card Header Strip -->
             <div class="pd-header" style="background: ${isMale ? 'linear-gradient(90deg, #025335 0%, #009B63 100%)' : 'linear-gradient(90deg, #B91C1C 0%, #EF4444 100%)'};">
                 <div class="pd-header__left">
-                    <span class="pixel-badge pixel-badge--yellow">🏸 PROFIL ATLET BBC</span>
+                    <span class="pixel-badge pixel-badge--yellow"><span class="bbc-icon-shuttle"></span> PROFIL ATLET BBC</span>
                     <span class="pd-header__tag">ROSTER 2026</span>
                 </div>
                 <div class="pd-header__right">
-                    ${isPotm ? '<span class="pixel-badge pixel-badge--yellow">👑 PLAYER OF THE MONTH</span>' : ''}
+                    ${isPotm ? '<span class="pixel-badge pixel-badge--yellow"><span class="bbc-icon-crown"></span> PLAYER OF THE MONTH</span>' : ''}
                     <span class="pixel-badge pixel-badge--dark">${genderLabel}</span>
                 </div>
             </div>
@@ -274,7 +274,7 @@ BBC_onReady(() => {
                     <!-- Identity Block -->
                     <div class="pd-identity">
                         <div class="pd-identity__chips">
-                            <span class="pixel-badge ${badgeGenderClass}">🏸 ${genderLabel}</span>
+                            <span class="pixel-badge ${badgeGenderClass}"><span class="bbc-icon-shuttle"></span> ${genderLabel}</span>
                         </div>
                         <h1 class="pd-name">${player.name}</h1>
                     </div>
@@ -282,7 +282,7 @@ BBC_onReady(() => {
                     <!-- Achievements Block -->
                     <div class="pd-achievements-block">
                         <div class="pd-achievements-header">
-                            <span>🏆 PRESTASI &amp; PENCAPAIAN</span>
+                            <span><span class="bbc-icon-trophy"></span> PRESTASI &amp; PENCAPAIAN</span>
                             <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.6rem;">${achievements.length} REKOR</span>
                         </div>
                         <ul class="pd-achievements-list">

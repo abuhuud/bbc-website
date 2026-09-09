@@ -5,10 +5,71 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-2. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-3. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-4. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+2. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+3. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+4. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+5. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"🏸 icon2 seperti ini ketika di deploy tidak tampil"*
+
+### 🔍 Analisis Akar Masalah
+1. **Font Suppression pada Web Font Khusus:**
+   - Elemen antarmuka seperti `.btn-arrow`, `.pixel-badge`, dan `.marquee-item` menggunakan custom web font retro `--font-pixel: 'Silkscreen'`. Font ini hanya berisi karakter Latin dasar dan tidak memiliki tabel glif (*color glyphs*) untuk emoji Unicode bulutangkis (`🏸` U+1F3F8), petir (`⚡`), api (`🔥`), mahkota (`👑`), maupun piala (`🏆`). Pada beberapa sistem operasi (khususnya Windows, Linux, dan browser Chromium di lingkungan tertentu), browser gagal melakukan fallback ke font emoji sistem ketika berada di dalam container web font tanpa glyph coverage.
+2. **Ketiadaan Header UTF-8 Eksplisit pada Vercel Static Assets:**
+   - Serverless static edge CDN Vercel belum dikonfigurasi dengan header eksplisit `Content-Type: text/html; charset=utf-8`, sehingga urutan byte 4-byte UTF-8 emoji rentan terpotong atau salah diinterpretasikan oleh proxy atau browser klien tertentu.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Sistem Ikon Vektor SVG Mandiri Zero-Dependency (`css/components.css`):**
+   - Dibuat class icon berbasis data-URI SVG murni beresolusi tinggi, pixel-perfect, dan tanpa dependensi jaringan eksternal:
+     - `.bbc-icon-shuttle`: Kok bulutangkis retro realistis (bulu putih bersusun, ribbon hijau zamrud BAZNAS, dan gabus kuning).
+     - `.bbc-icon-racket`: Raket bulutangkis retro presisi.
+     - `.bbc-icon-lightning`: Petir smash elektrik kuning tajam.
+     - `.bbc-icon-fire`: Api match point membara (gradasi oranye-merah).
+     - `.bbc-icon-crown`: Mahkota emas Player of the Month bertabur permata.
+     - `.bbc-icon-trophy`: Piala turnamen juara emas elegan.
+   - Menggunakan ukuran relatif `1.15em` dan `vertical-align: -0.15em` agar proporsional dan selaras mengikuti ukuran teks font di sekitarnya.
+2. **Universal Dynamic SVG Icon Enhancer (`js/utils/dom.js`):**
+   - Mengembangkan fungsi `BBC_enhanceIcons()` yang memindai text node secara aman (`TreeWalker`) dan menggantikan emoji mentah menjadi span vektor SVG.
+   - Dilengkapi **Reentrancy Guard** (`isEnhancing`) dan **Debounced MutationObserver (80ms)** pada `document.body` agar konten baru hasil render dinamis (kartu pemain, jadwal, berita, POTM, galeri) secara otomatis dikonversi tanpa *infinite loop* atau lag.
+3. **Penggantian Statis Menyeluruh pada Template HTML:**
+   - [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html): Hero smash badge, CTA button arrow shuttle, floating match point, marquee banner, agenda preview, POTM badge, squad amilin/amilat headers, activity cards (Latihan Rutin, Turnamen, Fun Match), dan badge penutup CTA.
+   - [`pages/players.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/players.html): Marquee banner dan badge header skuad Amilin & Amilat.
+   - [`pages/schedule.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/schedule.html): Marquee banner jadwal pertandingan.
+   - [`pages/news.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/news.html): Marquee banner berita dan liputan.
+   - [`pages/profile.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/profile.html): Marquee banner dan butir-butir visi-misi klub.
+4. **Sinkronisasi Komponen JavaScript:**
+   - [`js/components/footer.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/footer.js): Ticker bar atas (`MAIN BARENG`, `INTERNAL BAZNAS RI`) dan tagline footer bawah.
+   - [`js/pages/player-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/player-detail.js): Badge profil atlet BBC, POTM crown, gender chip, empty achievement icon, dan header prestasi piala.
+   - [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js): Empty state agenda mingguan.
+   - [`js/pages/schedule.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/schedule.js): Empty state daftar agenda/turnamen.
+   - [`js/pages/profile.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/profile.js): Empty state pengurus BBC.
+5. **Konfigurasi Header UTF-8 Vercel (`vercel.json`):**
+   - Menambahkan rules header statis untuk seluruh file `*.html`, `*.css`, dan `*.js` dengan `charset=utf-8` eksplisit untuk menjamin integritas karakter byte di jaringan edge CDN Vercel.
+
+### 📂 Berkas yang Dimodifikasi
+- [`css/components.css`](file:///e:/Ikrom%20Docs/bbc-website/css/components.css) — Penambahan class SVG vector icon (`.bbc-icon-shuttle`, `.bbc-icon-racket`, `.bbc-icon-lightning`, `.bbc-icon-fire`, `.bbc-icon-crown`, `.bbc-icon-trophy`).
+- [`js/utils/dom.js`](file:///e:/Ikrom%20Docs/bbc-website/js/utils/dom.js) — Implementasi `BBC_enhanceIcons()` dengan MutationObserver dan reentrancy guard.
+- [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html) — Penggantian emoji mentah di hero, marquee, squad, activity cards, dan CTA ke SVG icon spans.
+- [`pages/players.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/players.html) — Penggantian emoji shuttlecock di ticker dan badge.
+- [`pages/schedule.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/schedule.html) — Penggantian emoji shuttlecock di ticker.
+- [`pages/news.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/news.html) — Penggantian emoji shuttlecock di ticker.
+- [`pages/profile.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/profile.html) — Penggantian emoji shuttlecock, petir, dan piala di ticker dan list misi.
+- [`js/components/footer.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/footer.js) — Penggantian emoji di footer ticker dan tagline.
+- [`js/pages/player-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/player-detail.js) — Penggantian emoji di profil atlet, POTM, gender, dan prestasi.
+- [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js) — Penggantian icon di agenda empty state.
+- [`js/pages/schedule.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/schedule.js) — Penggantian icon di schedule empty state.
+- [`js/pages/profile.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/profile.js) — Penggantian icon di profile empty state.
+- [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) — Penambahan header Content-Type UTF-8 untuk HTML, CSS, JS.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.3 sesuai aturan `AGENTS.md`.
+
+---
 
 ---
 

@@ -149,7 +149,7 @@ BBC_onReady(() => {
                                 rgba(0,0,0,0.02) 20px
                             );
                         ">
-                            <div style="font-size: 3.5rem; margin-bottom: 12px; line-height: 1;">🏸</div>
+                            <div style="margin-bottom: 12px; line-height: 1;"><span class="bbc-icon-shuttle" style="font-size: 3.5rem;"></span></div>
                             <h3 style="margin: 0 0 8px; font-size: clamp(1.3rem, 2.5vw, 1.8rem); color: var(--color-dark);">TIDAK ADA AGENDA MINGGU INI</h3>
                             <p style="color: var(--color-grey, #6B7F78); font-size: 0.95rem; margin: 0 0 24px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.6;">
                                 Belum ada jadwal pertandingan atau latihan dalam 7 hari ke depan.

@@ -25,13 +25,13 @@ function renderFooter() {
         <!-- Top accent bar with pixel pattern -->
         <div class="footer__accent-bar">
             <div class="footer__accent-ticker">
-                <span>🏸 MAIN BARENG</span>
+                <span><span class="bbc-icon-shuttle"></span> MAIN BARENG</span>
                 <span class="footer__accent-dot">◆</span>
                 <span>SEHAT BARENG</span>
                 <span class="footer__accent-dot">◆</span>
                 <span>BAZNAS BADMINTON CLUB</span>
                 <span class="footer__accent-dot">◆</span>
-                <span>🏸 INTERNAL BAZNAS RI</span>
+                <span><span class="bbc-icon-shuttle"></span> INTERNAL BAZNAS RI</span>
                 <span class="footer__accent-dot">◆</span>
                 <span>MAIN BARENG</span>
                 <span class="footer__accent-dot">◆</span>
@@ -39,7 +39,7 @@ function renderFooter() {
                 <span class="footer__accent-dot">◆</span>
                 <span>BAZNAS BADMINTON CLUB</span>
                 <span class="footer__accent-dot">◆</span>
-                <span>🏸 INTERNAL BAZNAS RI</span>
+                <span><span class="bbc-icon-shuttle"></span> INTERNAL BAZNAS RI</span>
                 <span class="footer__accent-dot">◆</span>
             </div>
         </div>
@@ -188,7 +188,7 @@ function renderFooter() {
                     <span class="footer__bottom-rights">Seluruh Hak Cipta Dilindungi.</span>
                 </div>
                 <div class="footer__bottom-right">
-                    <span class="footer__tagline">MAIN BARENG • SEHAT BARENG 🏸</span>
+                    <span class="footer__tagline">MAIN BARENG • SEHAT BARENG <span class="bbc-icon-shuttle"></span></span>
                 </div>
             </div>
 

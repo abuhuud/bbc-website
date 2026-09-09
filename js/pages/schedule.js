@@ -42,7 +42,7 @@ function renderSchedulePage() {
     if (filtered.length === 0) {
         listContainer.innerHTML = `
             <div style="background-color: var(--color-off-white); border: 2px solid var(--color-dark); padding: 36px; text-align: center; border-radius: var(--radius-md);">
-                <div style="font-size: 2rem; margin-bottom: 8px;">🏸</div>
+                <div style="margin-bottom: 8px;"><span class="bbc-icon-shuttle" style="font-size: 2.2rem;"></span></div>
                 <h3 style="margin: 0;">BELUM ADA JADWAL UNTUK KATEGORI INI</h3>
                 <p style="color: var(--color-grey); margin-top: 4px;">Silakan cek kategori lain atau pantau Instagram BBC.</p>
             </div>
