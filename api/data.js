@@ -143,54 +143,99 @@ export default async function handler(req, res) {
       const pathname = `data/${category}.json`;
       const jsonContent = JSON.stringify(payloadToSave, null, 2);
 
-      // Simpan langsung ke Vercel Blob dengan akses publik
-      if (token) {
-        const options = {
-          access: 'public',
-          addRandomSuffix: false,
-          contentType: 'application/json'
-        };
-        if (storeId) options.storeId = storeId;
-        if (token) options.token = token;
-
-        const blob = await put(pathname, jsonContent, options);
-
-        return res.status(200).json({
-          success: true,
-          message: `Kategori '${category}' berhasil disimpan secara realtime ke Vercel Blob`,
-          source: 'vercel-blob',
-          blob_url: blob.url,
-          pathname: blob.pathname,
-          version: currentVer,
-          updatedAt: timestamp
-        });
-      }
-
-      // Jika dijalankan di lingkungan lokal tanpa token Vercel Blob
+      // 1. Coba simpan langsung ke file lokal data/*.json (jika filesystem writable / lingkungan lokal / dev)
+      let localWritten = false;
       try {
         const localFilePath = path.join(process.cwd(), 'data', `${category}.json`);
         fs.writeFileSync(localFilePath, jsonContent, 'utf8');
-        return res.status(200).json({
-          success: true,
-          message: `Kategori '${category}' disimpan ke file lokal (Vercel Blob token tidak terdeteksi)`,
-          source: 'local-fs',
-          version: currentVer,
-          updatedAt: timestamp
-        });
-      } catch (writeErr) {
-        return res.status(200).json({
-          success: true,
-          message: `Data kategori '${category}' diterima (offline mode)`,
-          source: 'memory',
-          version: currentVer,
-          updatedAt: timestamp
-        });
+        localWritten = true;
+      } catch (fsErr) {
+        // Lingkungan read-only lambda di Vercel cloud
       }
+
+      // 2. Simpan ke Vercel Blob jika token tersedia (Cloud Real-time persistence di Vercel)
+      let blobSaved = false;
+      let blobInfo = null;
+      if (token) {
+        try {
+          const options = {
+            access: 'public',
+            addRandomSuffix: false,
+            contentType: 'application/json'
+          };
+          if (storeId) options.storeId = storeId;
+          if (token) options.token = token;
+
+          const blob = await put(pathname, jsonContent, options);
+          blobSaved = true;
+          blobInfo = { url: blob.url, pathname: blob.pathname };
+        } catch (bErr) {
+          console.error(`[Blob Save Error for ${category}]:`, bErr.message);
+        }
+      }
+
+      // 3. Jika tersedia token GitHub di Environment Variables, commit langsung ke repository remote
+      let githubSynced = false;
+      const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+      if (ghToken) {
+        try {
+          const repoOwner = process.env.GITHUB_REPO_OWNER || 'abuhuud';
+          const repoName = process.env.GITHUB_REPO_NAME || 'bbc-website';
+          const branch = process.env.GITHUB_BRANCH || 'main';
+          const ghPath = `data/${category}.json`;
+
+          let currentSha = null;
+          const getRes = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${ghPath}?ref=${branch}`, {
+            headers: {
+              'Authorization': `token ${ghToken}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'BBC-Website-CMS'
+            }
+          });
+          if (getRes.ok) {
+            const fileMeta = await getRes.json();
+            currentSha = fileMeta.sha;
+          }
+
+          const putRes = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${ghPath}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `token ${ghToken}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'BBC-Website-CMS'
+            },
+            body: JSON.stringify({
+              message: `CMS: update data/${category}.json [skip ci]`,
+              content: Buffer.from(jsonContent, 'utf8').toString('base64'),
+              branch,
+              sha: currentSha || undefined
+            })
+          });
+          if (putRes.ok) {
+            githubSynced = true;
+          }
+        } catch (ghErr) {
+          console.warn(`[GitHub Push Warning for ${category}]:`, ghErr.message);
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: `Kategori '${category}' berhasil disimpan langsung ke file .json dan Vercel`,
+        category,
+        version: currentVer,
+        updatedAt: timestamp,
+        localWritten,
+        blobSaved,
+        blobInfo,
+        githubSynced
+      });
     } catch (err) {
-      console.error(`[Blob Save Error for ${category}]:`, err);
+      console.error(`[Save Error for ${category}]:`, err);
       return res.status(500).json({
         success: false,
-        error: err.message || 'Gagal menyimpan ke Vercel Blob'
+        error: err.message || 'Gagal menyimpan data kategori'
       });
     }
   }

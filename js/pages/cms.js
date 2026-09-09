@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof BBC_FS !== 'undefined') {
             await BBC_FS.clearProjectFolder();
             updateFsStatusUI();
-            showToast('🔓 Folder proyek dilepas. Data hanya tersimpan di localStorage.', 'info');
+            showToast('🔓 Folder proyek dilepas. Data tersimpan langsung di file .json & cloud.', 'info');
         }
     }
 
@@ -1157,7 +1157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Attach POTM quick-toggle handlers
         document.querySelectorAll('[data-toggle-potm]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 const id = btn.getAttribute('data-toggle-potm');
                 const isCurrentlyPotm = btn.getAttribute('data-potm-status') === 'true';
@@ -1165,13 +1165,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const p = BBC_STORE.getPlayerById(id);
                 if (!p) return;
 
-                BBC_STORE.setPlayerOfTheMonth(id, nextStatus);
-                renderPlayersTable();
-                updateTabCounts();
-                if (nextStatus) {
-                    showToast(`"${p.name}" kini aktif sebagai Player of the Month (${p.gender === 'male' ? 'Amilin' : 'Amilat'})!`, 'success');
-                } else {
-                    showToast(`Status POTM untuk "${p.name}" dinonaktifkan.`, 'info');
+                btn.disabled = true;
+                try {
+                    await BBC_STORE.setPlayerOfTheMonth(id, nextStatus);
+                    renderPlayersTable();
+                    updateTabCounts();
+                    if (nextStatus) {
+                        showToast(`⭐ "${p.name}" aktif sebagai POTM (${p.gender === 'male' ? 'Amilin' : 'Amilat'}) & tersimpan ke .json!`, 'success');
+                    } else {
+                        showToast(`Status POTM untuk "${p.name}" dinonaktifkan di .json.`, 'info');
+                    }
+                } finally {
+                    btn.disabled = false;
                 }
             });
         });
@@ -1198,11 +1203,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-player');
                 const p = BBC_STORE.getPlayerById(id);
                 if (p) {
-                    promptDelete(`Pemain: ${p.name}`, () => {
-                        BBC_STORE.deletePlayer(id);
+                    promptDelete(`Pemain: ${p.name}`, async () => {
+                        await BBC_STORE.deletePlayer(id);
                         renderPlayersTable();
                         updateTabCounts();
-                        showToast(`Pemain "${p.name}" berhasil dihapus.`);
+                        showToast(`Pemain "${p.name}" berhasil dihapus dari file .json & Vercel.`);
                     });
                 }
             });
@@ -1432,13 +1437,13 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 const photoId = btn.getAttribute('data-delete-photo');
                 const targetPhoto = gallery.find(g => String(g.id) === String(photoId));
-                promptDelete(`Foto Galeri: "${targetPhoto?.caption || 'Momen Aksi'}"`, () => {
-                    BBC_STORE.deletePlayerGalleryPhoto(playerId, photoId);
+                promptDelete(`Foto Galeri: "${targetPhoto?.caption || 'Momen Aksi'}"`, async () => {
+                    await BBC_STORE.deletePlayerGalleryPhoto(playerId, photoId);
                     renderPlayerGalleryModalGrid(playerId);
                     renderPlayersTable();
                     const updatedPlayer = BBC_STORE.getPlayerById(playerId);
                     renderPlayerModalGalleryPreview(updatedPlayer);
-                    showToast('Foto galeri berhasil dihapus.', 'info');
+                    showToast('Foto galeri berhasil dihapus dari file .json & Vercel.', 'info');
                 });
             });
         });
@@ -1523,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save photo button in gallery modal
     const btnPgSavePhoto = document.getElementById('pg-btn-save-photo');
     if (btnPgSavePhoto) {
-        btnPgSavePhoto.addEventListener('click', () => {
+        btnPgSavePhoto.addEventListener('click', async () => {
             const playerId = document.getElementById('pg-target-player-id').value;
             const photoId = document.getElementById('pg-edit-photo-id').value;
             const url = document.getElementById('pg-photo-url').value.trim();
@@ -1535,26 +1540,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (photoId) {
-                BBC_STORE.updatePlayerGalleryPhoto(playerId, photoId, { url, caption });
-                showToast('Foto galeri berhasil diperbarui!', 'success');
-            } else {
-                BBC_STORE.addPlayerGalleryPhoto(playerId, { url, caption });
-                showToast('Foto baru berhasil ditambahkan ke galeri pemain!', 'success');
-            }
+            btnPgSavePhoto.disabled = true;
+            try {
+                if (photoId) {
+                    await BBC_STORE.updatePlayerGalleryPhoto(playerId, photoId, { url, caption });
+                    showToast('Foto galeri berhasil diperbarui di file .json & Vercel!', 'success');
+                } else {
+                    await BBC_STORE.addPlayerGalleryPhoto(playerId, { url, caption });
+                    showToast('Foto baru berhasil ditambahkan ke file .json & Vercel!', 'success');
+                }
 
-            resetPlayerGalleryForm();
-            renderPlayerGalleryModalGrid(playerId);
-            renderPlayersTable();
-            const updatedPlayer = BBC_STORE.getPlayerById(playerId);
-            renderPlayerModalGalleryPreview(updatedPlayer);
+                resetPlayerGalleryForm();
+                renderPlayerGalleryModalGrid(playerId);
+                renderPlayersTable();
+                const updatedPlayer = BBC_STORE.getPlayerById(playerId);
+                renderPlayerModalGalleryPreview(updatedPlayer);
+            } finally {
+                btnPgSavePhoto.disabled = false;
+            }
         });
     }
 
     // File upload for main player photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
 
     if (formPlayer) {
-        formPlayer.addEventListener('submit', (e) => {
+        formPlayer.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('player-id').value;
             const name = document.getElementById('player-name').value.trim();
@@ -1601,11 +1611,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 gallery: existingGallery
             };
 
-            BBC_STORE.savePlayer(playerData);
-            closeModal('modal-player');
-            renderPlayersTable();
-            updateTabCounts();
-            showToast(id ? `Data ${name} berhasil diperbarui!` : `Pemain ${name} berhasil ditambahkan!`);
+            const submitBtn = formPlayer.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
+            }
+
+            try {
+                await BBC_STORE.savePlayer(playerData);
+                closeModal('modal-player');
+                renderPlayersTable();
+                updateTabCounts();
+                showToast(id ? `✅ Data ${name} berhasil disimpan ke .json & Vercel!` : `✅ Pemain ${name} berhasil disimpan ke .json & Vercel!`);
+            } catch (err) {
+                showToast(`⚠️ Gagal menyimpan: ${err.message}`, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
         });
     }
 
@@ -1749,11 +1775,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-event');
                 const ev = BBC_STORE.getEventById(id);
                 if (ev) {
-                    promptDelete(`Jadwal: ${ev.title}`, () => {
-                        BBC_STORE.deleteEvent(id);
+                    promptDelete(`Jadwal: ${ev.title}`, async () => {
+                        await BBC_STORE.deleteEvent(id);
                         renderEventsTable();
                         updateTabCounts();
-                        showToast(`Jadwal "${ev.title}" berhasil dihapus.`);
+                        showToast(`Jadwal "${ev.title}" berhasil dihapus dari file .json & Vercel.`);
                     });
                 }
             });
@@ -1814,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formEvent) {
-        formEvent.addEventListener('submit', (e) => {
+        formEvent.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('event-id').value;
             const title = document.getElementById('event-title').value.trim();
@@ -1855,11 +1881,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 description
             };
 
-            BBC_STORE.saveEvent(eventData);
-            closeModal('modal-event');
-            renderEventsTable();
-            updateTabCounts();
-            showToast(id ? 'Jadwal berhasil diperbarui!' : 'Jadwal baru berhasil ditambahkan!');
+            const submitBtn = formEvent.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
+            }
+
+            try {
+                await BBC_STORE.saveEvent(eventData);
+                closeModal('modal-event');
+                renderEventsTable();
+                updateTabCounts();
+                showToast(id ? '✅ Jadwal berhasil disimpan ke .json & Vercel!' : '✅ Jadwal baru berhasil disimpan ke .json & Vercel!');
+            } catch (err) {
+                showToast(`⚠️ Gagal menyimpan jadwal: ${err.message}`, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
         });
     }
 
@@ -1938,11 +1980,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-gallery');
                 const g = BBC_STORE.getGalleryById(id);
                 if (g) {
-                    promptDelete(`Foto Galeri: "${g.tag}"`, () => {
-                        BBC_STORE.deleteGalleryItem(id);
+                    promptDelete(`Foto Galeri: "${g.tag}"`, async () => {
+                        await BBC_STORE.deleteGalleryItem(id);
                         renderGalleryGrid();
                         updateTabCounts();
-                        showToast('Foto galeri berhasil dihapus.');
+                        showToast('Foto galeri berhasil dihapus dari file .json & Vercel.');
                     });
                 }
             });
@@ -1979,7 +2021,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formGallery) {
-        formGallery.addEventListener('submit', (e) => {
+        formGallery.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('gallery-id').value;
             const tag = document.getElementById('gallery-tag').value.trim();
@@ -2000,11 +2042,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 image
             };
 
-            BBC_STORE.saveGalleryItem(itemData);
-            closeModal('modal-gallery');
-            renderGalleryGrid();
-            updateTabCounts();
-            showToast(id ? 'Foto galeri diperbarui!' : 'Foto baru ditambahkan ke galeri!');
+            const submitBtn = formGallery.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
+            }
+
+            try {
+                await BBC_STORE.saveGalleryItem(itemData);
+                closeModal('modal-gallery');
+                renderGalleryGrid();
+                updateTabCounts();
+                showToast(id ? '✅ Foto galeri berhasil disimpan ke .json & Vercel!' : '✅ Foto baru berhasil disimpan ke .json & Vercel!');
+            } catch (err) {
+                showToast(`⚠️ Gagal menyimpan foto: ${err.message}`, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
         });
     }
 
@@ -2141,11 +2199,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-article');
                 const art = BBC_STORE.getArticleById(id);
                 if (art) {
-                    promptDelete(`Artikel: "${art.title}"`, () => {
-                        BBC_STORE.deleteArticle(id);
+                    promptDelete(`Artikel: "${art.title}"`, async () => {
+                        await BBC_STORE.deleteArticle(id);
                         renderArticlesTable();
                         updateTabCounts();
-                        showToast(`Artikel "${art.title}" berhasil dihapus.`);
+                        showToast(`Artikel "${art.title}" berhasil dihapus dari file .json & Vercel.`);
                     });
                 }
             });
@@ -2191,7 +2249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formArticle) {
-        formArticle.addEventListener('submit', (e) => {
+        formArticle.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('article-id').value;
             const title = document.getElementById('article-title').value.trim();
@@ -2222,11 +2280,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 image
             };
 
-            BBC_STORE.saveArticle(articleData);
-            closeModal('modal-article');
-            renderArticlesTable();
-            updateTabCounts();
-            showToast(id ? 'Artikel berhasil diperbarui!' : 'Artikel baru berhasil dipublikasikan!');
+            const submitBtn = formArticle.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
+            }
+
+            try {
+                await BBC_STORE.saveArticle(articleData);
+                closeModal('modal-article');
+                renderArticlesTable();
+                updateTabCounts();
+                showToast(id ? '✅ Artikel berhasil disimpan ke .json & Vercel!' : '✅ Artikel baru berhasil disimpan ke .json & Vercel!');
+            } catch (err) {
+                showToast(`⚠️ Gagal menyimpan artikel: ${err.message}`, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
         });
     }
 
@@ -2374,11 +2448,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-official');
                 const o = BBC_STORE.getOfficialById(id);
                 if (o) {
-                    promptDelete(`Pengurus: ${o.name} (${o.role})`, () => {
-                        BBC_STORE.deleteOfficial(id);
+                    promptDelete(`Pengurus: ${o.name} (${o.role})`, async () => {
+                        await BBC_STORE.deleteOfficial(id);
                         renderOfficialsTable();
                         updateTabCounts();
-                        showToast('Data pengurus berhasil dihapus.');
+                        showToast('Data pengurus berhasil dihapus dari file .json & Vercel.');
                     });
                 }
             });
@@ -2449,25 +2523,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // File upload for official photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
 
     if (formOfficial) {
-        formOfficial.addEventListener('submit', (e) => {
+        formOfficial.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('official-id').value;
             const image = document.getElementById('official-image') ? document.getElementById('official-image').value.trim() : '';
             const gender = document.getElementById('official-gender') ? document.getElementById('official-gender').value : 'male';
 
-            BBC_STORE.saveOfficial({
+            const officialData = {
                 id: id || undefined,
                 name: document.getElementById('official-name').value.trim(),
                 role: document.getElementById('official-role').value.trim(),
                 period: document.getElementById('official-period').value.trim(),
                 gender,
                 image
-            });
+            };
 
-            closeModal('modal-official');
-            renderOfficialsTable();
-            updateTabCounts();
-            showToast(id ? 'Data pengurus diperbarui!' : 'Pengurus baru ditambahkan!');
+            const submitBtn = formOfficial.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
+            }
+
+            try {
+                await BBC_STORE.saveOfficial(officialData);
+                closeModal('modal-official');
+                renderOfficialsTable();
+                updateTabCounts();
+                showToast(id ? '✅ Data pengurus berhasil disimpan ke .json & Vercel!' : '✅ Pengurus baru berhasil disimpan ke .json & Vercel!');
+            } catch (err) {
+                showToast(`⚠️ Gagal menyimpan pengurus: ${err.message}`, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
         });
     }
 
@@ -2745,6 +2836,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isSavingHero) return;
             isSavingHero = true;
 
+            const submitBtn = btnHeroSave || (formHero && formHero.querySelector('button[type="submit"]'));
+            const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '💾 Menyimpan ke .json & Vercel...';
+            }
+
             try {
                 const mediaType = getMediaType();
 
@@ -2767,16 +2865,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     thumb2Label: fThumb2Lbl ? fThumb2Lbl.value.trim() : ''
                 };
 
-                const saved = BBC_STORE.saveHeroSettings(settings);
+                const saved = await BBC_STORE.saveHeroSettings(settings);
                 if (saved) {
                     const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
-                    showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan! Tampilan beranda langsung diperbarui.`);
+                    showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan langsung ke hero.json & Vercel!`);
                     if (loadHeroFormFn) loadHeroFormFn();
                 } else {
-                    showToast('❌ Gagal menyimpan! Pastikan link URL atau file foto/video tidak melebihi kapasitas memori.', 'error');
+                    showToast('❌ Gagal menyimpan! Pastikan link URL atau file foto/video valid.', 'error');
                 }
+            } catch (err) {
+                console.error('[CMS] Hero save error:', err);
+                showToast('❌ Terjadi kesalahan saat menyimpan pengaturan hero.', 'error');
             } finally {
-                setTimeout(() => { isSavingHero = false; }, 800);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                }
+                setTimeout(() => { isSavingHero = false; }, 400);
             }
         }
 
@@ -2819,10 +2924,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function resetHeroSettingsAction() {
-            promptDelete('RESET MEDIA HERO KE DEFAULT BAWAAN', () => {
-                BBC_STORE.resetHeroSettings();
+            promptDelete('RESET MEDIA HERO KE DEFAULT BAWAAN', async () => {
+                await BBC_STORE.resetHeroSettings();
                 if (loadHeroFormFn) loadHeroFormFn();
-                showToast('↩ Media hero berhasil direset ke foto default bawaan.');
+                showToast('↩ Media hero berhasil direset ke foto default bawaan dan tersimpan ke hero.json & Vercel.');
             });
         }
 

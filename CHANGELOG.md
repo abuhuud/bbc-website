@@ -5,17 +5,73 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.9 — Penyelarasan Proporsional Tipografi CMS, Eliminasi Teks Pengelola/Pusat Navigasi & Refinement Ikon Representatif](#-v419---penyelarasan-proporsional-tipografi-cms-eliminasi-teks-pengelolapusat-navigasi--refinement-ikon-representatif)
-2. [v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)](#-v418---reaktivitas-otomatis-real-time-sinkronisasi-cms-ke-indexhtml-pencegahan-overwrite-cache-multi-channel-broadcast--focus-auto-sync)
-3. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
-4. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
-5. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
-6. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-7. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-8. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-9. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-10. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-11. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.2.0 — Migrasi Penyimpanan CMS Langsung ke File .JSON & Vercel Cloud Store (Eliminasi LocalStorage)](#-v420---migrasi-penyimpanan-cms-langsung-ke-file-json--vercel-cloud-store-eliminasi-localstorage)
+2. [v4.1.9 — Penyelarasan Proporsional Tipografi CMS, Eliminasi Teks Pengelola/Pusat Navigasi & Refinement Ikon Representatif](#-v419---penyelarasan-proporsional-tipografi-cms-eliminasi-teks-pengelolapusat-navigasi--refinement-ikon-representatif)
+3. [v4.1.8 — Reaktivitas Otomatis Real-time Sinkronisasi CMS ke index.html (Pencegahan Overwrite Cache, Multi-Channel Broadcast & Focus Auto-Sync)](#-v418---reaktivitas-otomatis-real-time-sinkronisasi-cms-ke-indexhtml-pencegahan-overwrite-cache-multi-channel-broadcast--focus-auto-sync)
+4. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
+5. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
+6. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+7. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+8. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+9. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+10. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+11. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+12. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.2.0 — Migrasi Penyimpanan CMS Langsung ke File .JSON & Vercel Cloud Store (Eliminasi LocalStorage)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"setiap perubahan pada cms jangan buat tersimpan ke localstorage tapi langsung di store ke file .json nya dan secara otomatis berubah di vercelnya"*
+
+### 🔍 Analisis Akar Masalah
+1. **Ketergantungan Historis pada `localStorage` Browser Admin:**
+   - Selama ini, operasi penambahan, pengubahan, dan penghapusan data CMS (pemain, jadwal kegiatan, galeri foto, berita artikel, pengurus, hingga pengaturan media hero) disimpan di dalam `localStorage` peramban admin (misalnya kunci `bbc_data_players_v5`, `bbc_data_events_v5`, dll).
+   - Fungsi inisialisasi awal (`BBC_STORE.initialize()`) membandingkan stempel waktu versi data di `localStorage` dengan file `.json`. Jika versi `localStorage` lebih baru atau sama, sistem menolak memperbarui data dari file JSON server dan memprioritaskan cache lokal peramban.
+   - **Konsekuensi Kritis:** Pembaruan data yang dibuat oleh admin hanya tersimpan di browser perangkat admin saat itu (*client-side sandbox*). Pengunjung lain atau perangkat lain yang mengakses website langsung di Vercel tidak melihat pembaruan tersebut karena `localStorage` bersifat terisolasi per peramban dan tidak tersinkronisasi antar pengguna.
+2. **Ketiadaan Jalur Persistensi Langsung ke File `.json` Backend & Cloud:**
+   - Tidak ada alur otomatis yang mengalirkan mutasi CMS langsung ke file fisik `data/*.json` di server backend lokal maupun ke Vercel Blob store / repositori GitHub secara terpadu.
+   - Admin harus melakukan ekspor manual atau menyalin file JSON secara terpisah, yang rawan human-error dan tidak efisien.
+3. **Penyimpanan Cache HTTP yang Menahan Data Lama:**
+   - Pengambilan file JSON melalui `fetch()` rentan di-cache oleh browser pengunjung (*browser caching*) atau Vercel edge network jika tidak dikonfigurasi dengan header anti-cache yang ketat (`Cache-Control: no-store`).
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Transisi ke In-Memory Data Store & Pembersihan Total LocalStorage ([`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js)):**
+   - **Single Source of Truth:** Menggantikan seluruh ketergantungan `localStorage` dengan objek `inMemoryData` sebagai memori runtime aktif.
+   - **Pembersihan Cache Usang (`purgeLegacyLocalStorage`):** Secara otomatis menghapus seluruh kunci cache usang (`bbc_data_*` dan `bbc_json_ver_*`) dari `localStorage` peramban saat aplikasi pertama kali dimuat, memastikan tidak ada sisa data kadaluarsa yang menahan pembaruan sistem.
+   - **Inisialisasi Bersih & Segar:** Mengubah alur `BBC_STORE.initialize()` agar selalu memuat data mutakhir secara langsung dari endpoint serverless `/api/data` atau file `data/*.json` dengan opsi `cache: 'no-store'`.
+   - **Persistensi Otomatis (`persistCategory`):** Setiap operasi penambahan, perubahan, dan penghapusan data memicu pemanggilan fungsi asinkron `persistCategory(category, data)` yang langsung mengirimkan payload mutakhir via HTTP POST ke endpoint backend `/api/data?category=${category}`.
+   - **Refactoring Komprehensif Seluruh Modul CRUD:**
+     - Modul Pemain: `savePlayer()`, `deletePlayer()`, `setPlayerOfTheMonth()`.
+     - Modul Jadwal Kegiatan & Turnamen: `saveEvent()`, `deleteEvent()`.
+     - Modul Galeri & Album Foto: `saveGalleryItem()`, `deleteGalleryItem()`, `saveGalleryPhotoItem()`, `deleteGalleryPhotoItem()`.
+     - Modul Berita & Artikel: `saveArticle()`, `deleteArticle()`.
+     - Modul Pengurus Klub: `saveOfficial()`, `deleteOfficial()`.
+     - Modul Media Hero: `saveHeroSettings()`, `resetHeroSettings()`.
+     - Modul Pemulihan Data: `importDatabase()`, `resetToDefaults()`.
+2. **Peningkatan Endpoint Backend Serverless & Persistensi Cloud Ganda ([`api/data.js`](file:///e:/Ikrom%20Docs/bbc-website/api/data.js)):**
+   - **Local File System Persistence:** Handler `POST /api/data?category=...` secara otomatis menuliskan konten JSON yang terformat rapi langsung ke file fisik `data/${category}.json` di disk server menggunakan Node.js `fs.writeFileSync`.
+   - **Vercel Blob Cloud CDN Persistence:** Pada lingkungan cloud Vercel, payload JSON diunggah secara instan ke Vercel Blob store menggunakan `@vercel/blob` (`put()`) dengan parameter `access: 'public'`, `addRandomSuffix: false`, dan `cacheControlMaxAge: 0`, sehingga langsung terdistribusi ke edge network global tanpa jeda build.
+   - **GitHub Remote Auto-Commit (Opsional):** Jika `GITHUB_TOKEN` tersedia di environment variable Vercel, API akan melakukan commit otomatis langsung ke branch utama repositori GitHub via GitHub REST API, menjaga konsistensi repo Git secara permanen.
+   - **Zero-Cache GET Handler:** Endpoint GET menyertakan header proteksi `Cache-Control: no-store, no-cache, must-revalidate, max-age=0` dan `Pragma: no-cache` serta parameter timestamp unik (`?_t=Date.now()`) untuk mencegah cache browser.
+3. **Modernisasi Antarmuka Asinkron & Status Loading CMS ([`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js)):**
+   - Mengubah seluruh tombol form submit dan konfirmasi hapus pada modal CMS menjadi asinkron (`async/await`).
+   - Menerapkan indikator status interaktif saat penyimpanan berlangsung: tombol aksi menampilkan teks `💾 Menyimpan ke .json & Vercel...` dan beralih ke kondisi `disabled` untuk mencegah klik berulang atau *race condition*.
+   - Menyajikan notifikasi Toast informatif yang menegaskan bahwa data telah berhasil disimpan langsung ke file `.json` dan Vercel cloud store tanpa mengandalkan cache lokal.
+   - Memperbarui badge sinkronisasi cloud di header atas CMS (`#cloud-sync-topbar-badge`) untuk merefleksikan status penyimpanan data real-time ke Vercel Blob.
+4. **Penaikan Versi Aplikasi ([`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json)):**
+   - Menaikkan versi aplikasi menjadi `4.2.0`.
+
+### 📂 Berkas yang Dimodifikasi
+| Nama Berkas | Lokasi | Deskripsi Perubahan |
+| :--- | :--- | :--- |
+| `api/data.js` | [`api/data.js`](file:///e:/Ikrom%20Docs/bbc-website/api/data.js) | Penambahan penulisan langsung ke file `data/*.json`, persistensi Vercel Blob cloud store, GitHub auto-commit, dan header anti-cache `no-store`. |
+| `js/data/store.js` | [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js) | Eliminasi total `localStorage` untuk CRUD, implementasi `inMemoryData`, penambahan `purgeLegacyLocalStorage()`, refactoring seluruh CRUD ke `persistCategory()`, dan dukungan asinkron `saveHeroSettings()` serta `resetHeroSettings()`. |
+| `js/pages/cms.js` | [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js) | Integrasi `async/await` pada seluruh aksi CRUD (Pemain, Jadwal, Galeri, Artikel, Pengurus, Hero), tombol status `💾 Menyimpan ke .json & Vercel...`, dan penyesuaian notifikasi Toast. |
+| `package.json` | [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) | Peningkatan versi proyek menjadi `4.2.0`. |
+| `CHANGELOG.md` | [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) | Pencatatan detail perubahan v4.2.0 dan pembaruan Daftar Isi navigasi. |
 
 ---
 
