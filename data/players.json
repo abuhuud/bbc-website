@@ -1,5 +1,5 @@
 {
-  "_version": 1788921923706,
+  "_version": 1788922215666,
   "_updatedAt": "2026-09-09",
   "players": [
     {
@@ -25,7 +25,7 @@
     },
     {
       "id": "farhan",
-      "name": "Afif",
+      "name": "Ikrom",
       "gender": "male",
       "division": "Kedeputian II",
       "isPlayerOfTheMonth": false,
@@ -42,7 +42,7 @@
       "image": "https://lh3.googleusercontent.com/sitesv/AG8ngQXUL39opZjxRaSc7A_5eSVrlJxcx_UtciZOZB_72EhqoRHeb0lC-MB8q_uJsCDtohbwdLTka9EgdS9m4l1QlWxytapkqoWSEKnzSu5t-Dp-HHhWhK4DLy0LbJK69xorzyftDhuhRceHz70md-NvVwwEI3t1Ce-YDLRC14jQbeTnDxXUItb0HJ4zhndpBldzdhiYTPYx2hmHfFAb3gbXVxyq8vun4MVt0-jvYh5B=w1280",
       "cardBg": "var(--color-yellow)",
       "gallery": [],
-      "slug": "afif"
+      "slug": "ikrom"
     },
     {
       "id": "siti",
