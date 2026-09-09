@@ -203,32 +203,56 @@ const BBC_GITHUB = (function () {
         {
             key: 'players',
             path: 'data/players.json',
-            getData: () => ({ players: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getPlayers() : []) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                players: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getPlayers() : [])
+            })
         },
         {
             key: 'events',
             path: 'data/events.json',
-            getData: () => ({ events: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getEvents() : []) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                events: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getEvents() : [])
+            })
         },
         {
             key: 'gallery',
             path: 'data/gallery.json',
-            getData: () => ({ gallery: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getGallery() : []) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                gallery: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getGallery() : [])
+            })
         },
         {
             key: 'articles',
             path: 'data/articles.json',
-            getData: () => ({ articles: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getArticles() : []) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                articles: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getArticles() : [])
+            })
         },
         {
             key: 'officials',
             path: 'data/officials.json',
-            getData: () => ({ officials: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getOfficials() : []) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                officials: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getOfficials() : [])
+            })
         },
         {
             key: 'hero',
             path: 'data/hero.json',
-            getData: () => ({ hero: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getHeroSettings() : {}) })
+            getData: () => ({
+                _version: Date.now(),
+                _updatedAt: new Date().toISOString().split('T')[0],
+                hero: (typeof BBC_STORE !== 'undefined' ? BBC_STORE.getHeroSettings() : {})
+            })
         }
     ];
 
