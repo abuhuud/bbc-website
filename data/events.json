@@ -1,5 +1,5 @@
 {
-  "_version": 1788922217282,
+  "_version": 1788922538930,
   "_updatedAt": "2026-09-09",
   "events": [
     {
@@ -28,6 +28,20 @@
       "city": "Jakarta Timur",
       "locationUrl": "https://maps.app.goo.gl/XPYEhiDhcPz24T9u8",
       "description": "",
+      "typeName": "Latihan Rutin"
+    },
+    {
+      "id": "mabar-rutin-bbc-6910",
+      "title": "Mabar Rutin BBC",
+      "type": "training",
+      "status": "upcoming",
+      "date": "2026-09-17",
+      "dayName": "Kamis",
+      "time": "17.00 - 20.00 WIB",
+      "venue": "Pakko Sport",
+      "city": "Jakarta Timur",
+      "locationUrl": "https://maps.app.goo.gl/M23haoR3twhaayau5",
+      "description": "Mabar Rutin BBC",
       "typeName": "Latihan Rutin"
     }
   ]
