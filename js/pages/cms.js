@@ -1417,14 +1417,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // File upload for gallery photo with FileReader (BBC_FS aware)
+    // File upload for gallery photo with FileReader (Vercel Blob & BBC_FS aware)
     const pgFileInput = document.getElementById('pg-photo-file');
     if (pgFileInput) {
         pgFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Coba simpan ke folder proyek via BBC_FS
+            // 1. Coba upload langsung ke Vercel Blob jika online
+            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
+                try {
+                    const uploadResult = await BBC_STORE.uploadToBlob(file, 'players');
+                    if (uploadResult && uploadResult.success && uploadResult.url) {
+                        document.getElementById('pg-photo-url').value = uploadResult.url;
+                        const previewBox = document.getElementById('pg-preview-box');
+                        if (previewBox) {
+                            previewBox.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
+                        }
+                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
+                        return;
+                    }
+                } catch (uploadErr) {
+                    console.info('[CMS] Vercel upload fallback:', uploadErr);
+                }
+            }
+
+            // 2. Coba simpan ke folder proyek via BBC_FS
             if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
                 try {
                     const result = await BBC_FS.writeImageFile('assets/images/players', file, '');
@@ -1440,7 +1458,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (err) {
                     console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
                 }
-            // Fallback: base64
+            }
+
+            // 3. Fallback: base64
             const reader = new FileReader();
             reader.onload = (evt) => {
                 const dataUrl = evt.target.result;
@@ -2825,7 +2845,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!file) return;
                     applyMediaTypeToggle('image');
 
-                    // Prioritas: simpan ke folder proyek jika BBC_FS tersedia
+                    // 1. Prioritas: Coba upload langsung ke Vercel Blob jika online
+                    if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
+                        try {
+                            const uploadResult = await BBC_STORE.uploadToBlob(file, 'hero');
+                            if (uploadResult && uploadResult.success && uploadResult.url) {
+                                if (fMainUrl) fMainUrl.value = uploadResult.url;
+                                updatePreview();
+                                showToast('☁️ Foto utama terupload ke Vercel Blob CDN!');
+                                return;
+                            }
+                        } catch (uploadErr) {
+                            console.info('[CMS] Hero upload fallback:', uploadErr);
+                        }
+                    }
+
+                    // 2. Simpan ke folder proyek jika BBC_FS tersedia
                     if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
                         showToast('⏳ Menyimpan foto utama ke folder proyek...');
                         try {
@@ -2839,7 +2874,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         } catch (err) {
                             console.warn('[CMS] BBC_FS error, fallback ke base64:', err);
                         }
-                    // Fallback: base64 dengan kompresi optimal
+                    }
+
+                    // 3. Fallback: base64 dengan kompresi optimal
                     showToast('⏳ Mengompres foto utama...');
                     try {
                         const base64 = await compressHeroImageFile(file, 960, 600, 0.76);
