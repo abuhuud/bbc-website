@@ -1,8 +1,10 @@
 import { put } from '@vercel/blob';
 
 /**
- * Endpoint Upload Avatar / Media ke Vercel Blob
- * Store: bbc-baznas-db (storeId: process.env.db_STORE_ID)
+ * Endpoint Server Upload ke Vercel Blob (Public Access)
+ *
+ * Menggunakan pola resmi Vercel Blob Public:
+ * const { url } = await put(pathname, body, { access: 'public' });
  */
 export default async function handler(req, res) {
   // CORS Headers
@@ -19,30 +21,36 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    let filename = url.searchParams.get('filename') || `avatar-${Date.now()}.jpg`;
+    const reqUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    let filename = reqUrl.searchParams.get('filename') || `file-${Date.now()}.jpg`;
     filename = filename.replace(/[^a-zA-Z0-9_.-]/g, '_');
 
-    // Folder prefix (misal 'avatars/' atau 'media/')
-    const folder = url.searchParams.get('folder') || 'avatars';
+    // Folder prefix (misal 'articles/', 'players/', 'gallery/', 'avatars/', 'hero/')
+    const folder = (reqUrl.searchParams.get('folder') || 'articles').replace(/^\/+|\/+$/g, '');
     const blobPath = `${folder}/${filename}`;
 
-    const requestedAccess = url.searchParams.get('access') || 'public';
     const storeId = process.env.db_STORE_ID || process.env.BLOB_STORE_ID;
     const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.db_READ_WRITE_TOKEN;
 
     const options = {
-      access: requestedAccess === 'private' ? 'private' : 'public',
+      access: 'public',
       addRandomSuffix: true
     };
     if (storeId) options.storeId = storeId;
     if (token) options.token = token;
 
-    const blob = await put(blobPath, req, options);
+    // Eksekusi put() dengan access: 'public' -> mengambil { url }
+    const { url, pathname, contentType, downloadUrl } = await put(blobPath, req, options);
 
-    return res.status(200).json(blob);
+    return res.status(200).json({
+      success: true,
+      url,
+      pathname,
+      contentType,
+      downloadUrl: downloadUrl || url
+    });
   } catch (err) {
-    console.error('[Vercel Blob Upload Error]:', err);
+    console.error('[Vercel Blob Public Upload Error]:', err);
     return res.status(500).json({
       success: false,
       error: err.message || 'Failed to upload to Vercel Blob'
