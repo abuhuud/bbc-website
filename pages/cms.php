@@ -98,7 +98,7 @@
                 </form>
 
                 <div style="margin-top: 24px; text-align: center;">
-                    <a href="../index.html" class="cms-btn-auth-back">
+                    <a href="../index.php" class="cms-btn-auth-back">
                         <span>← KEMBALI KE WEBSITE UTAMA</span>
                     </a>
                 </div>
@@ -232,7 +232,7 @@
 
             <!-- Sidebar Footer Quick Actions -->
             <div class="cms-sidebar__footer">
-                <a href="../index.html" class="cms-sidebar__btn-site" title="Buka Website Utama BAZNAS Badminton Club">
+                <a href="../index.php" class="cms-sidebar__btn-site" title="Buka Website Utama BAZNAS Badminton Club">
                     <span class="cms-btn-icon">🌐</span>
                     <span class="cms-sidebar__btn-text">LIHAT WEBSITE</span>
                     <span class="cms-btn-badge" aria-hidden="true">↗</span>
@@ -275,7 +275,7 @@
                                     <span id="cloud-sync-topbar-text" class="cms-cloud-sync-text">☁️ Vercel: Siap</span>
                                 </div>
 
-                                <a href="../index.html" class="cms-btn-topbar-site" title="Buka Website Utama BAZNAS Badminton Club">
+                                <a href="../index.php" class="cms-btn-topbar-site" title="Buka Website Utama BAZNAS Badminton Club">
                                     <span class="cms-btn-icon">🌐</span>
                                     <span class="cms-btn-text">LIHAT WEBSITE</span>
                                     <span class="cms-btn-badge" aria-hidden="true">↗</span>
@@ -487,7 +487,7 @@
                         </div>
 
                         <div style="margin-top: 16px;">
-                            <a href="../index.html" class="btn btn-primary cms-dash-preview-btn">
+                            <a href="../index.php" class="btn btn-primary cms-dash-preview-btn">
                                 <span>🌐 PRATINJAU WEBSITE UTAMA SEKARANG</span>
                                 <span>↗</span>
                             </a>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -71,11 +71,11 @@
 
                         <div class="hero-actions"
                             style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-                            <a href="pages/schedule.html" class="btn btn-primary" id="hero-schedule-cta">
+                            <a href="pages/schedule.php" class="btn btn-primary" id="hero-schedule-cta">
                                 <span>LIHAT JADWAL</span>
                                 <span style="font-family: var(--font-pixel);">🏸</span>
                             </a>
-                            <a href="pages/players.html" class="btn btn-outline" id="hero-players-cta">
+                            <a href="pages/players.php" class="btn btn-outline" id="hero-players-cta">
                                 <span>KENALI PEMAIN</span>
                                 <span style="font-family: var(--font-pixel);">→</span>
                             </a>
@@ -208,7 +208,7 @@
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span class="pixel-badge pixel-badge--green" id="agenda-period-badge">JANGAN LEWATKAN JADWAL
                             🏸</span>
-                        <a href="pages/schedule.html" class="btn btn-sm btn-outline">SEMUA JADWAL <span
+                        <a href="pages/schedule.php" class="btn btn-sm btn-outline">SEMUA JADWAL <span
                                 style="font-family: var(--font-pixel);">→</span></a>
                     </div>
                 </div>
@@ -279,7 +279,7 @@
                             Melalui rotasi permainan yang santai namun kompetitif, BBC menjadi ruang cair antar generasi
                             dan divisi di lingkungan BAZNAS RI tanpa sekat birokrasi formal.
                         </p>
-                        <a href="pages/profile.html" class="btn btn-outline">
+                        <a href="pages/profile.php" class="btn btn-outline">
                             <span>KENALAN DENGAN BBC</span>
                             <span style="font-family: var(--font-pixel);">→</span>
                         </a>
@@ -333,7 +333,7 @@
                         <span class="section-subtitle">OUR SQUAD // COLLECTIBLES</span>
                         <h2>KENALAN SAMA PEMAINNYA.</h2>
                     </div>
-                    <a href="pages/players.html" class="btn btn-outline">
+                    <a href="pages/players.php" class="btn btn-outline">
                         <span>LIHAT SEMUA PEMAIN</span>
                         <span style="font-family: var(--font-pixel);">→</span>
                     </a>
@@ -393,7 +393,7 @@
                         <span class="pixel-label">UPCOMING SESSIONS</span>
                         <h3 style="margin: 0;">JADWAL PERTANDINGAN & LATIHAN LAINNYA</h3>
                     </div>
-                    <a href="pages/schedule.html" class="btn btn-sm btn-outline">
+                    <a href="pages/schedule.php" class="btn btn-sm btn-outline">
                         <span>LIHAT SEMUA JADWAL</span>
                         <span style="font-family: var(--font-pixel);">→</span>
                     </a>
@@ -495,7 +495,7 @@
                         <span class="section-subtitle">BBC STORIES</span>
                         <h2>CERITA DARI LAPANGAN.</h2>
                     </div>
-                    <a href="pages/news.html" class="btn btn-outline">
+                    <a href="pages/news.php" class="btn btn-outline">
                         <span>BACA SEMUA ARTIKEL</span>
                         <span style="font-family: var(--font-pixel);">→</span>
                     </a>

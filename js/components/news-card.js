@@ -30,7 +30,7 @@ function createNewsCard(article) {
             </div>
 
             <h3 class="news-card__title">
-                <a href="${detailBase}article-detail.html?id=${article.id}" style="color: inherit; text-decoration: none;">
+                <a href="${detailBase}article-detail.php?id=${article.id}" style="color: inherit; text-decoration: none;">
                     ${article.title}
                 </a>
             </h3>
@@ -40,7 +40,7 @@ function createNewsCard(article) {
             </p>
 
             <div style="margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--color-light-grey);">
-                <a href="${detailBase}article-detail.html?id=${article.id}" class="btn btn-outline btn-sm" aria-label="Baca selengkapnya artikel ${article.title}">
+                <a href="${detailBase}article-detail.php?id=${article.id}" class="btn btn-outline btn-sm" aria-label="Baca selengkapnya artikel ${article.title}">
                     <span>BACA CERITA</span>
                     <span style="font-family: var(--font-pixel);">→</span>
                 </a>

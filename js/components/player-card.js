@@ -15,7 +15,7 @@ function createPlayerCard(player, options) {
     const playerSlug = (typeof BBC_STORE !== 'undefined' && BBC_STORE.slugify)
         ? BBC_STORE.slugify(player.name)
         : (player.slug || (typeof BBC_slugify === 'function' ? BBC_slugify(player.name) : (player.name || '').toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')));
-    const detailUrl = `${detailBase}player-detail.html?slug=${encodeURIComponent(playerSlug)}`;
+    const detailUrl = `${detailBase}player-detail.php?slug=${encodeURIComponent(playerSlug)}`;
 
     const isPotm = !!player.isPlayerOfTheMonth;
     const base = inPages ? '../' : '';

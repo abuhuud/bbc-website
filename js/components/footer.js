@@ -94,27 +94,27 @@ function renderFooter() {
                     </div>
                     <ul class="footer__links">
                         <li>
-                            <a href="${base}index.html" class="footer__link">
+                            <a href="${base}index.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Beranda
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/profile.html" class="footer__link">
+                            <a href="${base}pages/profile.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Profil BBC
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/players.html" class="footer__link">
+                            <a href="${base}pages/players.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Daftar Pemain
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Jadwal &amp; Kegiatan
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/news.html" class="footer__link">
+                            <a href="${base}pages/news.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Berita &amp; Artikel
                             </a>
                         </li>
@@ -129,27 +129,27 @@ function renderFooter() {
                     </div>
                     <ul class="footer__links">
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Latihan Rutin
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Friendly Match
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Turnamen Internal
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Fun Match
                             </a>
                         </li>
                         <li>
-                            <a href="${base}pages/schedule.html" class="footer__link">
+                            <a href="${base}pages/schedule.php" class="footer__link">
                                 <span class="footer__link-arrow">→</span> Gathering &amp; Sharing
                             </a>
                         </li>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
         <section class="section court-pattern-bg">
             <div class="container container-narrow">
                 <div style="margin-bottom: 24px;">
-                    <a href="news.html" class="btn btn-outline btn-sm">
+                    <a href="news.php" class="btn btn-outline btn-sm">
                         <span style="font-family: var(--font-pixel);">←</span>
                         <span>KEMBALI KE SEMUA ARTIKEL</span>
                     </a>

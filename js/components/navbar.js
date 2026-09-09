@@ -3,29 +3,29 @@
  * Reusable Navbar Component
  *
  * Navigation links point to pages/ subfolder for all
- * sub-pages; index.html lives at root.
+ * sub-pages; index.php lives at root.
  */
 function renderNavbar() {
     // Determine active menu item based on current pathname
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const currentPath = window.location.pathname.split('/').pop() || 'index.php';
     const isInPagesDir = window.location.pathname.includes('/pages/');
 
-    // Base href: if we're inside pages/, index.html is at ../
+    // Base href: if we're inside pages/, index.php is at ../
     const base = isInPagesDir ? '../' : '';
 
     const navItems = [
-        { label: "Beranda", file: "index.html", href: `${base}index.html` },
-        { label: "Profil BBC", file: "profile.html", href: `${base}pages/profile.html` },
-        { label: "Daftar Pemain", file: "players.html", href: `${base}pages/players.html` },
-        { label: "Jadwal & Kegiatan", file: "schedule.html", href: `${base}pages/schedule.html` },
-        { label: "Berita & Artikel", file: "news.html", href: `${base}pages/news.html` }
+        { label: "Beranda", file: "index.php", href: `${base}index.php` },
+        { label: "Profil BBC", file: "profile.php", href: `${base}pages/profile.php` },
+        { label: "Daftar Pemain", file: "players.php", href: `${base}pages/players.php` },
+        { label: "Jadwal & Kegiatan", file: "schedule.php", href: `${base}pages/schedule.php` },
+        { label: "Berita & Artikel", file: "news.php", href: `${base}pages/news.php` }
     ];
 
     const navLinksHtml = navItems.map(item => {
         const isActive = (currentPath === item.file) ||
-            (currentPath === '' && item.file === 'index.html') ||
-            (currentPath === 'player-detail.html' && item.file === 'players.html') ||
-            (currentPath === 'article-detail.html' && item.file === 'news.html');
+            ((currentPath === '' || currentPath === 'index.html' || currentPath === 'index.php') && item.file === 'index.php') ||
+            ((currentPath === 'player-detail.php' || currentPath === 'player-detail.html') && item.file === 'players.php') ||
+            ((currentPath === 'article-detail.php' || currentPath === 'article-detail.html') && item.file === 'news.php');
         return `
             <a href="${item.href}" class="navbar__link ${isActive ? 'active' : ''}">
                 ${item.label}
@@ -40,7 +40,7 @@ function renderNavbar() {
     const navbarHTML = `
     <header class="navbar" id="main-header" role="banner">
         <div class="container navbar__inner">
-            <a href="${base}index.html" class="navbar__brand" aria-label="Beranda BAZNAS Badminton Club">
+            <a href="${base}index.php" class="navbar__brand" aria-label="Beranda BAZNAS Badminton Club">
                 <img
                     src="${base}assets/images/brand/logo.png"
                     alt="BAZNAS Badminton Club Logo"

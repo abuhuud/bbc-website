@@ -59,7 +59,7 @@ BBC_onReady(() => {
                 <span class="pixel-badge pixel-badge--yellow" style="margin-bottom: 12px;">STATUS: ERROR 404</span>
                 <h3>PEMAIN TIDAK DITEMUKAN</h3>
                 <p>Data profil pemain tidak tercatat dalam roster resmi BBC.</p>
-                <a href="players.html" class="btn btn-primary" style="margin-top: 18px;">
+                <a href="players.php" class="btn btn-primary" style="margin-top: 18px;">
                     <span>← KEMBALI KE DAFTAR PEMAIN</span>
                 </a>
             </div>
@@ -145,7 +145,7 @@ BBC_onReady(() => {
 
         <!-- ===== TOP NAVIGATION BAR ===== -->
         <div class="pd-top-nav">
-            <a href="players.html" class="btn btn-outline btn-sm">
+            <a href="players.php" class="btn btn-outline btn-sm">
                 <span style="font-family: var(--font-pixel);">←</span>
                 <span>KEMBALI KE DAFTAR PEMAIN</span>
             </a>
@@ -329,14 +329,14 @@ BBC_onReady(() => {
 
                     <!-- Bottom Navigation Inside Card -->
                     <div class="pd-card-footer">
-                        <a href="player-detail.html?slug=${encodeURIComponent(prevSlug)}" class="btn btn-outline btn-sm">
+                        <a href="player-detail.php?slug=${encodeURIComponent(prevSlug)}" class="btn btn-outline btn-sm">
                             <span style="font-family: var(--font-pixel);">←</span>
                             <span>${prevPlayer.name.split(' ')[0]}</span>
                         </a>
-                        <a href="players.html" class="btn btn-outline btn-sm">
+                        <a href="players.php" class="btn btn-outline btn-sm">
                             <span>SEMUA PEMAIN</span>
                         </a>
-                        <a href="player-detail.html?slug=${encodeURIComponent(nextSlug)}" class="btn btn-primary btn-sm">
+                        <a href="player-detail.php?slug=${encodeURIComponent(nextSlug)}" class="btn btn-primary btn-sm">
                             <span>${nextPlayer.name.split(' ')[0]}</span>
                             <span style="font-family: var(--font-pixel);">→</span>
                         </a>
