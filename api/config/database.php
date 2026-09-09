@@ -1,7 +1,7 @@
 <?php
 /**
  * BAZNAS Badminton Club (BBC) — Database & API Configuration
- * Mendukung koneksi PDO MySQL lokal (XAMPP/Docker) dan cloud (Vercel, TiDB, PlanetScale, Railway, Supabase).
+ * Mendukung koneksi PDO MariaDB & MySQL lokal (XAMPP/Laragon/Docker) dan cloud (Vercel, Aiven MariaDB, Railway, TiDB, SkySQL).
  */
 
 header('Access-Control-Allow-Origin: *');
@@ -19,7 +19,7 @@ class Database {
     private static ?PDO $pdo = null;
 
     /**
-     * Dapatkan koneksi PDO singleton ke MySQL
+     * Dapatkan koneksi PDO singleton ke MariaDB / MySQL
      * @return PDO
      */
     public static function getConnection(): PDO {

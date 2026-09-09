@@ -805,7 +805,7 @@
 
 
                 <!-- ============================================================
-                     PANEL: DATABASE MYSQL & PHP REST API (REAL-TIME CRUD)
+                     PANEL: DATABASE MARIADB & PHP REST API (REAL-TIME CRUD)
                      ============================================================ -->
                 <div class="cms-card" id="mysql-db-panel"
                     style="border-top: 6px solid #009B63; background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%); margin-top: 0; box-shadow: 4px 4px 0 var(--cms-dark);">
@@ -813,7 +813,7 @@
                     <!-- Header -->
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
                         <div class="pixel-badge pixel-badge--green" style="font-size: 0.75rem;">
-                            🗄️ DATABASE MYSQL (PHP REST API)
+                            🗄️ DATABASE MARIADB (PHP REST API)
                         </div>
                         <span class="pixel-badge" id="db-status-badge"
                             style="font-size: 0.65rem; padding: 3px 10px; background: #64748B; color: white;">
@@ -825,9 +825,9 @@
                         </span>
                     </div>
 
-                    <h3 class="cms-backup-title" style="color: #065F46; font-size: 1.25rem;">SINKRONISASI DATABASE MYSQL SERVERLESS</h3>
+                    <h3 class="cms-backup-title" style="color: #065F46; font-size: 1.25rem;">SINKRONISASI DATABASE MARIADB SERVERLESS</h3>
                     <p class="cms-backup-desc" style="color: #047857; font-weight: 500; line-height: 1.6;">
-                        Setiap aksi <strong>Tambah, Edit, dan Hapus</strong> data (pemain, jadwal, galeri, berita, pengurus, media hero) melalui CMS akan otomatis tersimpan langsung ke database MySQL secara instan melalui <strong>Serverless PHP REST API (<code>/api/*</code>)</strong> tanpa perlu build ulang di Vercel.
+                        Setiap aksi <strong>Tambah, Edit, dan Hapus</strong> data (pemain, jadwal, galeri, berita, pengurus, media hero) melalui CMS akan otomatis tersimpan langsung ke database MariaDB (atau MySQL) secara instan melalui <strong>Serverless PHP REST API (<code>/api/*</code>)</strong> tanpa perlu build ulang di Vercel.
                     </p>
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0;">
@@ -863,14 +863,14 @@
                                     ⚡ MIGRASI DATA AWAL (SEEDER)
                                 </div>
                                 <p style="font-size: 0.78rem; color: #475569; line-height: 1.5; margin: 0 0 12px 0;">
-                                    Belum ada data di database MySQL baru Anda? Jalankan seeder 1-klik untuk mengimpor seluruh data roster, jadwal, pengurus, galeri, berita, dan konfigurasi hero bawaan ke MySQL.
+                                    Belum ada data di database MariaDB baru Anda? Jalankan seeder 1-klik untuk mengimpor seluruh data roster, jadwal, pengurus, galeri, berita, dan konfigurasi hero bawaan ke MariaDB.
                                 </p>
                             </div>
 
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                 <button type="button" id="btn-seed-database" class="btn btn-primary btn-sm"
                                     style="flex: 1; min-width: 170px; justify-content: center; background: #009B63; border-color: #0D1612; box-shadow: 3px 3px 0 #0D1612; font-size: 0.82rem; padding: 10px 14px;">
-                                    <span>⚡ SINKRONKAN / SEED KE MYSQL</span>
+                                    <span>⚡ SINKRONKAN / SEED KE MARIADB</span>
                                 </button>
                                 <button type="button" id="btn-test-db" class="btn btn-outline btn-sm"
                                     style="border-color: #0D1612; font-size: 0.8rem; padding: 10px 14px;">
@@ -883,7 +883,7 @@
                     <!-- Environment Variable Guide -->
                     <div style="background: #FEF9C3; border: 2px solid #CA8A04; border-radius: 8px; padding: 12px 14px; font-size: 0.75rem; color: #854D0E; line-height: 1.6;">
                         <strong>💡 Konfigurasi Database Vercel:</strong> Pastikan Anda telah menambahkan Environment Variables pada Vercel Dashboard (Settings → Environment Variables):<br>
-                        <code>DB_HOST</code>, <code>DB_PORT</code> (default: 3306), <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASS</code>, dan <code>DB_SSL</code> (true untuk TiDB Cloud / PlanetScale / Aiven / cloud MySQL lainnya).
+                        <code>DB_HOST</code>, <code>DB_PORT</code> (default: 3306), <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASS</code>, dan <code>DB_SSL</code> (true untuk Aiven MariaDB / SkySQL / cloud database ber-SSL).
                     </div>
                 </div>
 

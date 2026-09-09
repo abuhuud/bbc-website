@@ -1,11 +1,12 @@
 -- ==========================================================
--- BAZNAS Badminton Club (BBC) — Database Schema (MySQL)
--- Versi: 3.0.0
--- Karakter Set: utf8mb4 (dukungan penuh emoji & multibyte)
+-- BAZNAS Badminton Club (BBC) — Database Schema (MariaDB & MySQL)
+-- Engine: MariaDB 10.3+ / 10.4+ / 10.5+ / 10.6+ / 10.11 LTS / 11.x & MySQL 8.x
+-- Karakter Set: utf8mb4 (dukungan penuh emoji & multibyte UTF-8)
 -- ==========================================================
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
 -- ----------------------------------------------------------
 -- 1. TABEL: bbc_users (Autentikasi Pengelola CMS)

@@ -471,25 +471,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const health = await BBC_STORE.checkApiHealth(forceRefresh);
 
             if (health && health.database === 'connected') {
+                const engine = health.engine || 'MariaDB';
                 if (badge) {
-                    badge.textContent = '🟢 TERHUBUNG KE MYSQL';
+                    badge.textContent = `🟢 TERHUBUNG KE ${engine.toUpperCase()}`;
                     badge.style.background = '#059669';
                     badge.style.color = '#FFFFFF';
                 }
                 if (hostBadge) {
                     hostBadge.style.display = '';
-                    hostBadge.textContent = `HOST: ${health.db_host || 'MySQL'}`;
+                    hostBadge.textContent = `HOST: ${health.db_host || engine}`;
                 }
                 if (infoConnected) {
-                    infoConnected.innerHTML = '<span style="color:#059669;font-weight:800;">✅ Terhubung ke MySQL</span>';
+                    infoConnected.innerHTML = `<span style="color:#059669;font-weight:800;">✅ Terhubung ke ${engine}</span>`;
                 }
                 if (infoHost) {
                     infoHost.textContent = `${health.db_host || 'localhost'} (DB: ${health.db_name || 'bbc_database'})`;
                 }
                 if (infoEngine && health.php_version) {
-                    infoEngine.textContent = `PHP ${health.php_version} Serverless (${health.mysql_version ? 'MySQL ' + health.mysql_version : 'MySQL'})`;
+                    infoEngine.textContent = `PHP ${health.php_version} Serverless (${health.db_version || engine})`;
                 }
-                updateCloudSyncTopbarBadge('ready', '🗄️ MySQL: Online');
+                updateCloudSyncTopbarBadge('ready', `🗄️ ${engine}: Online`);
                 return true;
             } else {
                 if (badge) {
@@ -507,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (infoHost) {
                     infoHost.textContent = 'Tidak terhubung (Mode Fallback JSON)';
                 }
-                updateCloudSyncTopbarBadge('offline', '🗄️ MySQL: Standby');
+                updateCloudSyncTopbarBadge('offline', '🗄️ MariaDB: Standby');
                 return false;
             }
         } catch (err) {
@@ -518,13 +519,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (infoConnected) {
                 infoConnected.innerHTML = `<span style="color:#DC2626;font-weight:700;">❌ Terputus (${err.message || 'Network Error'})</span>`;
             }
-            updateCloudSyncTopbarBadge('error', '🗄️ MySQL: Offline');
+            updateCloudSyncTopbarBadge('error', '🗄️ MariaDB: Offline');
             return false;
         }
     }
 
     /**
-     * Inisialisasi event listener panel Database MySQL di tab Backup.
+     * Inisialisasi event listener panel Database MySQL/MariaDB di tab Backup.
      */
     function initDatabaseUI() {
         updateDatabaseStatusUI();
@@ -553,19 +554,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnTestDb.disabled = false;
                 btnTestDb.innerHTML = '<span>🔄 CEK KONEKSI</span>';
                 if (isOnline) {
-                    showToast('✅ Koneksi ke MySQL & PHP REST API berhasil!');
+                    showToast('✅ Koneksi ke Database MariaDB & PHP REST API berhasil!');
                 } else {
-                    showToast('⚠️ Koneksi ke MySQL belum aktif. Pastikan environment variables di Vercel sudah diatur.', 'warning');
+                    showToast('⚠️ Koneksi database belum aktif. Pastikan environment variables di Vercel sudah diatur.', 'warning');
                 }
             });
         }
 
-        // Tombol Seed / Migrasi ke MySQL
+        // Tombol Seed / Migrasi ke MariaDB
         const btnSeedDb = document.getElementById('btn-seed-database');
         if (btnSeedDb && !btnSeedDb._dbWired) {
             btnSeedDb._dbWired = true;
             btnSeedDb.addEventListener('click', async () => {
-                const confirmed = confirm('Apakah Anda yakin ingin melakukan sinkronisasi / migrasi data awal ke MySQL?\n\nSemua data dari file JSON lokal akan diimpor ke database MySQL.');
+                const confirmed = confirm('Apakah Anda yakin ingin melakukan sinkronisasi / migrasi data awal ke database MariaDB?\n\nSemua data dari file JSON lokal akan diimpor ke tabel database MariaDB.');
                 if (!confirmed) return;
 
                 btnSeedDb.disabled = true;
@@ -574,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const result = await BBC_STORE.triggerSeed();
                     if (result && result.success) {
-                        showToast('🎉 Berhasil! Seluruh data awal telah disinkronkan ke database MySQL.');
+                        showToast('🎉 Berhasil! Seluruh data awal telah disinkronkan ke database MariaDB.');
                         await updateDatabaseStatusUI(true);
                         renderAll();
                     } else {
@@ -585,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(`❌ Error migrasi: ${err.message}`, 'error');
                 } finally {
                     btnSeedDb.disabled = false;
-                    btnSeedDb.innerHTML = '<span>⚡ SINKRONKAN / SEED KE MYSQL</span>';
+                    btnSeedDb.innerHTML = '<span>⚡ SINKRONKAN / SEED KE MARIADB</span>';
                 }
             });
         }

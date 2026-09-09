@@ -5,30 +5,67 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
-2. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
-3. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
-4. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
-5. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
-6. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-7. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-8. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-9. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-10. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-11. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-12. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-13. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-14. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-15. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-16. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-17. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-18. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-19. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-20. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-21. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-22. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-23. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-24. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine](#-v310---optimalisasi--dukungan-penuh-database-mariadb-mariadb-10x--11x--deteksi-otomatis-engine)
+2. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
+3. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
+4. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
+5. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
+6. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+7. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+8. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+9. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+10. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+11. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+12. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+13. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+14. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+15. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+16. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+17. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+18. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+19. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+20. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+21. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+22. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+23. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+24. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+25. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"buat dalam maria db"*
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Penyesuaian Skema DDL MariaDB (`database/schema.sql`):**
+   - Mengoptimalkan seluruh perintah DDL agar berjalan secara native pada MariaDB 10.3+, 10.4+, 10.5+, 10.6+, 10.11 LTS, dan 11.x (serta tetap kompatibel dengan MySQL 8.x).
+   - Menambahkan pengaturan sesi `SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"`, penonaktifan pengecekan foreign key sementara, serta deklarasi charset `utf8mb4_unicode_ci` dan engine `InnoDB`.
+   - Menggunakan tipe `LONGTEXT` untuk payload JSON fleksibel yang kompatibel di seluruh versi MariaDB.
+2. **Auto-Detection Engine MariaDB pada Health Diagnostic (`api/health.php`):**
+   - Membaca versi database dari query `SELECT VERSION()`.
+   - Otomatis mendeteksi string `MariaDB` dan menyertakan field `engine: "MariaDB"`, `is_mariadb: true`, serta string versi spesifik (misal `10.11.8-MariaDB`).
+3. **Penyelarasan Handler Koneksi PDO (`api/config/database.php`):**
+   - Mendokumentasikan dan memvalidasi koneksi PDO `mysql:` driver untuk MariaDB lokal (XAMPP/Laragon) maupun cloud (Aiven MariaDB, Railway MariaDB, Clever Cloud, SkySQL).
+4. **Pembaruan Panduan Setup MariaDB (`database/README.md`):**
+   - Menyediakan panduan terperinci untuk membuat database MariaDB di penyedia cloud gratis/handal (Aiven for MariaDB, Railway, Clever Cloud, SkySQL, cPanel/VPS) dan lokal XAMPP/Laragon.
+5. **Modernisasi UI CMS untuk MariaDB (`pages/cms.html`, `js/pages/cms.js`):**
+   - Memperbarui label kartu kontrol menjadi **DATABASE MARIADB (PHP REST API)**.
+   - Mengubah tombol migrasi menjadi **⚡ SINKRONKAN / SEED KE MARIADB**.
+   - Menampilkan status badge koneksi reaktif sesuai engine yang terhubung (`🟢 TERHUBUNG KE MARIADB`).
+
+### 📁 Berkas yang Dimodifikasi
+| Berkas | Status | Ringkasan Perubahan |
+|---|---|---|
+| `database/schema.sql` | Diperbarui | Header deklarasi MariaDB 10.x/11.x & SQL mode compatibility |
+| `database/README.md` | Diperbarui | Panduan lengkap deployment MariaDB Cloud & Local (XAMPP/Laragon) |
+| `api/config/database.php` | Diperbarui | Penyesuaian dokumentasi & koneksi PDO singleton untuk MariaDB |
+| `api/health.php` | Diperbarui | Logika auto-detection engine MariaDB vs MySQL via `VERSION()` |
+| `pages/cms.html` | Diperbarui | Penyesuaian label panel kontrol database & tombol seed MariaDB |
+| `js/pages/cms.js` | Diperbarui | Tampilan status reaktif MariaDB dan konfirmasi migrasi data |
+| `CHANGELOG.md` | Diperbarui | Pencatatan detail rilis v3.1.0 & pembaruan daftar isi |
 
 ---
 
