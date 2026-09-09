@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBC Admin Control Center — BAZNAS Badminton Club</title>
+    <title>CMS Pengelola Konten — BAZNAS Badminton Club</title>
     <meta name="description"
         content="Dashboard manajemen konten mandiri BAZNAS Badminton Club: kelola pemain, jadwal, foto kegiatan, dan berita.">
 
@@ -61,8 +61,8 @@
                 </div>
                 <h2 style="font-size: 1.7rem; margin: 0 0 6px 0; color: var(--color-white); letter-spacing: -0.01em;">
                     BBC CMS LOGIN</h2>
-                <div style="font-family: var(--font-pixel); font-size: 0.74rem; color: var(--cms-mint);">
-                    ✦ MASUKKAN KREDENSIAL ADMIN BBC ✦
+                <div style="font-family: var(--font-pixel); font-size: 0.65rem; color: var(--cms-mint);">
+                    ✦ MASUKKAN ID &amp; PASSWORD PENGELOLA ✦
                 </div>
             </div>
 
@@ -93,7 +93,7 @@
                     <button type="submit" class="btn btn-primary"
                         style="width: 100%; justify-content: center; margin-top: 24px; padding: 13px; font-size: 1rem; box-shadow: 4px 4px 0 var(--cms-dark);">
                         <span>MASUK KE DASHBOARD</span>
-                        <span class="btn-arrow">→</span>
+                        <span style="font-family: var(--font-pixel);">→</span>
                     </button>
                 </form>
 
@@ -111,7 +111,7 @@
          ========================================== -->
     <div class="cms-app-wrapper" id="cms-app-wrapper">
         <!-- Collapsible Left Sidebar Navigation (Desktop, Tablet & Mobile Drawer) -->
-        <aside class="cms-sidebar" id="cms-sidebar" aria-label="Navigasi Menu Admin BBC">
+        <aside class="cms-sidebar" id="cms-sidebar" aria-label="Navigasi Modul CMS">
             <!-- Sidebar Header & Brand -->
             <div class="cms-sidebar__header">
                 <div class="cms-sidebar__brand">
@@ -129,8 +129,8 @@
             <!-- Sidebar Nav Modul List (Uniform Box Sizes) -->
             <div class="cms-sidebar__body">
                 <div class="cms-sidebar__section-header">
-                    <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.74rem;">NAVIGASI MENU</span>
-                    <span class="cms-sidebar__badge-version">v4.2</span>
+                    <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.65rem;">✦ MODUL PENGELOLA</span>
+                    <span class="cms-sidebar__badge-version">V2.6</span>
                 </div>
 
                 <ul class="cms-tabs-list" role="tablist">
@@ -196,7 +196,7 @@
                     <li>
                         <button type="button" class="cms-tab-btn" data-tab="hero" role="tab" aria-selected="false">
                             <span class="cms-tab-btn__main">
-                                <span class="cms-tab-icon">🎨</span>
+                                <span class="cms-tab-icon">🎬</span>
                                 <span class="cms-tab-btn__text">HERO MEDIA</span>
                             </span>
                             <span class="cms-tab-btn__end">
@@ -207,7 +207,7 @@
                     <li>
                         <button type="button" class="cms-tab-btn" data-tab="officials" role="tab" aria-selected="false">
                             <span class="cms-tab-btn__main">
-                                <span class="cms-tab-icon">👥</span>
+                                <span class="cms-tab-icon">👔</span>
                                 <span class="cms-tab-btn__text">PENGURUS</span>
                             </span>
                             <span class="cms-tab-btn__end">
@@ -219,7 +219,7 @@
                     <li>
                         <button type="button" class="cms-tab-btn" data-tab="backup" role="tab" aria-selected="false">
                             <span class="cms-tab-btn__main">
-                                <span class="cms-tab-icon">📦</span>
+                                <span class="cms-tab-icon">💾</span>
                                 <span class="cms-tab-btn__text">BACKUP</span>
                             </span>
                             <span class="cms-tab-btn__end">
@@ -237,7 +237,7 @@
                     <span class="cms-sidebar__btn-text">LIHAT WEBSITE</span>
                     <span class="cms-btn-badge" aria-hidden="true">↗</span>
                 </a>
-                <button type="button" class="cms-sidebar__btn-logout" id="btn-sidebar-logout" title="Keluar dari Dashboard Admin">
+                <button type="button" class="cms-sidebar__btn-logout" id="btn-sidebar-logout" title="Keluar dari CMS Pengelola">
                     <span class="cms-btn-icon">🚪</span>
                     <span class="cms-sidebar__btn-text">KELUAR</span>
                 </button>
@@ -269,10 +269,10 @@
                         <div class="cms-topbar__controls">
                             <!-- Desktop & Tablet Actions -->
                             <div class="cms-topbar__actions cms-topbar__actions--desktop">
-                                <!-- Real-time Vercel Cloud Sync Status Badge -->
-                                <div id="cloud-sync-topbar-badge" class="cms-cloud-sync-badge cms-cloud-sync-badge--ready" title="Status Sinkronisasi Real-time Vercel Blob" style="cursor: pointer;">
+                                <!-- Cloud Sync Status Badge (Vercel / GitHub Auto-Deploy) -->
+                                <div id="cloud-sync-topbar-badge" class="cms-cloud-sync-badge" title="Status Auto-Deploy ke Vercel" style="cursor: pointer;">
                                     <span class="cms-cloud-sync-dot" id="cloud-sync-dot"></span>
-                                    <span id="cloud-sync-topbar-text" class="cms-cloud-sync-text">☁️ Vercel Sync: Siap</span>
+                                    <span id="cloud-sync-topbar-text" class="cms-cloud-sync-text">☁️ Vercel: Siap</span>
                                 </div>
 
                                 <a href="../index.html" class="cms-btn-topbar-site" title="Buka Website Utama BAZNAS Badminton Club">
@@ -280,7 +280,7 @@
                                     <span class="cms-btn-text">LIHAT WEBSITE</span>
                                     <span class="cms-btn-badge" aria-hidden="true">↗</span>
                                 </a>
-                                <button type="button" class="cms-btn-topbar-logout" id="btn-logout" title="Keluar dari Dashboard Admin">
+                                <button type="button" class="cms-btn-topbar-logout" id="btn-logout" title="Keluar dari CMS Pengelola">
                                     <span class="cms-btn-icon">🚪</span>
                                     <span class="cms-btn-text">KELUAR</span>
                                 </button>
@@ -306,7 +306,7 @@
                             <span class="pixel-badge pixel-badge--green">LIVE SINKRONISASI</span>
                         </div>
                         <h2 class="cms-dashboard-hero__title">
-                            SELAMAT DATANG DI BBC ADMIN 🏸
+                            HALO PENGELOLA BBC! 🏸
                         </h2>
                         <p class="cms-dashboard-hero__desc">
                             Selamat datang di BBC Control Center. Kelola data pemain, agenda kegiatan, galeri foto, artikel turnamen, dan kepengurusan klub secara langsung.
@@ -367,7 +367,7 @@
                     </div>
 
                     <div class="cms-stat-card" data-stat-tab="officials" role="button" tabindex="0" title="Buka Tab Pengurus">
-                        <div class="cms-stat-card__icon" style="background: rgba(2, 83, 53, 0.14); color: var(--color-primary-dark);">👥</div>
+                        <div class="cms-stat-card__icon" style="background: rgba(2, 83, 53, 0.14); color: var(--color-primary-dark);">👔</div>
                         <div class="cms-stat-card__info">
                             <div class="cms-stat-card__label">PENGURUS BBC</div>
                             <div class="cms-stat-card__value" id="stat-total-officials">0</div>
@@ -393,8 +393,8 @@
                     <!-- Module Shortcut List -->
                     <div class="cms-dash-widget">
                         <div class="cms-dash-widget__header">
-                            <h3 class="cms-dash-widget__title">⚡ AKSES CEPAT</h3>
-                            <span class="pixel-badge pixel-badge--yellow">PINTASAN MENU</span>
+                            <h3 class="cms-dash-widget__title">📌 PUSAT NAVIGASI MODUL</h3>
+                            <span class="pixel-badge pixel-badge--yellow">7 MODUL PENGELOLA</span>
                         </div>
                         <div class="cms-dash-modules-list">
                             <div class="cms-dash-module-item" data-stat-tab="players" role="button" tabindex="0">
@@ -430,7 +430,7 @@
                                 <span class="cms-dash-module-btn">BUKA TAB →</span>
                             </div>
                             <div class="cms-dash-module-item" data-stat-tab="hero" role="button" tabindex="0">
-                                <span class="cms-dash-module-icon">🎨</span>
+                                <span class="cms-dash-module-icon">🎬</span>
                                 <div class="cms-dash-module-info">
                                     <div class="cms-dash-module-title">Kustomisasi Media Hero</div>
                                     <div class="cms-dash-module-desc">Atur foto dan video banner utama di homepage website.</div>
@@ -438,7 +438,7 @@
                                 <span class="cms-dash-module-btn">BUKA TAB →</span>
                             </div>
                             <div class="cms-dash-module-item" data-stat-tab="officials" role="button" tabindex="0">
-                                <span class="cms-dash-module-icon">👥</span>
+                                <span class="cms-dash-module-icon">👔</span>
                                 <div class="cms-dash-module-info">
                                     <div class="cms-dash-module-title">Struktur Pengurus BBC</div>
                                     <div class="cms-dash-module-desc">Kelola nama, jabatan, foto, dan susunan organisasi.</div>
@@ -446,7 +446,7 @@
                                 <span class="cms-dash-module-btn">BUKA TAB →</span>
                             </div>
                             <div class="cms-dash-module-item" data-stat-tab="backup" role="button" tabindex="0">
-                                <span class="cms-dash-module-icon">📦</span>
+                                <span class="cms-dash-module-icon">💾</span>
                                 <div class="cms-dash-module-info">
                                     <div class="cms-dash-module-title">Backup &amp; Restore Database</div>
                                     <div class="cms-dash-module-desc">Unduh cadangan data JSON dan pulihkan kapan saja.</div>
@@ -459,7 +459,7 @@
                     <!-- System Status & Helpful Tips -->
                     <div class="cms-dash-widget">
                         <div class="cms-dash-widget__header">
-                            <h3 class="cms-dash-widget__title">⚡ STATUS SISTEM &amp; PANDUAN</h3>
+                            <h3 class="cms-dash-widget__title">ℹ️ STATUS SISTEM &amp; TIPS</h3>
                             <span class="pixel-badge pixel-badge--green">STATUS: SIAP</span>
                         </div>
                         <div class="cms-dash-status-box">
@@ -478,7 +478,7 @@
                         </div>
 
                         <div class="cms-dash-tips-card">
-                            <div class="cms-dash-tips-title">💡 TIPS PENGELOLAAN:</div>
+                            <div class="cms-dash-tips-title">💡 TIPS PENGELOLAAN DATA:</div>
                             <ul class="cms-dash-tips-list">
                                 <li>Setiap perubahan data (pemain, jadwal, foto, berita) langsung otomatis tampil di <strong>Website Utama</strong> secara instan.</li>
                                 <li>Gunakan tombol <strong>Backup &amp; Restore</strong> untuk mengekspor cadangan database JSON secara berkala.</li>
@@ -503,7 +503,7 @@
                 <div class="cms-card cms-card--players">
                     <div class="cms-card__header">
                         <div>
-                            <div class="pixel-badge pixel-badge--green" style="font-size: 0.74rem; margin-bottom: 6px;">
+                            <div class="pixel-badge pixel-badge--green" style="font-size: 0.65rem; margin-bottom: 6px;">
                                 DATA MASTER // ROSTER</div>
                             <h2 class="cms-card__title">🏸 MANAJEMEN PEMAIN BBC</h2>
                             <div class="cms-card__desc">Kelola seluruh skuad pemain Amilin dan Amilat, statistik performa, dan daftar prestasi.</div>
@@ -527,7 +527,7 @@
                                 <option value="female">🏸 Hanya Amilat</option>
                             </select>
                         </div>
-                        <div class="pixel-badge pixel-badge--dark" style="font-size: 0.74rem;">
+                        <div class="pixel-badge pixel-badge--dark" style="font-size: 0.65rem;">
                             AUTO-SYNCED
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                     <div class="cms-card__header">
                         <div>
                             <div class="pixel-badge pixel-badge--yellow"
-                                style="font-size: 0.74rem; margin-bottom: 6px;">DATA MASTER // SCHEDULE</div>
+                                style="font-size: 0.65rem; margin-bottom: 6px;">DATA MASTER // SCHEDULE</div>
                             <h2 class="cms-card__title">📅 MANAJEMEN JADWAL &amp; KEGIATAN</h2>
                             <div class="cms-card__desc">Kelola sesi latihan rutin, laga persahabatan, dan turnamen
                                 internal BBC.</div>
@@ -578,7 +578,7 @@
                                 ⚡ DAFTAR SESI LAPANGAN AKTIF
                             </div>
                         </div>
-                        <div class="pixel-badge pixel-badge--yellow" style="font-size: 0.74rem;">
+                        <div class="pixel-badge pixel-badge--yellow" style="font-size: 0.65rem;">
                             LIVE AGENDA
                         </div>
                     </div>
@@ -610,7 +610,7 @@
                 <div class="cms-card cms-card--gallery">
                     <div class="cms-card__header">
                         <div>
-                            <div class="pixel-badge pixel-badge--coral" style="font-size: 0.74rem; margin-bottom: 6px;">
+                            <div class="pixel-badge pixel-badge--coral" style="font-size: 0.65rem; margin-bottom: 6px;">
                                 DATA MASTER // MOMENTS</div>
                             <h2 class="cms-card__title">📸 GALERI FOTO KEGIATAN</h2>
                             <div class="cms-card__desc">Kelola foto-foto keseruan latihan dan pertandingan yang tampil
@@ -634,7 +634,7 @@
                 <div class="cms-card cms-card--articles">
                     <div class="cms-card__header">
                         <div>
-                            <div class="pixel-badge pixel-badge--blue" style="font-size: 0.74rem; margin-bottom: 6px;">
+                            <div class="pixel-badge pixel-badge--blue" style="font-size: 0.65rem; margin-bottom: 6px;">
                                 DATA MASTER // NEWS &amp; ARTICLES</div>
                             <h2 class="cms-card__title">📰 MANAJEMEN BERITA &amp; ARTIKEL</h2>
                             <div class="cms-card__desc">Kelola liputan turnamen, artikel tips bulutangkis, dan cerita
@@ -672,9 +672,9 @@
                 <div class="cms-card cms-card--players">
                     <div class="cms-card__header">
                         <div>
-                            <div class="pixel-badge pixel-badge--green" style="font-size: 0.74rem; margin-bottom: 6px;">
+                            <div class="pixel-badge pixel-badge--green" style="font-size: 0.65rem; margin-bottom: 6px;">
                                 DATA MASTER // LEADERSHIP</div>
-                            <h2 class="cms-card__title">👥 PENGURUS BBC PERIODE SAAT INI</h2>
+                            <h2 class="cms-card__title">👔 PENGURUS BBC PERIODE SAAT INI</h2>
                             <div class="cms-card__desc">Kelola susunan pengurus yang tampil di halaman Profil BBC —
                                 tambah, edit, atau hapus sesuai periode kepengurusan berjalan.</div>
                         </div>
@@ -714,10 +714,10 @@
                     <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 260px;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <div class="pixel-badge" style="background: #059669; color: white; font-size: 0.74rem;">
+                                <div class="pixel-badge" style="background: #059669; color: white;">
                                     📁 SIMPAN KE FOLDER PROYEK
                                 </div>
-                                <span class="pixel-badge" id="fs-folder-status" style="font-size: 0.72rem; padding: 3px 8px; background: #9CA3AF; color: white;">
+                                <span class="pixel-badge" id="fs-folder-status" style="font-size: 0.6rem; padding: 2px 8px; background: #9CA3AF; color: white;">
                                     ⏳ MENDETEKSI...
                                 </span>
                             </div>
@@ -756,8 +756,8 @@
 
                         <!-- Info struktur file yang akan disimpan -->
                         <div style="background: white; border: 3px solid #059669; border-radius: 10px; padding: 16px; min-width: 200px; max-width: 260px;">
-                            <div style="font-size: 0.76rem; font-weight: 800; color: #059669; letter-spacing: 0.05em; margin-bottom: 8px;">📋 FILE YANG TERSIMPAN OTOMATIS</div>
-                            <pre style="font-size: 0.78rem; color: #374151; margin: 0; line-height: 1.8; font-family: 'Courier New', monospace;">bbc-website/
+                            <div style="font-size: 0.7rem; font-weight: 800; color: #059669; letter-spacing: 0.05em; margin-bottom: 8px;">📋 FILE YANG TERSIMPAN OTOMATIS</div>
+                            <pre style="font-size: 0.72rem; color: #374151; margin: 0; line-height: 1.8; font-family: 'Courier New', monospace;">bbc-website/
 ├── data/           📄
 │   ├── players.json
 │   ├── events.json
@@ -804,6 +804,180 @@
                 </div>
 
 
+                <!-- ============================================================
+                     PANEL: GITHUB AUTO-DEPLOY → VERCEL (1-KLIK SINKRONISASI)
+                     ============================================================ -->
+                <div class="cms-card" id="github-deploy-panel"
+                    style="border-top: 6px solid #7C3AED; background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); margin-top: 0;">
+
+                    <!-- Header -->
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <div class="pixel-badge" style="background: #7C3AED; color: white;">
+                            🚀 DEPLOY KE VERCEL
+                        </div>
+                        <span class="pixel-badge" id="github-status-badge"
+                            style="font-size: 0.6rem; padding: 2px 8px; background: #9CA3AF; color: white;">
+                            ⏳ MENDETEKSI...
+                        </span>
+                    </div>
+
+                    <h3 class="cms-backup-title" style="color: #5B21B6;">SINKRONISASI 1-KLIK KE GITHUB &amp; VERCEL</h3>
+                    <p class="cms-backup-desc" style="color: #4C1D95; font-weight: 500;">
+                        Masukkan GitHub Token sekali → klik <strong>"🚀 Deploy ke Vercel"</strong> → semua file JSON langsung
+                        di-push ke GitHub → Vercel otomatis redeploy dalam <strong>±1–2 menit</strong>. Tidak perlu download/upload manual!
+                    </p>
+
+                    <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+                        <!-- Kiri: Form konfigurasi + Tombol deploy -->
+                        <div style="flex: 1; min-width: 280px;">
+
+                            <!-- Form Setup GitHub -->
+                            <div id="github-config-form" style="background: white; border: 2px solid #7C3AED; border-radius: 10px; padding: 16px; margin-bottom: 14px;">
+                                <div style="font-size: 0.72rem; font-weight: 800; color: #7C3AED; letter-spacing: 0.05em; margin-bottom: 12px;">
+                                    ⚙️ KONFIGURASI GITHUB (Isi sekali, tersimpan otomatis)
+                                </div>
+
+                                <div style="display: grid; gap: 10px;">
+                                    <!-- Token -->
+                                    <div>
+                                        <label style="font-size: 0.75rem; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">
+                                            🔑 GitHub Personal Access Token
+                                            <a href="https://github.com/settings/tokens/new?scopes=repo&description=BBC+CMS+Deploy"
+                                                target="_blank" rel="noopener"
+                                                style="font-size: 0.65rem; color: #7C3AED; margin-left: 6px; text-decoration: underline;">
+                                                Buat Token Baru ↗
+                                            </a>
+                                        </label>
+                                        <div style="display: flex; gap: 6px;">
+                                            <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                                                style="flex: 1; padding: 7px 10px; border: 2px solid #D1D5DB; border-radius: 6px; font-size: 0.82rem; font-family: monospace;">
+                                            <button type="button" id="btn-toggle-token" title="Tampilkan/sembunyikan token"
+                                                style="padding: 6px 10px; border: 2px solid #D1D5DB; border-radius: 6px; background: white; cursor: pointer; font-size: 0.9rem;">
+                                                👁️
+                                            </button>
+                                        </div>
+                                        <div style="font-size: 0.68rem; color: #6B7280; margin-top: 3px;">
+                                            Diperlukan scope: <code>repo</code> (classic) atau <code>contents: write</code> (fine-grained)
+                                        </div>
+                                    </div>
+
+                                    <!-- Owner / Repo / Branch -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                        <div>
+                                            <label style="font-size: 0.75rem; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">
+                                                👤 GitHub Username / Org
+                                            </label>
+                                            <input type="text" id="github-owner-input" placeholder="namauser"
+                                                style="width: 100%; box-sizing: border-box; padding: 7px 10px; border: 2px solid #D1D5DB; border-radius: 6px; font-size: 0.82rem;">
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 0.75rem; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">
+                                                📦 Nama Repository
+                                            </label>
+                                            <input type="text" id="github-repo-input" placeholder="bbc-website"
+                                                style="width: 100%; box-sizing: border-box; padding: 7px 10px; border: 2px solid #D1D5DB; border-radius: 6px; font-size: 0.82rem;">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label style="font-size: 0.75rem; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">
+                                            🌿 Branch (default: main)
+                                        </label>
+                                        <input type="text" id="github-branch-input" placeholder="main"
+                                            style="width: 220px; padding: 7px 10px; border: 2px solid #D1D5DB; border-radius: 6px; font-size: 0.82rem;">
+                                    </div>
+                                </div>
+
+                                <!-- Toggle Auto-Deploy Otomatis -->
+                                <div style="margin-top: 12px; padding: 10px 12px; background: #F5F3FF; border: 2px solid #DDD6FE; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <div>
+                                        <label for="github-autodeploy-checkbox" style="font-size: 0.8rem; font-weight: 800; color: #5B21B6; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                            ⚡ Push Otomatis ke Vercel saat Data Berubah
+                                        </label>
+                                        <div style="font-size: 0.7rem; color: #6D28D9; margin-top: 2px; line-height: 1.4;">
+                                            Setiap tambah/edit/hapus data di CMS langsung di-push ke GitHub &amp; memicu redeploy Vercel otomatis (debounce 2 detik).
+                                        </div>
+                                    </div>
+                                    <input type="checkbox" id="github-autodeploy-checkbox" checked
+                                        style="width: 20px; height: 20px; cursor: pointer; accent-color: #7C3AED; flex-shrink: 0;">
+                                </div>
+
+                                <!-- Tombol Simpan Konfigurasi & Verifikasi -->
+                                <div style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;">
+                                    <button type="button" id="btn-save-github-config"
+                                        style="padding: 7px 14px; background: #7C3AED; color: white; border: 2px solid #5B21B6; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer; box-shadow: 2px 2px 0 #5B21B6;">
+                                        💾 Simpan & Verifikasi
+                                    </button>
+                                    <button type="button" id="btn-clear-github-config"
+                                        style="padding: 7px 14px; background: white; color: #6B7280; border: 2px solid #D1D5DB; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                                        🗑️ Hapus Konfigurasi
+                                    </button>
+                                </div>
+
+                                <!-- Status verifikasi -->
+                                <div id="github-verify-status" style="margin-top: 10px; font-size: 0.78rem; font-weight: 600; display: none;"></div>
+                            </div>
+
+                            <!-- Info Repo yang Terhubung -->
+                            <div id="github-connected-info"
+                                style="display: none; background: #EDE9FE; border: 2px solid #7C3AED; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.82rem; font-weight: 700; color: #4C1D95;">
+                                🔗 Terhubung ke: <span id="github-repo-display"></span>
+                                <span style="font-weight: 400; color: #6B7280; margin-left: 6px;" id="github-branch-display"></span>
+                            </div>
+
+                            <!-- TOMBOL DEPLOY UTAMA -->
+                            <button type="button" id="btn-deploy-vercel"
+                                style="width: 100%; padding: 14px 20px; background: linear-gradient(135deg, #7C3AED, #4F46E5); color: white; border: 3px solid #1E1B4B; border-radius: 10px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 5px 5px 0 #1E1B4B; letter-spacing: 0.05em; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">🚀</span>
+                                <span id="btn-deploy-vercel-text">DEPLOY KE VERCEL</span>
+                            </button>
+
+                            <!-- Log Progress Deploy -->
+                            <div id="github-deploy-log" style="display: none; margin-top: 14px; background: #1E1B4B; border-radius: 8px; padding: 12px 14px; font-family: 'Courier New', monospace; font-size: 0.75rem; color: #C4B5FD; line-height: 1.8; max-height: 200px; overflow-y: auto;">
+                                <!-- Log akan di-inject dari JS -->
+                            </div>
+
+                            <!-- Catatan setelah deploy berhasil -->
+                            <div id="github-deploy-success-note" style="display: none; margin-top: 12px; background: #ECFDF5; border: 2px solid #059669; border-radius: 8px; padding: 12px 14px;">
+                                <div style="font-size: 0.82rem; font-weight: 700; color: #065F46; margin-bottom: 6px;">
+                                    ✅ Push ke GitHub berhasil!
+                                </div>
+                                <div style="font-size: 0.78rem; color: #047857; line-height: 1.6;">
+                                    Vercel sedang memproses deployment... biasanya selesai dalam <strong>1–2 menit</strong>.
+                                    <br>Cek status di:
+                                    <a id="github-vercel-link" href="https://vercel.com/dashboard" target="_blank" rel="noopener"
+                                        style="color: #7C3AED; font-weight: 700; text-decoration: underline;">
+                                        Vercel Dashboard ↗
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kanan: Info alur kerja -->
+                        <div style="min-width: 200px; max-width: 240px;">
+                            <div style="background: white; border: 3px solid #7C3AED; border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+                                <div style="font-size: 0.7rem; font-weight: 800; color: #7C3AED; letter-spacing: 0.05em; margin-bottom: 10px;">⚡ ALUR SINKRONISASI</div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div class="github-flow-step" id="gh-step-players">👥 players.json</div>
+                                    <div class="github-flow-step" id="gh-step-events">📅 events.json</div>
+                                    <div class="github-flow-step" id="gh-step-gallery">🖼️ gallery.json</div>
+                                    <div class="github-flow-step" id="gh-step-articles">📰 articles.json</div>
+                                    <div class="github-flow-step" id="gh-step-officials">🏅 officials.json</div>
+                                    <div class="github-flow-step" id="gh-step-hero">🎬 hero.json</div>
+                                </div>
+                                <div style="margin-top: 10px; padding-top: 10px; border-top: 2px dashed #EDE9FE; font-size: 0.68rem; color: #6B7280; text-align: center;">
+                                    ↓ GitHub push otomatis<br>↓ Vercel redeploy ±1–2 menit
+                                </div>
+                            </div>
+
+                            <div style="background: #FFFBEB; border: 2px solid #F59E0B; border-radius: 8px; padding: 10px 12px; font-size: 0.72rem; color: #78350F; line-height: 1.5;">
+                                <strong>⚠️ Keamanan Token:</strong><br>
+                                Token tersimpan di localStorage browser ini saja. Jangan gunakan di perangkat bersama.
+                                Gunakan <em>Fine-grained token</em> dengan scope terbatas untuk keamanan maksimal.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Panel Export JSON lama (tetap ada sebagai alternatif) -->
                 <details style="margin: 0;">
@@ -851,9 +1025,9 @@
                     <div class="cms-card__header">
                         <div>
                             <div class="pixel-badge"
-                                style="background:#7C3AED;color:#fff;font-size:0.74rem;margin-bottom:6px;">PENGATURAN
+                                style="background:#7C3AED;color:#fff;font-size:0.65rem;margin-bottom:6px;">PENGATURAN
                                 TAMPILAN // HERO</div>
-                            <h2 class="cms-card__title">🎨 MEDIA HERO BERANDA (FOTO / VIDEO)</h2>
+                            <h2 class="cms-card__title">🎬 MEDIA HERO BERANDA (FOTO / VIDEO)</h2>
                             <div class="cms-card__desc">Edit foto/video utama dan 2 foto mini (thumbnail) yang tampil di hero
                                 section beranda website. Media utama bisa berupa foto atau video (MP4/YouTube/Upload).</div>
                         </div>
@@ -868,7 +1042,7 @@
                     <!-- Live Preview Panel -->
                     <div class="cms-hero-preview" id="hero-live-preview">
                         <div class="cms-hero-preview__label">
-                            <span class="pixel-badge pixel-badge--green" style="font-size:0.72rem;">PREVIEW
+                            <span class="pixel-badge pixel-badge--green" style="font-size:0.6rem;">PREVIEW
                                 LANGSUNG</span>
                         </div>
                         <div class="cms-hero-preview__frame">
@@ -900,17 +1074,17 @@
                             <button type="button" class="cms-hero-acc-header" onclick="window.toggleHeroAccordion('hero-acc-main')"
                                 style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: none; border: none; cursor: pointer; text-align: left;">
                                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <span class="pixel-badge" style="background:#7C3AED;color:#fff;font-size:0.74rem;">🎨 MEDIA UTAMA (HERO BESAR)</span>
+                                    <span class="pixel-badge" style="background:#7C3AED;color:#fff;font-size:0.65rem;">🎬 MEDIA UTAMA (HERO BESAR)</span>
                                     <span class="cms-hero-acc-subtitle">Foto / Video Banner Utama</span>
                                 </div>
-                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.76rem; color: #7C3AED;">▼</span>
+                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.72rem; color: #7C3AED;">▼</span>
                             </button>
                             <div class="cms-hero-acc-body" style="padding: 0 18px 18px 18px;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px; border-top: 1.5px dashed #DDD6FE; padding-top: 14px;">
                                     <div class="cms-hero-acc-tip">
                                         Pilih tipe media yang akan aktif tampil di Beranda:
                                     </div>
-                                    <div class="cms-hero-toggle-group" style="display:flex; gap:6px; align-items:center; background:#EDE9FE; padding:4px; border:2.5px solid #7C3AED; border-radius:8px;">
+                                    <div style="display:flex; gap:6px; align-items:center; background:#EDE9FE; padding:4px; border:2.5px solid #7C3AED; border-radius:8px;">
                                         <button type="button" id="btn-toggle-hero-image"
                                             onclick="if(window.BBC_applyHeroToggle){window.BBC_applyHeroToggle('image');}"
                                             style="background:#7C3AED; color:#fff; border:none; font-weight:800; font-size:0.82rem; padding:7px 16px; border-radius:6px; cursor:pointer; transition:all 0.2s;">
@@ -968,7 +1142,7 @@
                                         <label class="cms-label" for="hero-video-file">📁 Upload File Video Lokal (MP4 / WebM)</label>
                                         <input type="file" id="hero-video-file" accept="video/mp4,video/webm" class="cms-input"
                                             style="padding: 6px; background: #fff;">
-                                        <div class="cms-form-hint">Maksimal 10MB (otomatis dikonversi Base64 langsung aktif di Vercel & seluruh pengunjung online). Untuk video berdurasi panjang disarankan menggunakan tautan YouTube.</div>
+                                        <div class="cms-form-hint">Maksimal 10MB untuk video lokal browser (MP4 / WebM). Disarankan gunakan link YouTube untuk durasi panjang.</div>
                                     </div>
                                 </div>
 
@@ -993,10 +1167,10 @@
                             <button type="button" class="cms-hero-acc-header" onclick="window.toggleHeroAccordion('hero-acc-thumb1')"
                                 style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: none; border: none; cursor: pointer; text-align: left;">
                                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <span class="pixel-badge pixel-badge--green" style="font-size:0.74rem;">📸 FOTO MINI KIRI (THUMBNAIL 1)</span>
+                                    <span class="pixel-badge pixel-badge--green" style="font-size:0.65rem;">📸 FOTO MINI KIRI (THUMBNAIL 1)</span>
                                     <span class="cms-hero-acc-subtitle">Card Thumbnail Lapangan</span>
                                 </div>
-                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.76rem; color: #009B63;">▼</span>
+                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.72rem; color: #009B63;">▼</span>
                             </button>
                             <div class="cms-hero-acc-body" style="padding: 0 18px 18px 18px;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; border-top: 1.5px dashed #A7F3D0; padding-top: 14px;">
@@ -1038,10 +1212,10 @@
                             <button type="button" class="cms-hero-acc-header" onclick="window.toggleHeroAccordion('hero-acc-thumb2')"
                                 style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: none; border: none; cursor: pointer; text-align: left;">
                                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <span class="pixel-badge pixel-badge--blue" style="font-size:0.74rem;">📸 FOTO MINI KANAN (THUMBNAIL 2)</span>
+                                    <span class="pixel-badge pixel-badge--blue" style="font-size:0.65rem;">📸 FOTO MINI KANAN (THUMBNAIL 2)</span>
                                     <span class="cms-hero-acc-subtitle">Card Thumbnail Latihan</span>
                                 </div>
-                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.76rem; color: #0284C7;">▼</span>
+                                <span class="cms-hero-acc-arrow" style="font-family: var(--font-pixel); font-size: 0.72rem; color: #0284C7;">▼</span>
                             </button>
                             <div class="cms-hero-acc-body" style="padding: 0 18px 18px 18px;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; border-top: 1.5px dashed #BAE6FD; padding-top: 14px;">
@@ -1077,13 +1251,14 @@
                             </div>
                         </div>
 
-                        <div class="cms-hero-form-actions" style="display:flex;gap:12px;justify-content:flex-end;">
+                        <div style="display:flex;gap:12px;justify-content:flex-end;">
                             <button type="button" id="btn-hero-preview" class="btn btn-outline"
                                 onclick="if(window.BBC_updateHeroPreview){window.BBC_updateHeroPreview();}"
                                 style="border-color:#7C3AED;color:#7C3AED;">
                                 👁️ PREVIEW
                             </button>
-                            <button type="submit" class="btn btn-primary" id="btn-hero-save">
+                            <button type="submit" class="btn btn-primary" id="btn-hero-save"
+                                onclick="if(window.BBC_saveHeroSettings){window.BBC_saveHeroSettings(event);}">
                                 <span>💾 SIMPAN MEDIA HERO (FOTO / VIDEO)</span>
                             </button>
                         </div>
@@ -1140,14 +1315,14 @@
                     </div>
 
                     <!-- Player Stats Grid -->
-                    <div class="cms-player-stats-card"
+                    <div
                         style="background: #F0FDF4; border: 2.5px solid #15803D; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 2.5px 2.5px 0px #0D1612;">
                         <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                            <span class="pixel-badge pixel-badge--green" style="font-size: 0.74rem;">📊 STATISTIK
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span class="pixel-badge pixel-badge--green" style="font-size: 0.65rem;">📊 STATISTIK
                                 PERFORMA PEMAIN</span>
                             <span id="player-stat-winrate-pill" class="pixel-badge pixel-badge--yellow"
-                                style="font-size: 0.74rem;">WIN RATE: 0%</span>
+                                style="font-size: 0.65rem;">WIN RATE: 0%</span>
                         </div>
 
                         <div class="grid grid-2" style="gap: 14px;">
@@ -1208,8 +1383,8 @@
                     <div class="cms-player-gallery-section" style="background: #F8FAFC; border: 2.5px solid var(--cms-dark); border-radius: 8px; padding: 16px; margin-top: 16px; box-shadow: 2.5px 2.5px 0px #0D1612;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.74rem;">📸 GALERI FOTO AKSI PEMAIN</span>
-                                <span id="player-modal-gallery-badge" class="pixel-badge pixel-badge--dark" style="font-size: 0.72rem;">0 FOTO</span>
+                                <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.65rem;">📸 GALERI FOTO AKSI PEMAIN</span>
+                                <span id="player-modal-gallery-badge" class="pixel-badge pixel-badge--dark" style="font-size: 0.6rem;">0 FOTO</span>
                             </div>
                             <button type="button" class="btn btn-outline btn-sm" id="btn-modal-open-gallery" style="font-size: 0.72rem; padding: 4px 10px;">
                                 + KELOLA / TAMBAH FOTO
@@ -1245,8 +1420,8 @@
                 <!-- Add / Edit Photo Form -->
                 <div style="background: #F0FDF4; border: 2px solid #15803D; border-radius: 8px; padding: 16px; margin-bottom: 18px; box-shadow: 2px 2px 0 var(--cms-dark);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span class="pixel-badge pixel-badge--green" id="pg-form-badge" style="font-size: 0.74rem;">➕ TAMBAH FOTO BARU</span>
-                        <button type="button" id="pg-btn-cancel-edit" class="btn btn-outline btn-sm" style="display: none; padding: 3px 10px; font-size: 0.74rem;">BATAL EDIT</button>
+                        <span class="pixel-badge pixel-badge--green" id="pg-form-badge" style="font-size: 0.62rem;">➕ TAMBAH FOTO BARU</span>
+                        <button type="button" id="pg-btn-cancel-edit" class="btn btn-outline btn-sm" style="display: none; padding: 2px 8px; font-size: 0.65rem;">BATAL EDIT</button>
                     </div>
 
                     <div class="cms-form-group">
@@ -1279,7 +1454,7 @@
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <strong style="font-size: 0.88rem; color: var(--cms-dark);">DAFTAR FOTO TERPASANG</strong>
-                        <span id="pg-photos-count" class="pixel-badge pixel-badge--yellow" style="font-size: 0.74rem;">0 FOTO</span>
+                        <span id="pg-photos-count" class="pixel-badge pixel-badge--yellow" style="font-size: 0.62rem;">0 FOTO</span>
                     </div>
                     <div id="pg-photos-grid" class="cms-pg-cards-grid">
                         <!-- Populated by JavaScript -->
@@ -1448,7 +1623,7 @@
         <div class="cms-modal">
             <div class="cms-modal__handle" aria-hidden="true"></div>
             <div class="cms-modal__header cms-modal__header--players">
-                <h3 class="cms-modal__title" id="modal-official-title">👥 TAMBAH PENGURUS BBC</h3>
+                <h3 class="cms-modal__title" id="modal-official-title">👔 TAMBAH PENGURUS BBC</h3>
                 <button type="button" class="cms-modal__close" data-close-modal>✕</button>
             </div>
             <form id="form-official">
@@ -1629,6 +1804,7 @@
     <script src="../js/data/news.js"></script>
     <script src="../js/data/officials.js"></script>
     <script src="../js/utils/filesystem.js"></script>
+    <script src="../js/utils/github-sync.js"></script>
     <script src="../js/data/store.js"></script>
     <script src="../js/data/live-sync.js"></script>
     <script src="../js/pages/cms.js"></script>

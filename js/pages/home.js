@@ -56,28 +56,22 @@ BBC_onReady(() => {
         const countMaleEl = document.getElementById('squad-count-male');
         const countFemEl = document.getElementById('squad-count-female');
 
-        const amilin = (playerList || []).filter(p => p.gender === 'male');
-        const amilat = (playerList || []).filter(p => p.gender === 'female');
+        if (playerList && playerList.length > 0) {
+            const amilin = playerList.filter(p => p.gender === 'male');
+            const amilat = playerList.filter(p => p.gender === 'female');
 
-        if (amilinTrack) {
-            if (amilin.length > 0) {
+            if (amilinTrack) {
                 amilinTrack.innerHTML = amilin.map(p => createPlayerCard(p, { nameOnly: true })).join('');
-            } else {
-                amilinTrack.innerHTML = '<div style="padding: 24px 16px; color: var(--color-grey); font-size: 0.85rem; font-style: italic;">Belum ada data pemain Amilin.</div>';
             }
-        }
-        if (amilatTrack) {
-            if (amilat.length > 0) {
+            if (amilatTrack) {
                 amilatTrack.innerHTML = amilat.map(p => createPlayerCard(p, { nameOnly: true })).join('');
-            } else {
-                amilatTrack.innerHTML = '<div style="padding: 24px 16px; color: var(--color-grey); font-size: 0.85rem; font-style: italic;">Belum ada data pemain Amilat.</div>';
             }
-        }
-        if (countMaleEl) {
-            countMaleEl.textContent = `${amilin.length} pemain`;
-        }
-        if (countFemEl) {
-            countFemEl.textContent = `${amilat.length} pemain`;
+            if (countMaleEl) {
+                countMaleEl.textContent = `${amilin.length} pemain`;
+            }
+            if (countFemEl) {
+                countFemEl.textContent = `${amilat.length} pemain`;
+            }
         }
     } catch (errSquad) {
         console.error('[BBC Home] Error rendering Squad section:', errSquad);
@@ -155,7 +149,7 @@ BBC_onReady(() => {
                                 rgba(0,0,0,0.02) 20px
                             );
                         ">
-                            <div style="margin-bottom: 12px; line-height: 1;"><span class="bbc-icon-shuttle" style="font-size: 3.5rem;"></span></div>
+                            <div style="font-size: 3.5rem; margin-bottom: 12px; line-height: 1;">🏸</div>
                             <h3 style="margin: 0 0 8px; font-size: clamp(1.3rem, 2.5vw, 1.8rem); color: var(--color-dark);">TIDAK ADA AGENDA MINGGU INI</h3>
                             <p style="color: var(--color-grey, #6B7F78); font-size: 0.95rem; margin: 0 0 24px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.6;">
                                 Belum ada jadwal pertandingan atau latihan dalam 7 hari ke depan.
@@ -390,7 +384,7 @@ function createPotmCard(player, isAmilin) {
                 </div>
                 <a href="pages/player-detail.html?slug=${encodeURIComponent(player.slug || (typeof BBC_STORE !== 'undefined' && BBC_STORE.slugify ? BBC_STORE.slugify(player.name) : (typeof BBC_slugify === 'function' ? BBC_slugify(player.name) : player.id)))}" class="btn btn-sm ${isAmilin ? 'btn-primary' : 'btn-coral'}" style="box-shadow: 3px 3px 0 var(--color-dark);">
                     <span>LIHAT PROFIL</span>
-                    <span class="btn-arrow">→</span>
+                    <span style="font-family: var(--font-pixel);">→</span>
                 </a>
             </div>
         </div>

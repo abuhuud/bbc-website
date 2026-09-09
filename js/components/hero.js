@@ -1,16 +1,14 @@
 /**
  * BAZNAS BADMINTON CLUB (BBC)
  * Hero Media Renderer — menerapkan foto/video hero yang disimpan dari CMS.
- * Idempoten, responsif & bebas race-condition:
- * - Menangani mode Foto (URL/Base64/default)
- * - Menangani mode Video (YouTube embed, direct MP4 URL, Data URL video, dan IndexedDB lokal)
- * - Fallback cerdas: jika video tidak ada / gagal diputar, otomatis kembali ke foto banner
+ * Idempoten: markup asli disimpan lalu dipulihkan sebelum setiap penerapan,
+ * sehingga aman dipanggil ulang saat data CMS berubah (realtime).
  */
 (function () {
-    const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1521537634581-0dced2efa2a3?auto=format&fit=crop&q=80&w=900';
+    let originalWrapHTML = null;
 
     function getSettings() {
-        if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.getHeroSettings === 'function') {
+        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.getHeroSettings) {
             return BBC_STORE.getHeroSettings();
         }
         try {
@@ -22,161 +20,103 @@
     }
 
     function youtubeId(url) {
-        if (!url) return '';
-        const m = String(url).match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+        const m = String(url).match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
         return m ? m[1] : '';
     }
 
-    let renderTimer = null;
-
-    function applyHeroImmediate() {
+    function applyHero() {
         const h = getSettings();
         if (!h) return;
 
-        const currentMedia = document.getElementById('hero-main-img');
-        if (!currentMedia) return;
-
-        const wrap = currentMedia.parentNode;
+        const current = document.getElementById('hero-main-img');
+        const wrap = current ? current.parentNode : null;
         if (!wrap) return;
 
-        const hasVideo = !!(h.mainVideo && h.mainVideo.trim());
-        const hasImage = !!(h.mainImage && h.mainImage.trim());
-        const isVideoType = (h.mediaType === 'video');
-        const fallbackSrc = hasImage ? h.mainImage.trim() : DEFAULT_IMAGE;
+        if (originalWrapHTML === null) originalWrapHTML = wrap.innerHTML;
+        else wrap.innerHTML = originalWrapHTML;
 
-        // Helper: Tampilkan gambar
-        function showImage(src, alt) {
-            const el = document.getElementById('hero-main-img');
-            const targetSrc = (src && src.trim()) ? src.trim() : DEFAULT_IMAGE;
+        const mainImg = document.getElementById('hero-main-img');
 
-            if (el && el.tagName.toLowerCase() === 'img') {
-                el.src = targetSrc;
-                el.alt = alt || 'Insan BAZNAS Badminton Club berlatih di lapangan';
-                el.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
-                el.onerror = function () {
-                    this.onerror = null;
-                    this.src = DEFAULT_IMAGE;
-                };
-            } else if (el && el.parentNode) {
-                const img = document.createElement('img');
-                img.id = 'hero-main-img';
-                img.src = targetSrc;
-                img.alt = alt || 'Insan BAZNAS Badminton Club berlatih di lapangan';
-                img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
-                img.onerror = function () {
-                    this.onerror = null;
-                    this.src = DEFAULT_IMAGE;
-                };
-                el.parentNode.replaceChild(img, el);
-            }
-        }
+        if (mainImg) {
+            const hasVideo = !!(h.mainVideo && h.mainVideo.trim());
+            const hasImage = !!(h.mainImage && h.mainImage.trim());
+            const preferVideo = (h.mediaType === 'video' && hasVideo) || (!hasImage && hasVideo);
 
-        // Helper: Tampilkan YouTube iframe
-        function showYouTube(ytid) {
-            const el = document.getElementById('hero-main-img');
-            if (!el || !el.parentNode) return;
-
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${ytid}?autoplay=1&mute=1&playsinline=1&loop=1&playlist=${ytid}&controls=1&rel=0`;
-
-            if (el.tagName.toLowerCase() === 'iframe' && el.src.includes(ytid)) {
-                return; // Iframe sudah terpasang
-            }
-
-            const iframe = document.createElement('iframe');
-            iframe.id = 'hero-main-img';
-            iframe.src = embedUrl;
-            iframe.style.cssText = 'width: 100%; height: 100%; border: none; object-fit: cover;';
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-            iframe.allowFullscreen = true;
-
-            el.parentNode.replaceChild(iframe, el);
-        }
-
-        // Helper: Tampilkan video HTML5 (URL langsung / Data URL / Blob)
-        function showVideo(videoSrc) {
-            const el = document.getElementById('hero-main-img');
-            if (!el || !el.parentNode) return;
-
-            if (el.tagName.toLowerCase() === 'video' && el.src === videoSrc) {
-                el.play().catch(() => {});
-                return;
-            }
-
-            const video = document.createElement('video');
-            video.id = 'hero-main-img';
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsInline = true;
-            video.controls = false;
-            video.setAttribute('muted', '');
-            video.setAttribute('autoplay', '');
-            video.setAttribute('loop', '');
-            video.setAttribute('playsinline', '');
-            video.setAttribute('webkit-playsinline', '');
-            video.defaultMuted = true;
-            video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
-            video.src = videoSrc;
-
-            video.onerror = () => {
-                console.warn('[BBC_HERO] Video gagal dimuat, beralih ke foto banner.');
-                showImage(fallbackSrc, h.mainImageAlt);
-            };
-
-            el.parentNode.replaceChild(video, el);
-            video.play().catch(() => {});
-        }
-
-        // 1. Render Media Utama
-        if (isVideoType && hasVideo) {
-            const rawVideo = h.mainVideo.trim();
-            const isIdb = rawVideo.startsWith('indexeddb:');
-            const ytid = !isIdb ? youtubeId(rawVideo) : '';
-
-            if (ytid) {
-                // YouTube Embed
-                showYouTube(ytid);
-            } else if (isIdb) {
-                // Video Lokal dari IndexedDB
-                const key = rawVideo.replace('indexeddb:', '') || 'hero_main_video';
-                if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.getMediaBlob === 'function') {
-                    BBC_STORE.getMediaBlob(key).then(blob => {
-                        if (blob) {
-                            const blobUrl = (typeof blob === 'string') ? blob : URL.createObjectURL(blob);
-                            showVideo(blobUrl);
-                        } else {
-                            // Blob tidak ada di browser ini (misal di Vercel / perangkat lain) -> fallback ke foto
-                            showImage(fallbackSrc, h.mainImageAlt);
-                        }
-                    }).catch(err => {
-                        console.warn('[BBC_HERO] Gagal membaca blob video IDB:', err);
-                        showImage(fallbackSrc, h.mainImageAlt);
-                    });
+            if (preferVideo) {
+                const isIdb = h.mainVideo.startsWith('indexeddb:');
+                const ytid = (!isIdb && (h.mainVideo.includes('youtube.com') || h.mainVideo.includes('youtu.be')))
+                    ? youtubeId(h.mainVideo)
+                    : '';
+                if (ytid) {
+                    const iframe = document.createElement('iframe');
+                    iframe.id = 'hero-main-img';
+                    iframe.src = 'https://www.youtube.com/embed/' + ytid +
+                        '?autoplay=1&mute=1&loop=1&playlist=' + ytid + '&controls=0&showinfo=0&playsinline=1&enablejsapi=1';
+                    iframe.style.cssText = 'width:100%;height:100%;border:none;object-fit:cover;pointer-events:none;';
+                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                    mainImg.parentNode.replaceChild(iframe, mainImg);
                 } else {
-                    showImage(fallbackSrc, h.mainImageAlt);
+                    const video = document.createElement('video');
+                    video.id = 'hero-main-img';
+                    video.autoplay = true;
+                    video.muted = true;
+                    video.loop = true;
+                    video.playsInline = true;
+                    video.setAttribute('muted', '');
+                    video.setAttribute('autoplay', '');
+                    video.setAttribute('loop', '');
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.defaultMuted = true;
+                    video.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+
+                    if (isIdb) {
+                        const key = h.mainVideo.replace('indexeddb:', '') || 'hero_main_video';
+                        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.getMediaBlob) {
+                            BBC_STORE.getMediaBlob(key).then(blob => {
+                                if (blob) {
+                                    video.src = (typeof blob === 'string') ? blob : URL.createObjectURL(blob);
+                                    video.play().catch(() => {});
+                                }
+                            });
+                        }
+                    } else {
+                        video.src = h.mainVideo;
+                    }
+
+                    mainImg.parentNode.replaceChild(video, mainImg);
+                    video.play().catch(() => {});
                 }
+            } else if (hasImage) {
+                mainImg.src = h.mainImage;
+                if (h.mainImageAlt) mainImg.alt = h.mainImageAlt;
             } else {
-                // Video URL Langsung (MP4 / WebM / Data URL)
-                showVideo(rawVideo);
-            }
-        } else {
-            // Mode Foto
-            showImage(fallbackSrc, h.mainImageAlt);
-        }
-
-        // 2. Terapkan Label Banner Utama
-        const mainLabelEl = document.getElementById('hero-main-label');
-        if (mainLabelEl) {
-            if (h.mainLabel && h.mainLabel.trim()) {
-                mainLabelEl.textContent = h.mainLabel.trim();
-                mainLabelEl.style.display = '';
-            } else {
-                mainLabelEl.textContent = '';
-                mainLabelEl.style.display = 'none';
+                mainImg.src = 'https://images.unsplash.com/photo-1521537634581-0dced2efa2a3?auto=format&fit=crop&q=80&w=900';
             }
         }
 
-        // 3. Terapkan Thumbnail Mini Samping
+        const setLabel = (id, text) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (text && text.trim()) {
+                el.textContent = text.trim();
+                el.style.display = '';
+            } else {
+                el.textContent = '';
+                el.style.display = 'none';
+            }
+        };
+
+        const setImg = (id, src, alt) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (src) el.src = src;
+            if (alt) el.alt = alt;
+        };
+
+        setLabel('hero-main-label', h.mainLabel);
+
+        // Handle thumbnail visibility if deleted/cleared
         const thumbsRow = document.getElementById('hero-thumbs-row');
         const thumb1Wrap = document.getElementById('hero-thumb1-wrap');
         const thumb2Wrap = document.getElementById('hero-thumb2-wrap');
@@ -204,55 +144,16 @@
             }
         }
 
-        const setThumb = (imgId, lblId, src, alt, lbl) => {
-            const imgEl = document.getElementById(imgId);
-            const lblEl = document.getElementById(lblId);
-            if (imgEl && src && src.trim()) {
-                imgEl.src = src.trim();
-                if (alt) imgEl.alt = alt;
-            }
-            if (lblEl) {
-                if (lbl && lbl.trim()) {
-                    lblEl.textContent = lbl.trim();
-                    lblEl.style.display = '';
-                } else {
-                    lblEl.style.display = 'none';
-                }
-            }
-        };
-
         if (hasThumb1) {
-            setThumb('hero-thumb1-img', 'hero-thumb1-label', h.thumb1Image, h.thumb1Alt, h.thumb1Label);
+            setImg('hero-thumb1-img', h.thumb1Image, h.thumb1Alt);
+            setLabel('hero-thumb1-label', h.thumb1Label);
         }
         if (hasThumb2) {
-            setThumb('hero-thumb2-img', 'hero-thumb2-label', h.thumb2Image, h.thumb2Alt, h.thumb2Label);
+            setImg('hero-thumb2-img', h.thumb2Image, h.thumb2Alt);
+            setLabel('hero-thumb2-label', h.thumb2Label);
         }
-    }
-
-    // Debounced applyHero untuk mencegah collision antar script
-    function applyHero() {
-        if (renderTimer) clearTimeout(renderTimer);
-        renderTimer = setTimeout(applyHeroImmediate, 20);
     }
 
     window.BBC_applyHero = applyHero;
-
-    if (typeof BBC_onReady === 'function') {
-        BBC_onReady(applyHero);
-    } else {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', applyHero);
-        } else {
-            applyHero();
-        }
-    }
-
-    // Reaktivitas real-time saat hero data diubah di CMS
-    if (typeof BBC_LIVE !== 'undefined' && typeof BBC_LIVE.onChange === 'function') {
-        BBC_LIVE.onChange((key) => {
-            if (!key || key === 'bbc_data_hero_v1') {
-                applyHero();
-            }
-        });
-    }
+    if (typeof BBC_onReady === 'function') BBC_onReady(applyHero);
 })();

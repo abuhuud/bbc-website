@@ -35,14 +35,6 @@ const BBC_STORE = (function () {
         return './data/';
     }
 
-    // Path API relatif — otomatis menyesuaikan apakah di /pages/ atau root
-    function getApiBasePath() {
-        if (typeof window !== 'undefined' && window.location.pathname.includes('/pages/')) {
-            return '../api/';
-        }
-        return './api/';
-    }
-
     // Default Hero Settings (Supports Photo or Video)
     const DEFAULT_HERO = {
         mediaType: 'image', // 'image' | 'video'
@@ -58,48 +50,44 @@ const BBC_STORE = (function () {
         thumb2Label: 'PRACTICE'
     };
 
-    // ========================================================
-    // IN-MEMORY DATA STORE (SINGLE SOURCE OF TRUTH)
-    // Data dimuat langsung dari file .json / Vercel API, TIDAK lagi disimpan di localStorage.
-    // ========================================================
-    const inMemoryData = {
-        players: null,
-        events: null,
-        gallery: null,
-        articles: null,
-        officials: null,
-        hero: null
-    };
-
-    // Bersihkan cache usang di localStorage agar browser tidak tertahan pada data lama
-    function purgeLegacyLocalStorage() {
+    // Helper to safely read from localStorage
+    function readStorage(key, fallback) {
         try {
-            if (typeof localStorage !== 'undefined') {
-                Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
-                Object.values(JSON_VERSION_KEYS).forEach(k => localStorage.removeItem(k));
+            const raw = localStorage.getItem(key);
+            if (raw !== null) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) return parsed;
+                if (parsed !== null && typeof parsed === 'object') return parsed;
             }
-        } catch (e) {}
+        } catch (e) {
+            console.warn(`[BBC_STORE] Failed to read ${key} from storage:`, e);
+        }
+        return fallback;
     }
 
-    // Eksekusi pembersihan sekali saat inisialisasi modul
-    purgeLegacyLocalStorage();
+    // Helper to write to localStorage
+    function writeStorage(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+            broadcast(key);
+            return true;
+        } catch (e) {
+            console.error(`[BBC_STORE] Failed to save ${key} to storage:`, e);
+            return false;
+        }
+    }
 
-    // Siarkan perubahan agar tampilan website ikut ter-update seketika
+    // Siarkan perubahan agar tampilan website ikut ter-update tanpa refresh
     function broadcast(key) {
         if (typeof BBC_LIVE !== 'undefined' && BBC_LIVE.notify) {
             BBC_LIVE.notify(key);
         }
-        if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-            try {
-                window.dispatchEvent(new CustomEvent('bbc-data-changed', { detail: { key } }));
-            } catch (e) {}
-        }
     }
 
     // ========================================================
-    // PERSISTENSI LANGSUNG KE FILE .JSON & VERCEL BLOB
-    // Setiap penambahan, perubahan, dan penghapusan langsung disimpan ke backend .json
+    // FILE SYSTEM ACCESS API — Auto-sync ke file JSON lokal
     // ========================================================
+    // Peta storage key → kategori BBC_FS.syncToFiles()
     const FS_CATEGORY_MAP = {
         [STORAGE_KEYS.PLAYERS]:   'players',
         [STORAGE_KEYS.EVENTS]:    'events',
@@ -110,94 +98,34 @@ const BBC_STORE = (function () {
     };
 
     /**
-     * Persistensi utama langsung ke file JSON & Vercel Blob (Tanpa LocalStorage)
-     * Dipanggil otomatis pada setiap operasi penambahan, perubahan, dan penghapusan di CMS.
-     * @param {string} category - 'players' | 'events' | 'gallery' | 'articles' | 'officials' | 'hero'
-     * @param {*} [data=null] - data terbaru untuk kategori
+     * Sync kategori data tertentu:
+     * 1. Ke file JSON lokal di folder proyek (via BBC_FS, jika diaktifkan).
+     * 2. Otomatis push ke GitHub / Vercel (via BBC_GITHUB.triggerAutoDeploy, jika diaktifkan).
+     * Non-blocking — gagal secara silent agar tidak mengganggu UX pengguna.
+     * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
      */
-    async function persistCategory(category, data = null) {
-        if (!category) return null;
-        const currentVer = Date.now();
-        const timestamp = new Date().toISOString();
-
-        let payloadData = data;
-        if (!payloadData) {
-            if (category === 'players') payloadData = getPlayers();
-            else if (category === 'events') payloadData = getEvents();
-            else if (category === 'gallery') payloadData = getGallery();
-            else if (category === 'articles') payloadData = getArticles();
-            else if (category === 'officials') payloadData = getOfficials();
-            else if (category === 'hero') payloadData = getHeroSettings();
-        }
-
-        // Simpan langsung ke in-memory store
-        inMemoryData[category] = payloadData;
-
-        const fullPayload = {
-            _version: currentVer,
-            _updatedAt: timestamp,
-            [category]: payloadData
-        };
-
-        // 1. Simpan langsung ke endpoint API Vercel / serverless / local node
-        let apiResult = null;
-        try {
-            if (typeof fetch !== 'undefined') {
-                const base = getApiBasePath();
-                const res = await fetch(`${base}data?category=${encodeURIComponent(category)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fullPayload)
-                });
-                if (res.ok) {
-                    apiResult = await res.json();
-                    console.info(`[BBC_STORE] ☁️ Berhasil disimpan langsung ke file .json & Vercel (${category}):`, apiResult);
-                    if (typeof document !== 'undefined') {
-                        const badgeText = document.getElementById('cloud-sync-topbar-text');
-                        const badgeDot = document.getElementById('cloud-sync-dot');
-                        if (badgeText) badgeText.textContent = `☁️ Vercel: ${category}.json tersimpan!`;
-                        if (badgeDot) {
-                            badgeDot.style.background = '#10B981';
-                            badgeDot.style.boxShadow = '0 0 8px #10B981';
-                        }
-                    }
-                } else {
-                    console.warn(`[BBC_STORE] Serverless API HTTP ${res.status} saat menyimpan ${category}`);
-                }
-            }
-        } catch (err) {
-            console.warn(`[BBC_STORE] Gagal kirim ke API /api/data (${category}):`, err.message);
-        }
-
-        // 2. Simpan ke file lokal via File System Access API jika aktif di CMS
-        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
-            try {
-                await BBC_FS.writeJsonFile(`data/${category}.json`, payloadData);
-            } catch (fsErr) {
-                console.warn(`[BBC_STORE] BBC_FS writeJsonFile error for ${category}:`, fsErr);
-            }
-        }
-
-        // 3. Memicu broadcast agar tab dan UI website terupdate seketika
-        broadcast(category);
-
-        return {
-            success: true,
-            category,
-            version: currentVer,
-            updatedAt: timestamp,
-            apiResult
-        };
-    }
-
-    async function syncToVercel(category, data = null) {
-        return await persistCategory(category, data);
-    }
-
     function syncToFile(storageKey) {
-        const category = FS_CATEGORY_MAP[storageKey] || storageKey;
+        const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
-        persistCategory(category);
+
+        // 1. Sinkronisasi ke File Lokal (File System Access API)
+        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
+            BBC_FS.syncToFiles(category).then(({ synced, failed }) => {
+                if (synced.length > 0) {
+                    console.info(`[BBC_STORE] ✅ Tersinkronisasi ke file lokal: ${synced.join(', ')}.json`);
+                }
+                if (failed.length > 0) {
+                    console.warn(`[BBC_STORE] ⚠️ Gagal sync ke file lokal: ${failed.join(', ')}`);
+                }
+            }).catch(err => {
+                console.warn('[BBC_STORE] Error saat sync ke file lokal:', err);
+            });
+        }
+
+        // 2. Auto-Deploy Otomatis ke GitHub & Vercel
+        if (typeof BBC_GITHUB !== 'undefined' && typeof BBC_GITHUB.triggerAutoDeploy === 'function') {
+            BBC_GITHUB.triggerAutoDeploy(category);
+        }
     }
 
     // Helper to generate URL-safe slugs
@@ -311,15 +239,17 @@ const BBC_STORE = (function () {
     }
 
     function getPlayers() {
-        if (inMemoryData.players === null) {
-            const seed = (typeof players !== 'undefined') ? players : [];
-            inMemoryData.players = seed.map(p => normalizePlayer({ ...p }));
-            ensureSinglePotmPerGender(inMemoryData.players);
+        const seed = (typeof players !== 'undefined') ? players : [];
+        let data = readStorage(STORAGE_KEYS.PLAYERS, null);
+        if (data === null || !Array.isArray(data)) {
+            data = seed.map(p => normalizePlayer({ ...p }));
+            ensureSinglePotmPerGender(data);
+            writeStorage(STORAGE_KEYS.PLAYERS, data);
         } else {
-            inMemoryData.players = inMemoryData.players.map(p => normalizePlayer(p));
-            ensureSinglePotmPerGender(inMemoryData.players);
+            data = data.map(p => normalizePlayer(p));
+            ensureSinglePotmPerGender(data);
         }
-        return inMemoryData.players;
+        return data;
     }
 
     function getPlayerById(idOrSlug) {
@@ -359,8 +289,8 @@ const BBC_STORE = (function () {
             target.isPlayerOfTheMonth = false;
         }
 
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return true;
     }
 
@@ -419,8 +349,8 @@ const BBC_STORE = (function () {
             list.push(player);
         }
 
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return player;
     }
 
@@ -428,8 +358,8 @@ const BBC_STORE = (function () {
         let list = getPlayers();
         list = list.filter(p => String(p.id) !== String(id));
         ensureSinglePotmPerGender(list);
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return list;
     }
 
@@ -444,8 +374,8 @@ const BBC_STORE = (function () {
             caption: photo.caption || ''
         };
         p.gallery.push(newPhoto);
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return newPhoto;
     }
 
@@ -460,8 +390,8 @@ const BBC_STORE = (function () {
             url: photoData.url !== undefined ? photoData.url : p.gallery[idx].url,
             caption: photoData.caption !== undefined ? photoData.caption : p.gallery[idx].caption
         };
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return p.gallery[idx];
     }
 
@@ -470,8 +400,8 @@ const BBC_STORE = (function () {
         const p = list.find(x => String(x.id) === String(playerId));
         if (!p || !Array.isArray(p.gallery)) return false;
         p.gallery = p.gallery.filter(g => String(g.id) !== String(photoId));
-        inMemoryData.players = list;
-        persistCategory('players', list);
+        writeStorage(STORAGE_KEYS.PLAYERS, list);
+        syncToFile(STORAGE_KEYS.PLAYERS);
         return true;
     }
 
@@ -479,11 +409,13 @@ const BBC_STORE = (function () {
     // 2. EVENTS / JADWAL CRUD
     // ========================================================
     function getEvents() {
-        if (inMemoryData.events === null) {
-            const seed = (typeof events !== 'undefined') ? events : [];
-            inMemoryData.events = [...seed];
+        const seed = (typeof events !== 'undefined') ? events : [];
+        let data = readStorage(STORAGE_KEYS.EVENTS, null);
+        if (data === null || !Array.isArray(data)) {
+            data = seed;
+            writeStorage(STORAGE_KEYS.EVENTS, data);
         }
-        return inMemoryData.events;
+        return data;
     }
 
     function getEventById(id) {
@@ -510,37 +442,22 @@ const BBC_STORE = (function () {
             event.typeName = map[event.type] || 'Kegiatan';
         }
 
-        // Auto derive dayName dari tanggal jika kosong
-        if (!event.dayName && event.date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            try {
-                const parts = event.date.split('-');
-                if (parts.length === 3) {
-                    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-                    if (!isNaN(d.getDay())) {
-                        event.dayName = days[d.getDay()];
-                    }
-                }
-            } catch (e) { /* ignore */ }
-        }
-        if (!event.dayName) event.dayName = 'Jadwal';
-
         if (index >= 0) {
             list[index] = { ...list[index], ...event };
         } else {
             list.push(event);
         }
 
-        inMemoryData.events = list;
-        persistCategory('events', list);
+        writeStorage(STORAGE_KEYS.EVENTS, list);
+        syncToFile(STORAGE_KEYS.EVENTS);
         return event;
     }
 
     function deleteEvent(id) {
         let list = getEvents();
         list = list.filter(e => String(e.id) !== String(id));
-        inMemoryData.events = list;
-        persistCategory('events', list);
+        writeStorage(STORAGE_KEYS.EVENTS, list);
+        syncToFile(STORAGE_KEYS.EVENTS);
         return list;
     }
 
@@ -548,11 +465,13 @@ const BBC_STORE = (function () {
     // 3. GALLERY / MOMENTS CRUD
     // ========================================================
     function getGallery() {
-        if (inMemoryData.gallery === null) {
-            const seed = (typeof initialGallery !== 'undefined') ? initialGallery : [];
-            inMemoryData.gallery = [...seed];
+        const seed = (typeof initialGallery !== 'undefined') ? initialGallery : [];
+        let data = readStorage(STORAGE_KEYS.GALLERY, null);
+        if (data === null || !Array.isArray(data)) {
+            data = seed;
+            writeStorage(STORAGE_KEYS.GALLERY, data);
         }
-        return inMemoryData.gallery;
+        return data;
     }
 
     function getGalleryById(id) {
@@ -579,16 +498,16 @@ const BBC_STORE = (function () {
             list.push(item);
         }
 
-        inMemoryData.gallery = list;
-        persistCategory('gallery', list);
+        writeStorage(STORAGE_KEYS.GALLERY, list);
+        syncToFile(STORAGE_KEYS.GALLERY);
         return item;
     }
 
     function deleteGalleryItem(id) {
         let list = getGallery();
         list = list.filter(g => String(g.id) !== String(id));
-        inMemoryData.gallery = list;
-        persistCategory('gallery', list);
+        writeStorage(STORAGE_KEYS.GALLERY, list);
+        syncToFile(STORAGE_KEYS.GALLERY);
         return list;
     }
 
@@ -596,11 +515,13 @@ const BBC_STORE = (function () {
     // 4. ARTICLES / NEWS CRUD
     // ========================================================
     function getArticles() {
-        if (inMemoryData.articles === null) {
-            const seed = (typeof articles !== 'undefined') ? articles : [];
-            inMemoryData.articles = [...seed];
+        const seed = (typeof articles !== 'undefined') ? articles : [];
+        let data = readStorage(STORAGE_KEYS.ARTICLES, null);
+        if (data === null || !Array.isArray(data)) {
+            data = seed;
+            writeStorage(STORAGE_KEYS.ARTICLES, data);
         }
-        return inMemoryData.articles;
+        return data;
     }
 
     function getArticleById(id) {
@@ -622,16 +543,16 @@ const BBC_STORE = (function () {
             list.unshift(article); // New articles at the top
         }
 
-        inMemoryData.articles = list;
-        persistCategory('articles', list);
+        writeStorage(STORAGE_KEYS.ARTICLES, list);
+        syncToFile(STORAGE_KEYS.ARTICLES);
         return article;
     }
 
     function deleteArticle(id) {
         let list = getArticles();
         list = list.filter(a => String(a.id) !== String(id));
-        inMemoryData.articles = list;
-        persistCategory('articles', list);
+        writeStorage(STORAGE_KEYS.ARTICLES, list);
+        syncToFile(STORAGE_KEYS.ARTICLES);
         return list;
     }
 
@@ -639,9 +560,21 @@ const BBC_STORE = (function () {
     // 5. PENGURUS BBC (OFFICIALS) CRUD
     // ========================================================
     function getOfficials() {
-        if (inMemoryData.officials === null) {
-            const seed = (typeof officials !== 'undefined') ? officials : [];
-            inMemoryData.officials = seed.map(o => ({
+        const seed = (typeof officials !== 'undefined') ? officials : [];
+        let data = readStorage(STORAGE_KEYS.OFFICIALS, null);
+        if (data === null || !Array.isArray(data)) {
+            data = seed.map(o => ({
+                id: o.id,
+                name: o.name || '',
+                role: o.role || '',
+                period: o.period || '',
+                gender: o.gender || (/siti|nur|fatimah|rahma|putri|dewi|ayu|ani/i.test(o.name || '') ? 'female' : 'male'),
+                image: o.image || ''
+            }));
+            writeStorage(STORAGE_KEYS.OFFICIALS, data);
+        } else {
+            // Clean up any stale number, nickname, division from earlier stored data
+            data = data.map(o => ({
                 id: o.id,
                 name: o.name || '',
                 role: o.role || '',
@@ -650,7 +583,7 @@ const BBC_STORE = (function () {
                 image: o.image || ''
             }));
         }
-        return inMemoryData.officials;
+        return data;
     }
 
     function getOfficialById(id) {
@@ -681,16 +614,16 @@ const BBC_STORE = (function () {
             list.push(cleanOfficial);
         }
 
-        inMemoryData.officials = list;
-        persistCategory('officials', list);
+        writeStorage(STORAGE_KEYS.OFFICIALS, list);
+        syncToFile(STORAGE_KEYS.OFFICIALS);
         return cleanOfficial;
     }
 
     function deleteOfficial(id) {
         let list = getOfficials();
         list = list.filter(o => String(o.id) !== String(id));
-        inMemoryData.officials = list;
-        persistCategory('officials', list);
+        writeStorage(STORAGE_KEYS.OFFICIALS, list);
+        syncToFile(STORAGE_KEYS.OFFICIALS);
         return list;
     }
 
@@ -698,33 +631,28 @@ const BBC_STORE = (function () {
     // 6. HERO SETTINGS
     // ========================================================
     function getHeroSettings() {
-        if (inMemoryData.hero !== null && typeof inMemoryData.hero === 'object') {
-            return { ...DEFAULT_HERO, ...inMemoryData.hero };
+        try {
+            const raw = localStorage.getItem(STORAGE_KEYS.HERO);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') return { ...DEFAULT_HERO, ...parsed };
+            }
+        } catch (e) {
+            console.warn('[BBC_STORE] Failed to read hero settings:', e);
         }
         return { ...DEFAULT_HERO };
     }
 
-    async function saveHeroSettings(settings) {
+    function saveHeroSettings(settings) {
         try {
             const current = getHeroSettings();
             const merged = { ...current, ...settings };
-            inMemoryData.hero = merged;
-            await persistCategory('hero', merged);
+            localStorage.setItem(STORAGE_KEYS.HERO, JSON.stringify(merged));
+            broadcast(STORAGE_KEYS.HERO);
+            syncToFile(STORAGE_KEYS.HERO);
             return merged;
         } catch (e) {
             console.error('[BBC_STORE] Failed to save hero settings:', e);
-            return null;
-        }
-    }
-
-    async function resetHeroSettings() {
-        try {
-            const resetData = { ...DEFAULT_HERO };
-            inMemoryData.hero = resetData;
-            await persistCategory('hero', resetData);
-            return resetData;
-        } catch (e) {
-            console.error('[BBC_STORE] Failed to reset hero settings:', e);
             return null;
         }
     }
@@ -801,42 +729,18 @@ const BBC_STORE = (function () {
     }
 
     function resetHeroSettings() {
-        inMemoryData.hero = { ...DEFAULT_HERO };
+        localStorage.removeItem(STORAGE_KEYS.HERO);
         deleteMediaBlob('hero_main_video');
-        persistCategory('hero', { ...DEFAULT_HERO });
+        broadcast(STORAGE_KEYS.HERO);
         return { ...DEFAULT_HERO };
     }
 
     // ========================================================
-    // REAL-TIME VERCEL BLOB & STATIC JSON SYNC
-    // Dipanggil saat halaman load.
-    // Memprioritaskan data realtime dari /api/data?category=... (Vercel Blob),
-    // dengan fallback ke file JSON statis lokal (/data/*.json).
+    // STATIC JSON SYNC — fetch data dari /data/*.json
+    // Dipanggil sekali saat halaman load. Jika JSON lebih baru
+    // dari versi di localStorage, data di-override secara otomatis.
     // ========================================================
-    async function fetchCloudOrJsonData(filename, arrayKey) {
-        const category = filename.replace('.json', '');
-
-        // 1. Coba fetch dari Serverless Real-time API (/api/data?category=...)
-        try {
-            const apiBase = getApiBasePath();
-            const res = await fetch(`${apiBase}data?category=${encodeURIComponent(category)}&t=${Date.now()}`, {
-                cache: 'no-store'
-            });
-            if (res.ok) {
-                const json = await res.json();
-                if (json && json.success && json.data !== undefined) {
-                    return {
-                        data: json.data,
-                        version: json.version || Date.now(),
-                        source: json.source || 'vercel-blob'
-                    };
-                }
-            }
-        } catch (apiErr) {
-            // Lanjutkan ke fallback JSON statis lokal
-        }
-
-        // 2. Fallback: fetch dari file JSON statis lokal (/data/*.json)
+    async function fetchJsonData(filename, arrayKey) {
         try {
             const base = getJsonBasePath();
             const res = await fetch(`${base}${filename}?v=${Date.now()}`, {
@@ -844,68 +748,52 @@ const BBC_STORE = (function () {
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
-            return {
-                data: json[arrayKey] !== undefined ? json[arrayKey] : [],
-                version: json._version || 0,
-                source: 'local-static-json'
-            };
+            return { data: json[arrayKey] !== undefined ? json[arrayKey] : [], version: json._version || 0 };
         } catch (e) {
-            console.warn(`[BBC_STORE] Gagal fetch data ${filename}:`, e.message);
+            console.warn(`[BBC_STORE] Gagal fetch ${filename}:`, e.message);
             return null;
         }
     }
 
     /**
      * initialize() — Harus dipanggil satu kali sebelum render halaman.
-     * Sinkronkan data langsung dari file .json / Vercel API ke memori aktif (tanpa localStorage).
+     * Fetch semua data dari JSON statis dan sync ke localStorage jika versi lebih baru.
      * @returns {Promise<void>}
      */
     async function initialize() {
-        purgeLegacyLocalStorage();
-
         const tasks = [
-            { file: 'players.json', key: 'players' },
-            { file: 'events.json',  key: 'events' },
-            { file: 'gallery.json', key: 'gallery' },
-            { file: 'articles.json',key: 'articles' },
-            { file: 'officials.json',key: 'officials' },
-            { file: 'hero.json',    key: 'hero' }
+            { file: 'players.json', key: 'players', storageKey: STORAGE_KEYS.PLAYERS, verKey: JSON_VERSION_KEYS.PLAYERS },
+            { file: 'events.json',  key: 'events',  storageKey: STORAGE_KEYS.EVENTS,  verKey: JSON_VERSION_KEYS.EVENTS },
+            { file: 'gallery.json', key: 'gallery', storageKey: STORAGE_KEYS.GALLERY, verKey: JSON_VERSION_KEYS.GALLERY },
+            { file: 'articles.json',key: 'articles',storageKey: STORAGE_KEYS.ARTICLES,verKey: JSON_VERSION_KEYS.ARTICLES },
+            { file: 'officials.json',key: 'officials',storageKey: STORAGE_KEYS.OFFICIALS,verKey: JSON_VERSION_KEYS.OFFICIALS },
+            { file: 'hero.json',     key: 'hero',     storageKey: STORAGE_KEYS.HERO,     verKey: JSON_VERSION_KEYS.HERO }
         ];
 
         await Promise.all(tasks.map(async (task) => {
-            const result = await fetchCloudOrJsonData(task.file, task.key);
-            if (!result || result.data === undefined) return;
+            const result = await fetchJsonData(task.file, task.key);
+            if (!result) return; // gagal fetch, pakai data localStorage
 
-            if (task.key === 'players') {
-                const arr = Array.isArray(result.data) ? result.data : [];
-                const normalized = arr.map(p => normalizePlayer(p));
-                ensureSinglePotmPerGender(normalized);
-                inMemoryData.players = normalized;
-            } else if (task.key === 'events') {
-                inMemoryData.events = Array.isArray(result.data) ? result.data : [];
-            } else if (task.key === 'gallery') {
-                inMemoryData.gallery = Array.isArray(result.data) ? result.data : [];
-            } else if (task.key === 'articles') {
-                inMemoryData.articles = Array.isArray(result.data) ? result.data : [];
-            } else if (task.key === 'officials') {
-                inMemoryData.officials = Array.isArray(result.data) ? result.data : [];
-            } else if (task.key === 'hero') {
-                if (result.data && typeof result.data === 'object') {
-                    inMemoryData.hero = { ...DEFAULT_HERO, ...result.data };
-                }
+            const storedVersion = parseInt(localStorage.getItem(task.verKey) || '0', 10);
+            const existingData = localStorage.getItem(task.storageKey);
+
+            // Override localStorage jika: (1) belum ada data, atau (2) versi JSON lebih baru
+            if (!existingData || result.version > storedVersion) {
+                writeStorage(task.storageKey, result.data);
+                localStorage.setItem(task.verKey, String(result.version));
+                console.info(`[BBC_STORE] Data '${task.key}' diperbarui dari JSON (v${result.version}).`);
             }
-            const srcLabel = result.source === 'vercel-blob' ? 'Vercel Blob ☁️' : 'Vercel JSON 📁';
-            console.info(`[BBC_STORE] Data '${task.key}' berhasil dimuat langsung dari ${srcLabel} (v${result.version}).`);
         }));
-
-        broadcast(null);
     }
 
     /**
-     * forceReloadFromJson() — Paksa reload semua data dari JSON serverless/statis.
+     * forceReloadFromJson() — Paksa reload semua data dari JSON statis,
+     * mengabaikan versi. Berguna setelah admin deploy data baru.
      * @returns {Promise<void>}
      */
     async function forceReloadFromJson() {
+        // Reset semua version keys agar initialize() selalu override
+        Object.values(JSON_VERSION_KEYS).forEach(k => localStorage.removeItem(k));
         await initialize();
         broadcast(null);
     }
@@ -941,10 +829,6 @@ const BBC_STORE = (function () {
             {
                 filename: 'officials.json',
                 content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, officials: getOfficials() }, null, 2)
-            },
-            {
-                filename: 'hero.json',
-                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, hero: getHeroSettings() }, null, 2)
             }
         ];
 
@@ -962,10 +846,9 @@ const BBC_STORE = (function () {
 
         return files.map(f => f.filename);
     }
-
     function exportDatabase() {
         const backup = {
-            version: '2.0',
+            version: '1.0',
             exportedAt: new Date().toISOString(),
             players: getPlayers(),
             events: getEvents(),
@@ -980,30 +863,12 @@ const BBC_STORE = (function () {
     function importDatabase(jsonString) {
         try {
             const data = JSON.parse(jsonString);
-            if (Array.isArray(data.players)) {
-                inMemoryData.players = data.players;
-                persistCategory('players', data.players);
-            }
-            if (Array.isArray(data.events)) {
-                inMemoryData.events = data.events;
-                persistCategory('events', data.events);
-            }
-            if (Array.isArray(data.gallery)) {
-                inMemoryData.gallery = data.gallery;
-                persistCategory('gallery', data.gallery);
-            }
-            if (Array.isArray(data.articles)) {
-                inMemoryData.articles = data.articles;
-                persistCategory('articles', data.articles);
-            }
-            if (Array.isArray(data.officials)) {
-                inMemoryData.officials = data.officials;
-                persistCategory('officials', data.officials);
-            }
-            if (data.hero && typeof data.hero === 'object') {
-                inMemoryData.hero = data.hero;
-                persistCategory('hero', data.hero);
-            }
+            if (Array.isArray(data.players)) writeStorage(STORAGE_KEYS.PLAYERS, data.players);
+            if (Array.isArray(data.events)) writeStorage(STORAGE_KEYS.EVENTS, data.events);
+            if (Array.isArray(data.gallery)) writeStorage(STORAGE_KEYS.GALLERY, data.gallery);
+            if (Array.isArray(data.articles)) writeStorage(STORAGE_KEYS.ARTICLES, data.articles);
+            if (Array.isArray(data.officials)) writeStorage(STORAGE_KEYS.OFFICIALS, data.officials);
+            if (data.hero && typeof data.hero === 'object') saveHeroSettings(data.hero);
             return { success: true };
         } catch (err) {
             return { success: false, error: err.message };
@@ -1011,28 +876,18 @@ const BBC_STORE = (function () {
     }
 
     function resetToDefaults() {
-        purgeLegacyLocalStorage();
-        inMemoryData.players = null;
-        inMemoryData.events = null;
-        inMemoryData.gallery = null;
-        inMemoryData.articles = null;
-        inMemoryData.officials = null;
-        inMemoryData.hero = null;
-
-        const p = getPlayers();
-        const ev = getEvents();
-        const g = getGallery();
-        const a = getArticles();
-        const o = getOfficials();
-        const h = getHeroSettings();
-
-        persistCategory('players', p);
-        persistCategory('events', ev);
-        persistCategory('gallery', g);
-        persistCategory('articles', a);
-        persistCategory('officials', o);
-        persistCategory('hero', h);
-
+        localStorage.removeItem(STORAGE_KEYS.PLAYERS);
+        localStorage.removeItem(STORAGE_KEYS.EVENTS);
+        localStorage.removeItem(STORAGE_KEYS.GALLERY);
+        localStorage.removeItem(STORAGE_KEYS.ARTICLES);
+        localStorage.removeItem(STORAGE_KEYS.OFFICIALS);
+        localStorage.removeItem(STORAGE_KEYS.HERO);
+        // Re-read to seed
+        getPlayers();
+        getEvents();
+        getGallery();
+        getArticles();
+        getOfficials();
         broadcast(null);
         return true;
     }
@@ -1078,13 +933,7 @@ const BBC_STORE = (function () {
         getMediaBlob,
         deleteMediaBlob,
 
-        // Vercel Real-time Cloud Helpers & Direct JSON Persist
-        persistCategory,
-        syncToVercel,
-        uploadToBlob,
-        checkBlobStatus,
-
-        // Static JSON sync
+        // Static JSON sync (DEPLOYMENT FIX)
         initialize,
         forceReloadFromJson,
         exportToJsonFiles,

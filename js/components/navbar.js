@@ -23,7 +23,7 @@ function renderNavbar() {
 
     const navLinksHtml = navItems.map(item => {
         const isActive = (currentPath === item.file) ||
-            ((currentPath === '' || currentPath === 'index.html') && item.file === 'index.html') ||
+            (currentPath === '' && item.file === 'index.html') ||
             (currentPath === 'player-detail.html' && item.file === 'players.html') ||
             (currentPath === 'article-detail.html' && item.file === 'news.html');
         return `
@@ -61,7 +61,7 @@ function renderNavbar() {
             <div style="display: flex; align-items: center; gap: 12px;">
                 <a href="${igUrl}" target="_blank" rel="noopener noreferrer" class="btn navbar__cta-btn" aria-label="Lihat Instagram BBC">
                     <span>INSTAGRAM BBC</span>
-                    <span class="btn-arrow btn-arrow--up-right">↗</span>
+                    <span style="font-family: var(--font-pixel);">↗</span>
                 </a>
                 
                 <button class="navbar__mobile-toggle" id="navbar-toggle" aria-label="Buka navigasi menu" aria-expanded="false">

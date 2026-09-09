@@ -14,7 +14,7 @@ BBC_onReady(() => {
     if (!list || list.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1/-1; border: 3px dashed var(--color-grey); border-radius: var(--radius-md); padding: 44px 28px; text-align: center;">
-                <div style="margin-bottom: 10px;"><span class="bbc-icon-shuttle" style="font-size: 2.6rem;"></span></div>
+                <div style="font-size: 2.4rem; margin-bottom: 10px;">🏸</div>
                 <h3 style="margin: 0 0 6px;">BELUM ADA DATA PENGURUS</h3>
                 <p style="color: var(--color-grey); margin: 0;">Data pengurus dapat ditambahkan melalui panel CMS BBC.</p>
             </div>`;

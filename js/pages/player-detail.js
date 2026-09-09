@@ -120,7 +120,7 @@ BBC_onReady(() => {
         `).join('')
         : `
             <li class="pd-achievement-item pd-achievement-item--empty">
-                <span class="pd-achievement-icon"><span class="bbc-icon-shuttle"></span></span>
+                <span class="pd-achievement-icon">🏸</span>
                 <span class="pd-achievement-text">Pemain aktif skuad resmi BBC musim 2026.</span>
             </li>
         `;
@@ -146,7 +146,7 @@ BBC_onReady(() => {
         <!-- ===== TOP NAVIGATION BAR ===== -->
         <div class="pd-top-nav">
             <a href="players.html" class="btn btn-outline btn-sm">
-                <span class="btn-arrow" style="transform: none;">←</span>
+                <span style="font-family: var(--font-pixel);">←</span>
                 <span>KEMBALI KE DAFTAR PEMAIN</span>
             </a>
             <div class="pd-top-nav__counter">
@@ -160,11 +160,11 @@ BBC_onReady(() => {
             <!-- Card Header Strip -->
             <div class="pd-header" style="background: ${isMale ? 'linear-gradient(90deg, #025335 0%, #009B63 100%)' : 'linear-gradient(90deg, #B91C1C 0%, #EF4444 100%)'};">
                 <div class="pd-header__left">
-                    <span class="pixel-badge pixel-badge--yellow"><span class="bbc-icon-shuttle"></span> PROFIL ATLET BBC</span>
+                    <span class="pixel-badge pixel-badge--yellow">🏸 PROFIL ATLET BBC</span>
                     <span class="pd-header__tag">ROSTER 2026</span>
                 </div>
                 <div class="pd-header__right">
-                    ${isPotm ? '<span class="pixel-badge pixel-badge--yellow"><span class="bbc-icon-crown"></span> PLAYER OF THE MONTH</span>' : ''}
+                    ${isPotm ? '<span class="pixel-badge pixel-badge--yellow">👑 PLAYER OF THE MONTH</span>' : ''}
                     <span class="pixel-badge pixel-badge--dark">${genderLabel}</span>
                 </div>
             </div>
@@ -274,7 +274,7 @@ BBC_onReady(() => {
                     <!-- Identity Block -->
                     <div class="pd-identity">
                         <div class="pd-identity__chips">
-                            <span class="pixel-badge ${badgeGenderClass}"><span class="bbc-icon-shuttle"></span> ${genderLabel}</span>
+                            <span class="pixel-badge ${badgeGenderClass}">🏸 ${genderLabel}</span>
                         </div>
                         <h1 class="pd-name">${player.name}</h1>
                     </div>
@@ -282,7 +282,7 @@ BBC_onReady(() => {
                     <!-- Achievements Block -->
                     <div class="pd-achievements-block">
                         <div class="pd-achievements-header">
-                            <span><span class="bbc-icon-trophy"></span> PRESTASI &amp; PENCAPAIAN</span>
+                            <span>🏆 PRESTASI &amp; PENCAPAIAN</span>
                             <span class="pixel-badge pixel-badge--yellow" style="font-size: 0.6rem;">${achievements.length} REKOR</span>
                         </div>
                         <ul class="pd-achievements-list">
@@ -330,7 +330,7 @@ BBC_onReady(() => {
                     <!-- Bottom Navigation Inside Card -->
                     <div class="pd-card-footer">
                         <a href="player-detail.html?slug=${encodeURIComponent(prevSlug)}" class="btn btn-outline btn-sm">
-                            <span class="btn-arrow" style="transform: none;">←</span>
+                            <span style="font-family: var(--font-pixel);">←</span>
                             <span>${prevPlayer.name.split(' ')[0]}</span>
                         </a>
                         <a href="players.html" class="btn btn-outline btn-sm">
@@ -338,7 +338,7 @@ BBC_onReady(() => {
                         </a>
                         <a href="player-detail.html?slug=${encodeURIComponent(nextSlug)}" class="btn btn-primary btn-sm">
                             <span>${nextPlayer.name.split(' ')[0]}</span>
-                            <span class="btn-arrow">→</span>
+                            <span style="font-family: var(--font-pixel);">→</span>
                         </a>
                     </div>
 

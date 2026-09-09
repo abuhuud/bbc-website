@@ -80,63 +80,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const AUTH_CONFIG = {
-        VALID_USERS: ['admin', 'adminbbc', 'adminbcc', 'bbc', 'bbcadmin', 'pengelola', 'superadmin'],
-        VALID_PASSWORDS_PLAIN: [
-            'admin',
-            'admin123',
-            'adminbbc',
-            'adminbbc2026',
-            'adminbcc2026',
-            'bbc2026',
-            'password',
-            '123456'
-        ],
+        // Valid hashes (Sha-256 for adminbcc2026 & adminbbc2026)
         VALID_PASSWORD_HASHES: [
-            '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', // admin
-            '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', // admin123
-            '5bf2e06fa8a5f09cbd51b9006bfeef036436fe1e6902187d1b3c5b2f078524fa', // adminbbc2026
             '50e8d103261dc36d343ca631ea3bf0c78f16deff8b8ca49c533c1ecf8ce192af', // adminbcc2026
-            '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', // password
-            '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'  // 123456
+            '5bf2e06fa8a5f09cbd51b9006bfeef036436fe1e6902187d1b3c5b2f078524fa'  // adminbbc2026
         ],
         SESSION_KEY: 'bbc_cms_session_token'
     };
 
     function isAuthenticated() {
-        try {
-            return sessionStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin' ||
-                   localStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin';
-        } catch (e) {
-            return false;
-        }
+        return sessionStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin';
     }
 
-    async function setAuthenticated(status) {
-        try {
-            if (status) {
-                try { sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
-                try { localStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
-                document.body.classList.remove('cms-auth-required');
-
-                // Sinkronkan data terbaru dari Vercel JSON / Blob sebelum render
-                if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
-                    try { await BBC_STORE.initialize(); } catch (initErr) { console.warn('[CMS Sync]', initErr); }
-                }
-
-                try { renderAll(); } catch (errR) { console.error('[CMS Render Error]', errR); }
-                try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Hero Error]', errH); }
-                try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Storage Error]', errS); }
-                try { if (typeof switchTab === 'function') switchTab('dashboard'); } catch (errT) { console.error('[CMS Tab Error]', errT); }
-            } else {
-                try { sessionStorage.removeItem(AUTH_CONFIG.SESSION_KEY); } catch (e) {}
-                try { localStorage.removeItem(AUTH_CONFIG.SESSION_KEY); } catch (e) {}
-                document.body.classList.add('cms-auth-required');
-                const wrapper = document.getElementById('cms-app-wrapper');
-                if (wrapper) wrapper.classList.remove('sidebar-open');
-                document.body.style.overflow = '';
-            }
-        } catch (errAuth) {
-            console.error('[CMS Auth Error]', errAuth);
+    function setAuthenticated(status) {
+        if (status) {
+            sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin');
+            document.body.classList.remove('cms-auth-required');
+            renderAll();
+            initHeroSettings();
+            switchTab('dashboard');
+        } else {
+            sessionStorage.removeItem(AUTH_CONFIG.SESSION_KEY);
+            document.body.classList.add('cms-auth-required');
+            const wrapper = document.getElementById('cms-app-wrapper');
+            if (wrapper) wrapper.classList.remove('sidebar-open');
+            document.body.style.overflow = '';
         }
     }
 
@@ -147,18 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorAlert = document.getElementById('login-error-msg');
     const togglePassBtn = document.getElementById('toggle-password-btn');
     const btnLogout = document.getElementById('btn-logout');
-    const btnQuickFill = document.getElementById('btn-quick-fill-login');
-
-    if (btnQuickFill) {
-        btnQuickFill.addEventListener('click', () => {
-            if (userInput) userInput.value = 'adminbbc';
-            if (passInput) passInput.value = 'adminbbc2026';
-            if (errorAlert) errorAlert.classList.remove('show');
-            setAuthenticated(true);
-            showToast('⚡ Login berhasil! Selamat datang di BBC CMS.');
-            if (loginForm) loginForm.reset();
-        });
-    }
 
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -168,10 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const enteredUser = (userInput ? userInput.value : '').trim().toLowerCase();
             const enteredPass = (passInput ? passInput.value : '').trim();
 
-            const isUserValid = AUTH_CONFIG.VALID_USERS.includes(enteredUser);
+            const isUserValid = (enteredUser === 'adminbbc' || enteredUser === 'adminbcc');
             const passHash = sha256(enteredPass);
-            const isPassValid = AUTH_CONFIG.VALID_PASSWORDS_PLAIN.includes(enteredPass) ||
-                                AUTH_CONFIG.VALID_PASSWORD_HASHES.includes(passHash);
+            const isPassValid = AUTH_CONFIG.VALID_PASSWORD_HASHES.includes(passHash);
 
             if (isUserValid && isPassValid) {
                 setAuthenticated(true);
@@ -179,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginForm.reset();
             } else {
                 if (errorAlert) {
-                    errorAlert.innerHTML = '⚠️ <strong>ID atau Password salah!</strong><br><span style="font-size:0.8rem; font-weight:normal;">Gunakan ID: <code>admin</code> atau <code>adminbbc</code> &amp; Password: <code>admin</code> atau <code>adminbbc2026</code>.</span>';
+                    errorAlert.textContent = '⚠️ ID atau Password salah! Periksa kembali ketikan Anda.';
                     errorAlert.classList.add('show');
                 }
                 if (passInput) {
@@ -294,23 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = fileInput.files[0];
             if (!file) return;
 
-            // 1. Coba upload langsung ke Vercel Blob CDN jika online / serverless aktif
-            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
-                try {
-                    const uploadFolder = assetSubdir ? assetSubdir.split('/').pop() : 'media';
-                    const uploadResult = await BBC_STORE.uploadToBlob(file, uploadFolder);
-                    if (uploadResult && uploadResult.success && uploadResult.url) {
-                        urlInput.value = uploadResult.url;
-                        previewEl.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
-                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
-                        return;
-                    }
-                } catch (uploadErr) {
-                    console.info('[CMS] Vercel upload fallback:', uploadErr);
-                }
-            }
-
-            // 2. Coba simpan ke folder proyek via BBC_FS jika tersedia
+            // Coba simpan ke folder proyek via BBC_FS jika tersedia
             if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured() && assetSubdir) {
                 // Buat nama file yang aman dari nama file asli
                 const safeName = file.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_.]/g, '');
@@ -456,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof BBC_FS !== 'undefined') {
             await BBC_FS.clearProjectFolder();
             updateFsStatusUI();
-            showToast('🔓 Folder proyek dilepas. Data tersimpan langsung di file .json & cloud.', 'info');
+            showToast('🔓 Folder proyek dilepas. Data hanya tersimpan di localStorage.', 'info');
         }
     }
 
@@ -494,126 +433,402 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ========================================================
-    // 3C. STORAGE & FILE SYSTEM SYNC STATUS
+    // 3C. BBC_GITHUB — GITHUB AUTO-DEPLOY UI HANDLERS
     // ========================================================
 
     /**
-     * Update badge status Storage di topbar header CMS.
+     * Update badge status Cloud Sync di topbar header CMS.
+     * @param {'ready'|'queued'|'syncing'|'success'|'error'|'unconfigured'} state
+     * @param {string} text
      */
-    async function updateStorageTopbarBadge() {
+    function updateCloudSyncTopbarBadge(state, text) {
         const badge = document.getElementById('cloud-sync-topbar-badge');
         const label = document.getElementById('cloud-sync-topbar-text');
         if (!badge || !label) return;
 
-        // Cek status Vercel Blob Cloud
-        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.checkBlobStatus) {
-            try {
-                const status = await BBC_STORE.checkBlobStatus();
-                if (status && status.connected) {
-                    badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
-                    label.textContent = '🟢 Vercel Real-time Sync: Aktif';
-                    return;
-                }
-            } catch (e) {}
-        }
-
-        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
-            badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
-            label.textContent = `📁 File: /${BBC_FS.getFolderName() || 'Terkonfigurasi'}`;
-        } else {
-            badge.className = 'cms-cloud-sync-badge cms-cloud-sync-badge--ready';
-            label.textContent = '💾 Storage & Vercel Sync';
-        }
-    }
-
-    function initStorageUI() {
-        updateStorageTopbarBadge();
-
-        const topbarCloudBadge = document.getElementById('cloud-sync-topbar-badge');
-        if (topbarCloudBadge && !topbarCloudBadge._storageWired) {
-            topbarCloudBadge._storageWired = true;
-            topbarCloudBadge.addEventListener('click', () => {
-                switchTab('backup');
-            });
-        }
-
-        // Auto-upload hook untuk semua form media (Vercel Blob + File System API + Base64 fallback)
-        attachMediaAutoUpload('player-file', 'player-image', 'player-preview', 'players');
-        attachMediaAutoUpload('gallery-file', 'gallery-image', 'gallery-preview', 'gallery');
-        attachMediaAutoUpload('official-file', 'official-image', 'official-preview', 'officials', () => {
-            if (typeof updateOfficialPreview === 'function') updateOfficialPreview();
-        });
-        attachMediaAutoUpload('article-file', 'article-image', 'article-preview', 'news');
+        badge.className = `cms-cloud-sync-badge cms-cloud-sync-badge--${state}`;
+        if (text) label.textContent = text;
     }
 
     /**
-     * Helper universal untuk upload media (Vercel Blob CDN / BBC_FS / Base64 Data URL)
+     * Update badge status GitHub dan info repo yang terhubung.
      */
-    function attachMediaAutoUpload(fileInputId, urlInputId, previewElId, folder, onDone) {
-        const fileInput = document.getElementById(fileInputId);
-        const urlInput = document.getElementById(urlInputId);
-        if (!fileInput || !urlInput || fileInput._autoUploadWired) return;
-        fileInput._autoUploadWired = true;
+    function updateGithubStatusUI() {
+        if (typeof BBC_GITHUB === 'undefined') return;
+        const status = BBC_GITHUB.getStatus();
+        const badge = document.getElementById('github-status-badge');
+        const connectedInfo = document.getElementById('github-connected-info');
+        const repoDisplay = document.getElementById('github-repo-display');
+        const branchDisplay = document.getElementById('github-branch-display');
+        const deployBtn = document.getElementById('btn-deploy-vercel');
 
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-
-            // 1. Coba upload langsung ke Vercel Blob CDN jika online
-            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
-                try {
-                    showToast(`⏳ Mengunggah "${file.name}" ke Vercel Blob CDN...`, 'info');
-                    const uploadResult = await BBC_STORE.uploadToBlob(file, folder);
-                    if (uploadResult && uploadResult.success && uploadResult.url) {
-                        urlInput.value = uploadResult.url;
-                        const previewEl = document.getElementById(previewElId);
-                        if (previewEl) {
-                            previewEl.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
-                        }
-                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
-                        if (typeof onDone === 'function') onDone(uploadResult.url);
-                        return;
-                    }
-                } catch (uploadErr) {
-                    console.info('[MediaAutoUpload] Cloud upload fallback:', uploadErr);
-                }
+        if (status.configured) {
+            if (badge) {
+                badge.textContent = '✅ TERHUBUNG';
+                badge.className = 'pixel-badge gh-badge--configured';
             }
+            if (connectedInfo) connectedInfo.style.display = '';
+            if (repoDisplay) repoDisplay.textContent = `${status.owner}/${status.repo}`;
+            if (branchDisplay) branchDisplay.textContent = `[${status.branch}]`;
+            if (deployBtn) deployBtn.disabled = false;
 
-            // 2. Coba simpan ke folder proyek jika BBC_FS aktif
-            if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
-                try {
-                    showToast(`⏳ Menyimpan "${file.name}" ke folder proyek...`);
-                    const result = await BBC_FS.writeImageFile(`assets/images/${folder}`, file);
-                    if (result && result.success) {
-                        urlInput.value = result.relativePath;
-                        const previewEl = document.getElementById(previewElId);
-                        if (previewEl) {
-                            previewEl.innerHTML = `<img src="${result.relativePath}" alt="Preview">`;
-                        }
-                        showToast(`✅ File tersimpan di: ${result.relativePath}`, 'success');
-                        if (typeof onDone === 'function') onDone(result.relativePath);
-                        return;
-                    }
-                } catch (err) {
-                    console.warn('[MediaAutoUpload] BBC_FS write failed, fallback ke Base64:', err);
-                }
+            const isAuto = status.autoDeployEnabled !== false;
+            updateCloudSyncTopbarBadge('ready', isAuto ? '☁️ Vercel: Auto' : '☁️ Vercel: Manual');
+        } else {
+            if (badge) {
+                badge.textContent = '⚠️ BELUM DIKONFIGURASI';
+                badge.className = 'pixel-badge gh-badge--unconfigured';
             }
+            if (connectedInfo) connectedInfo.style.display = 'none';
+            if (deployBtn) deployBtn.disabled = true;
 
-            // 3. Fallback: Base64 data URL
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const dataUrl = evt.target.result;
-                urlInput.value = dataUrl;
-                const previewEl = document.getElementById(previewElId);
-                if (previewEl) {
-                    previewEl.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
-                }
-                showToast('✅ Foto siap disimpan (Data URL lokal).', 'info');
-                if (typeof onDone === 'function') onDone(dataUrl);
-            };
-            reader.readAsDataURL(file);
-        });
+            updateCloudSyncTopbarBadge('unconfigured', '☁️ Vercel: Setup');
+        }
     }
+
+    /**
+     * Isi form konfigurasi GitHub dari data tersimpan di localStorage.
+     */
+    function loadGithubConfigToForm() {
+        if (typeof BBC_GITHUB === 'undefined') return;
+        const config = BBC_GITHUB.getConfig();
+
+        const chkAuto = document.getElementById('github-autodeploy-checkbox');
+        if (chkAuto) chkAuto.checked = BBC_GITHUB.isAutoDeployEnabled();
+
+        if (!config) return;
+
+        const tokenInput = document.getElementById('github-token-input');
+        const ownerInput = document.getElementById('github-owner-input');
+        const repoInput = document.getElementById('github-repo-input');
+        const branchInput = document.getElementById('github-branch-input');
+
+        if (tokenInput && config.token) tokenInput.value = config.token;
+        if (ownerInput && config.owner) ownerInput.value = config.owner;
+        if (repoInput && config.repo) repoInput.value = config.repo;
+        if (branchInput && config.branch) branchInput.value = config.branch;
+    }
+
+    /**
+     * Update state satu github-flow-step.
+     * @param {string} category - 'players'|'events'|'gallery'|'articles'|'officials'|'hero'
+     * @param {'idle'|'uploading'|'success'|'error'} state
+     */
+    function setFlowStepState(category, state) {
+        const el = document.getElementById(`gh-step-${category}`);
+        if (!el) return;
+        el.className = 'github-flow-step' + (state !== 'idle' ? ` github-flow-step--${state}` : '');
+    }
+
+    /**
+     * Reset semua flow steps ke state idle.
+     */
+    function resetFlowSteps() {
+        ['players', 'events', 'gallery', 'articles', 'officials', 'hero'].forEach(k => setFlowStepState(k, 'idle'));
+    }
+
+    /**
+     * Tambahkan baris ke log deploy (terminal style).
+     * @param {string} message
+     * @param {'info'|'success'|'error'|'warn'} type
+     */
+    function addDeployLog(message, type = 'info') {
+        const logEl = document.getElementById('github-deploy-log');
+        if (!logEl) return;
+        logEl.style.display = 'block';
+
+        const colors = {
+            info: '#C4B5FD',
+            success: '#6EE7B7',
+            error: '#FCA5A5',
+            warn: '#FCD34D'
+        };
+        const prefixes = {
+            info: '→',
+            success: '✓',
+            error: '✗',
+            warn: '!'
+        };
+
+        const line = document.createElement('div');
+        line.style.color = colors[type] || colors.info;
+        line.textContent = `${prefixes[type] || '→'} ${message}`;
+        logEl.appendChild(line);
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    /**
+     * Tangani klik tombol "💾 Simpan & Verifikasi".
+     */
+    async function handleSaveGithubConfig() {
+        if (typeof BBC_GITHUB === 'undefined') return;
+
+        const token = (document.getElementById('github-token-input') || {}).value || '';
+        const owner = (document.getElementById('github-owner-input') || {}).value || '';
+        const repo = (document.getElementById('github-repo-input') || {}).value || '';
+        const branch = (document.getElementById('github-branch-input') || {}).value || 'main';
+
+        const verifyEl = document.getElementById('github-verify-status');
+        const btn = document.getElementById('btn-save-github-config');
+
+        if (!token.trim() || !owner.trim() || !repo.trim()) {
+            if (verifyEl) {
+                verifyEl.style.display = '';
+                verifyEl.style.color = '#DC2626';
+                verifyEl.textContent = '❌ Token, Username, dan Nama Repository wajib diisi.';
+            }
+            return;
+        }
+
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ Memverifikasi...'; }
+        if (verifyEl) { verifyEl.style.display = ''; verifyEl.style.color = '#6B7280'; verifyEl.textContent = '⏳ Menghubungi GitHub API...'; }
+
+        const result = await BBC_GITHUB.verifyToken(token.trim());
+
+        if (result.valid) {
+            BBC_GITHUB.saveConfig({ token: token.trim(), owner: owner.trim(), repo: repo.trim(), branch: branch.trim() || 'main' });
+            if (verifyEl) {
+                verifyEl.style.color = '#059669';
+                verifyEl.textContent = `✅ Token valid! Login sebagai @${result.username}. Konfigurasi disimpan.`;
+            }
+            updateGithubStatusUI();
+            showToast(`✅ GitHub terhubung sebagai @${result.username}!`, 'success');
+        } else {
+            if (verifyEl) {
+                verifyEl.style.color = '#DC2626';
+                verifyEl.textContent = `❌ Verifikasi gagal: ${result.error}`;
+            }
+            showToast('❌ Token GitHub tidak valid. Periksa kembali.', 'error');
+        }
+
+        if (btn) { btn.disabled = false; btn.textContent = '💾 Simpan & Verifikasi'; }
+    }
+
+    /**
+     * Tangani klik tombol "🗑️ Hapus Konfigurasi".
+     */
+    function handleClearGithubConfig() {
+        if (typeof BBC_GITHUB === 'undefined') return;
+        BBC_GITHUB.clearConfig();
+
+        const inputs = ['github-token-input', 'github-owner-input', 'github-repo-input', 'github-branch-input'];
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+
+        const verifyEl = document.getElementById('github-verify-status');
+        if (verifyEl) { verifyEl.style.display = 'none'; verifyEl.textContent = ''; }
+
+        updateGithubStatusUI();
+        showToast('🗑️ Konfigurasi GitHub dihapus.', 'info');
+    }
+
+    /**
+     * Tangani klik tombol "🚀 DEPLOY KE VERCEL".
+     * Push semua file JSON ke GitHub → Vercel auto-redeploy.
+     */
+    async function handleDeployToVercel() {
+        if (typeof BBC_GITHUB === 'undefined' || !BBC_GITHUB.isConfigured()) {
+            showToast('⚠️ Konfigurasi GitHub belum diatur. Isi token terlebih dahulu.', 'error');
+            return;
+        }
+
+        const deployBtn = document.getElementById('btn-deploy-vercel');
+        const btnText = document.getElementById('btn-deploy-vercel-text');
+        const successNote = document.getElementById('github-deploy-success-note');
+        const logEl = document.getElementById('github-deploy-log');
+        const badge = document.getElementById('github-status-badge');
+
+        // Reset state
+        if (logEl) { logEl.innerHTML = ''; logEl.style.display = 'none'; }
+        if (successNote) successNote.style.display = 'none';
+        resetFlowSteps();
+
+        // UI: deploying state
+        if (deployBtn) deployBtn.disabled = true;
+        if (btnText) btnText.textContent = '⏳ Sedang Deploy...';
+        if (badge) { badge.textContent = '🔄 DEPLOYING...'; badge.className = 'pixel-badge gh-badge--deploying'; }
+
+        showToast('🚀 Memulai push ke GitHub...', 'info');
+        addDeployLog('Memulai sinkronisasi ke GitHub...', 'info');
+
+        const config = BBC_GITHUB.getConfig();
+        addDeployLog(`Target: ${config.owner}/${config.repo} [${config.branch}]`, 'info');
+
+        let anyFailed = false;
+
+        const result = await BBC_GITHUB.deployToGitHub({
+            onProgress: (category, status, error) => {
+                if (status === 'uploading') {
+                    setFlowStepState(category, 'uploading');
+                    addDeployLog(`Uploading ${category}.json...`, 'info');
+                } else if (status === 'success') {
+                    setFlowStepState(category, 'success');
+                    addDeployLog(`${category}.json ✓ berhasil di-push`, 'success');
+                } else if (status === 'error') {
+                    setFlowStepState(category, 'error');
+                    addDeployLog(`${category}.json ✗ GAGAL: ${error}`, 'error');
+                    anyFailed = true;
+                }
+            }
+        });
+
+        // UI: done state
+        if (deployBtn) deployBtn.disabled = false;
+
+        if (result.success > 0 && result.failed === 0) {
+            // Semua berhasil
+            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
+            if (badge) { badge.textContent = '✅ BERHASIL DEPLOY'; badge.className = 'pixel-badge gh-badge--success'; }
+            if (successNote) successNote.style.display = '';
+            addDeployLog(`✓ Selesai! ${result.success} file berhasil di-push ke GitHub.`, 'success');
+            addDeployLog('Vercel sedang redeploy... tunggu ±1–2 menit.', 'info');
+            showToast(`🚀 ${result.success} file berhasil di-push! Vercel sedang redeploy...`, 'success');
+
+            // Reset badge setelah 10 detik
+            setTimeout(() => {
+                updateGithubStatusUI();
+            }, 10000);
+
+        } else if (result.success > 0 && result.failed > 0) {
+            // Sebagian berhasil
+            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
+            if (badge) { badge.textContent = `⚠️ ${result.failed} GAGAL`; badge.className = 'pixel-badge gh-badge--error'; }
+            addDeployLog(`Selesai dengan error: ${result.success} berhasil, ${result.failed} gagal.`, 'warn');
+            showToast(`⚠️ ${result.success} file berhasil, ${result.failed} gagal. Cek log di bawah.`, 'warning');
+
+        } else {
+            // Semua gagal
+            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
+            if (badge) { badge.textContent = '❌ DEPLOY GAGAL'; badge.className = 'pixel-badge gh-badge--error'; }
+            addDeployLog(`Semua file gagal di-push. Periksa token & koneksi internet.`, 'error');
+            if (result.errors.length > 0) {
+                addDeployLog(`Error: ${result.errors[0]}`, 'error');
+            }
+            showToast('❌ Deploy gagal. Periksa token GitHub dan koneksi internet.', 'error');
+        }
+    }
+
+    /**
+     * Init semua UI GitHub deploy — dipanggil saat tab Backup dibuka.
+     */
+    function initGithubUI() {
+        // Load config ke form
+        loadGithubConfigToForm();
+        updateGithubStatusUI();
+
+        // Wire event listeners (hanya sekali)
+        const btnSave = document.getElementById('btn-save-github-config');
+        if (btnSave && !btnSave._ghWired) {
+            btnSave._ghWired = true;
+            btnSave.addEventListener('click', handleSaveGithubConfig);
+        }
+
+        const btnClear = document.getElementById('btn-clear-github-config');
+        if (btnClear && !btnClear._ghWired) {
+            btnClear._ghWired = true;
+            btnClear.addEventListener('click', handleClearGithubConfig);
+        }
+
+        const btnDeploy = document.getElementById('btn-deploy-vercel');
+        if (btnDeploy && !btnDeploy._ghWired) {
+            btnDeploy._ghWired = true;
+            btnDeploy.addEventListener('click', handleDeployToVercel);
+        }
+
+        // Toggle password visibility
+        const btnToggle = document.getElementById('btn-toggle-token');
+        const tokenInput = document.getElementById('github-token-input');
+        if (btnToggle && tokenInput && !btnToggle._ghWired) {
+            btnToggle._ghWired = true;
+            btnToggle.addEventListener('click', () => {
+                tokenInput.type = (tokenInput.type === 'password') ? 'text' : 'password';
+            });
+        }
+
+        // Toggle Auto-Deploy Checkbox
+        const chkAutoDeploy = document.getElementById('github-autodeploy-checkbox');
+        if (chkAutoDeploy && !chkAutoDeploy._ghWired) {
+            chkAutoDeploy._ghWired = true;
+            chkAutoDeploy.addEventListener('change', () => {
+                if (typeof BBC_GITHUB !== 'undefined') {
+                    BBC_GITHUB.setAutoDeployEnabled(chkAutoDeploy.checked);
+                    showToast(
+                        chkAutoDeploy.checked
+                            ? '⚡ Auto-Deploy ke Vercel diaktifkan!'
+                            : 'Auto-Deploy ke Vercel dinonaktifkan.',
+                        'info'
+                    );
+                    updateGithubStatusUI();
+                }
+            });
+        }
+    }
+
+    // ========================================================
+    // 3D. REAKTIF CLOUD SYNC LISTENER & TOPBAR SHORTCUT
+    // ========================================================
+    if (typeof BBC_GITHUB !== 'undefined') {
+        // Klik badge di topbar untuk langsung membuka pengaturan Vercel di tab Backup
+        const topbarCloudBadge = document.getElementById('cloud-sync-topbar-badge');
+        if (topbarCloudBadge && !topbarCloudBadge._ghWired) {
+            topbarCloudBadge._ghWired = true;
+            topbarCloudBadge.addEventListener('click', () => {
+                switchTab('backup');
+                setTimeout(() => {
+                    const cfgForm = document.getElementById('github-config-form');
+                    if (cfgForm) cfgForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            });
+        }
+
+        // Daftarkan listener live status deploy
+        BBC_GITHUB.onStatusChange((evt) => {
+            console.info(`[CMS] Status Auto-Deploy: ${evt.type}`, evt);
+
+            if (evt.type === 'queued') {
+                updateCloudSyncTopbarBadge('queued', '⏳ Menyimpan...');
+                addDeployLog(`[Auto-Deploy] Perubahan data (${evt.categories.join(', ')}) dijadwalkan push ke Vercel...`, 'info');
+            } else if (evt.type === 'deploying') {
+                updateCloudSyncTopbarBadge('syncing', '🚀 Push Vercel...');
+                addDeployLog(`[Auto-Deploy] Sedang mengunggah (${evt.categories.join(', ')}) ke GitHub...`, 'info');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'uploading'));
+                }
+            } else if (evt.type === 'success') {
+                updateCloudSyncTopbarBadge('success', '✅ Vercel: Terupdate!');
+                addDeployLog(`[Auto-Deploy] ✅ Sukses! Vercel otomatis redeploy dalam ±1-2 menit.`, 'success');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'success'));
+                }
+                showToast(`✅ Data (${evt.categories.join(', ')}) berhasil di-push ke Vercel!`, 'success');
+
+                // Kembalikan teks badge ke siap setelah 5 detik
+                setTimeout(() => {
+                    updateGithubStatusUI();
+                }, 5000);
+            } else if (evt.type === 'error') {
+                updateCloudSyncTopbarBadge('error', '⚠️ Vercel: Gagal');
+                addDeployLog(`[Auto-Deploy] ❌ Gagal: ${evt.message}`, 'error');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'error'));
+                }
+                showToast(`⚠️ Auto-Deploy Vercel gagal. Buka tab Backup untuk detail.`, 'error');
+
+                setTimeout(() => {
+                    updateGithubStatusUI();
+                }, 6000);
+            } else if (evt.type === 'autodeploy_toggle') {
+                updateGithubStatusUI();
+            }
+        });
+
+        // Inisialisasi tampilan status topbar saat pertama load
+        updateGithubStatusUI();
+    }
+
+    // ========================================================
     // 4. COLLAPSIBLE LEFT SIDEBAR & TAB SWITCHING (DESKTOP, TABLET & MOBILE)
     // ========================================================
     const tabPanes = document.querySelectorAll('.cms-tab-pane');
@@ -821,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target === 'backup') {
             initFsUI();
-            updateStorageTopbarBadge();
+            initGithubUI();
         }
 
         // Close mobile drawer if opened on mobile devices
@@ -1020,8 +1235,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rowsHtml = visibleList.map(p => {
             const genderBadge = p.gender === 'male'
-                ? `<span class="pixel-badge pixel-badge--green" style="font-size: 0.74rem; padding: 2px 8px;">🏸 AMILIN</span>`
-                : `<span class="pixel-badge pixel-badge--coral" style="font-size: 0.74rem; padding: 2px 8px;">🏸 AMILAT</span>`;
+                ? `<span class="pixel-badge pixel-badge--green" style="font-size: 0.65rem; padding: 2px 8px;">🏸 AMILIN</span>`
+                : `<span class="pixel-badge pixel-badge--coral" style="font-size: 0.65rem; padding: 2px 8px;">🏸 AMILAT</span>`;
 
             const achievements = Array.isArray(p.achievements)
                 ? p.achievements
@@ -1050,9 +1265,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="font-weight: 700; color: #1E40AF;">🏸 Main:</span>
                         <span>${stats.matches} match</span>
                     </div>
-                    <div class="cms-stat-badge-row" style="font-size: 0.74rem;">
-                        <span class="pixel-badge pixel-badge--green" style="font-size: 0.68rem; padding: 1px 5px;">W: ${stats.wins}</span>
-                        <span class="pixel-badge pixel-badge--coral" style="font-size: 0.68rem; padding: 1px 5px;">L: ${stats.losses}</span>
+                    <div class="cms-stat-badge-row" style="font-size: 0.72rem;">
+                        <span class="pixel-badge pixel-badge--green" style="font-size: 0.58rem; padding: 1px 4px;">W: ${stats.wins}</span>
+                        <span class="pixel-badge pixel-badge--coral" style="font-size: 0.58rem; padding: 1px 4px;">L: ${stats.losses}</span>
                         <span style="font-weight: 800; color: #D97706;">(${winRate}%)</span>
                     </div>
                 </div>
@@ -1157,7 +1372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Attach POTM quick-toggle handlers
         document.querySelectorAll('[data-toggle-potm]').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const id = btn.getAttribute('data-toggle-potm');
                 const isCurrentlyPotm = btn.getAttribute('data-potm-status') === 'true';
@@ -1165,18 +1380,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const p = BBC_STORE.getPlayerById(id);
                 if (!p) return;
 
-                btn.disabled = true;
-                try {
-                    await BBC_STORE.setPlayerOfTheMonth(id, nextStatus);
-                    renderPlayersTable();
-                    updateTabCounts();
-                    if (nextStatus) {
-                        showToast(`⭐ "${p.name}" aktif sebagai POTM (${p.gender === 'male' ? 'Amilin' : 'Amilat'}) & tersimpan ke .json!`, 'success');
-                    } else {
-                        showToast(`Status POTM untuk "${p.name}" dinonaktifkan di .json.`, 'info');
-                    }
-                } finally {
-                    btn.disabled = false;
+                BBC_STORE.setPlayerOfTheMonth(id, nextStatus);
+                renderPlayersTable();
+                updateTabCounts();
+                if (nextStatus) {
+                    showToast(`"${p.name}" kini aktif sebagai Player of the Month (${p.gender === 'male' ? 'Amilin' : 'Amilat'})!`, 'success');
+                } else {
+                    showToast(`Status POTM untuk "${p.name}" dinonaktifkan.`, 'info');
                 }
             });
         });
@@ -1203,11 +1413,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-player');
                 const p = BBC_STORE.getPlayerById(id);
                 if (p) {
-                    promptDelete(`Pemain: ${p.name}`, async () => {
-                        await BBC_STORE.deletePlayer(id);
+                    promptDelete(`Pemain: ${p.name}`, () => {
+                        BBC_STORE.deletePlayer(id);
                         renderPlayersTable();
                         updateTabCounts();
-                        showToast(`Pemain "${p.name}" berhasil dihapus dari file .json & Vercel.`);
+                        showToast(`Pemain "${p.name}" berhasil dihapus.`);
                     });
                 }
             });
@@ -1437,13 +1647,13 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 const photoId = btn.getAttribute('data-delete-photo');
                 const targetPhoto = gallery.find(g => String(g.id) === String(photoId));
-                promptDelete(`Foto Galeri: "${targetPhoto?.caption || 'Momen Aksi'}"`, async () => {
-                    await BBC_STORE.deletePlayerGalleryPhoto(playerId, photoId);
+                promptDelete(`Foto Galeri: "${targetPhoto?.caption || 'Momen Aksi'}"`, () => {
+                    BBC_STORE.deletePlayerGalleryPhoto(playerId, photoId);
                     renderPlayerGalleryModalGrid(playerId);
                     renderPlayersTable();
                     const updatedPlayer = BBC_STORE.getPlayerById(playerId);
                     renderPlayerModalGalleryPreview(updatedPlayer);
-                    showToast('Foto galeri berhasil dihapus dari file .json & Vercel.', 'info');
+                    showToast('Foto galeri berhasil dihapus.', 'info');
                 });
             });
         });
@@ -1467,32 +1677,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // File upload for gallery photo with FileReader (Vercel Blob & BBC_FS aware)
+    // File upload for gallery photo with FileReader (BBC_FS aware)
     const pgFileInput = document.getElementById('pg-photo-file');
     if (pgFileInput) {
         pgFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // 1. Coba upload langsung ke Vercel Blob jika online
-            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
-                try {
-                    const uploadResult = await BBC_STORE.uploadToBlob(file, 'players');
-                    if (uploadResult && uploadResult.success && uploadResult.url) {
-                        document.getElementById('pg-photo-url').value = uploadResult.url;
-                        const previewBox = document.getElementById('pg-preview-box');
-                        if (previewBox) {
-                            previewBox.innerHTML = `<img src="${uploadResult.url}" alt="Preview">`;
-                        }
-                        showToast(`☁️ Foto terupload ke Vercel Blob CDN!`, 'success');
-                        return;
-                    }
-                } catch (uploadErr) {
-                    console.info('[CMS] Vercel upload fallback:', uploadErr);
-                }
-            }
-
-            // 2. Coba simpan ke folder proyek via BBC_FS
+            // Coba simpan ke folder proyek via BBC_FS
             if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
                 try {
                     const result = await BBC_FS.writeImageFile('assets/images/players', file, '');
@@ -1510,7 +1702,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 3. Fallback: base64
+            // Fallback: base64
             const reader = new FileReader();
             reader.onload = (evt) => {
                 const dataUrl = evt.target.result;
@@ -1519,7 +1711,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (previewBox) {
                     previewBox.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
                 }
-                showToast(`ℹ️ Foto dimuat sebagai Data URL (Lokal/Standby).`, 'info');
             };
             reader.readAsDataURL(file);
         });
@@ -1528,7 +1719,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save photo button in gallery modal
     const btnPgSavePhoto = document.getElementById('pg-btn-save-photo');
     if (btnPgSavePhoto) {
-        btnPgSavePhoto.addEventListener('click', async () => {
+        btnPgSavePhoto.addEventListener('click', () => {
             const playerId = document.getElementById('pg-target-player-id').value;
             const photoId = document.getElementById('pg-edit-photo-id').value;
             const url = document.getElementById('pg-photo-url').value.trim();
@@ -1540,31 +1731,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            btnPgSavePhoto.disabled = true;
-            try {
-                if (photoId) {
-                    await BBC_STORE.updatePlayerGalleryPhoto(playerId, photoId, { url, caption });
-                    showToast('Foto galeri berhasil diperbarui di file .json & Vercel!', 'success');
-                } else {
-                    await BBC_STORE.addPlayerGalleryPhoto(playerId, { url, caption });
-                    showToast('Foto baru berhasil ditambahkan ke file .json & Vercel!', 'success');
-                }
-
-                resetPlayerGalleryForm();
-                renderPlayerGalleryModalGrid(playerId);
-                renderPlayersTable();
-                const updatedPlayer = BBC_STORE.getPlayerById(playerId);
-                renderPlayerModalGalleryPreview(updatedPlayer);
-            } finally {
-                btnPgSavePhoto.disabled = false;
+            if (photoId) {
+                BBC_STORE.updatePlayerGalleryPhoto(playerId, photoId, { url, caption });
+                showToast('Foto galeri berhasil diperbarui!', 'success');
+            } else {
+                BBC_STORE.addPlayerGalleryPhoto(playerId, { url, caption });
+                showToast('Foto baru berhasil ditambahkan ke galeri pemain!', 'success');
             }
+
+            resetPlayerGalleryForm();
+            renderPlayerGalleryModalGrid(playerId);
+            renderPlayersTable();
+            const updatedPlayer = BBC_STORE.getPlayerById(playerId);
+            renderPlayerModalGalleryPreview(updatedPlayer);
         });
     }
 
-    // File upload for main player photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
+    // File upload for main player photo with FileReader
+    const playerFileInput = document.getElementById('player-file');
+    if (playerFileInput) {
+        playerFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const dataUrl = evt.target.result;
+                document.getElementById('player-image').value = dataUrl;
+                const previewEl = document.getElementById('player-preview');
+                if (previewEl) {
+                    previewEl.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     if (formPlayer) {
-        formPlayer.addEventListener('submit', async (e) => {
+        formPlayer.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('player-id').value;
             const name = document.getElementById('player-name').value.trim();
@@ -1611,27 +1814,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 gallery: existingGallery
             };
 
-            const submitBtn = formPlayer.querySelector('button[type="submit"]');
-            const origHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
-            }
-
-            try {
-                await BBC_STORE.savePlayer(playerData);
-                closeModal('modal-player');
-                renderPlayersTable();
-                updateTabCounts();
-                showToast(id ? `✅ Data ${name} berhasil disimpan ke .json & Vercel!` : `✅ Pemain ${name} berhasil disimpan ke .json & Vercel!`);
-            } catch (err) {
-                showToast(`⚠️ Gagal menyimpan: ${err.message}`, 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origHtml;
-                }
-            }
+            BBC_STORE.savePlayer(playerData);
+            closeModal('modal-player');
+            renderPlayersTable();
+            updateTabCounts();
+            showToast(id ? `Data ${name} berhasil diperbarui!` : `Pemain ${name} berhasil ditambahkan!`);
         });
     }
 
@@ -1664,8 +1851,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rowsHtml = visibleList.map(ev => {
             const statusBadge = ev.status === 'completed'
-                ? `<span class="pixel-badge pixel-badge--dark" style="font-size: 0.74rem;">SELESAI</span>`
-                : `<span class="pixel-badge pixel-badge--green" style="font-size: 0.74rem;">🟢 UPCOMING</span>`;
+                ? `<span class="pixel-badge pixel-badge--dark" style="font-size: 0.65rem;">SELESAI</span>`
+                : `<span class="pixel-badge pixel-badge--green" style="font-size: 0.65rem;">🟢 UPCOMING</span>`;
 
             let typeBadgeClass = 'pixel-badge--yellow';
             if (ev.type === 'tournament') typeBadgeClass = 'pixel-badge--coral';
@@ -1683,7 +1870,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <strong>${ev.title}</strong>
                                     </div>
                                     <div class="cms-accordion-meta">
-                                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.70rem;">${ev.typeName || ev.type}</span>
+                                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.58rem;">${ev.typeName || ev.type}</span>
                                         <span class="cms-accordion-subtext">${ev.dayName ? ev.dayName + ', ' : ''}${ev.date}</span>
                                     </div>
                                 </div>
@@ -1703,7 +1890,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${ev.description ? `<div style="font-size: 0.8rem; color: var(--color-grey); margin-top: 2px;">${ev.description.slice(0, 75)}...</div>` : ''}
                     </td>
                     <td data-label="Kategori" class="cms-acc-cell">
-                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.74rem;">${ev.typeName || ev.type}</span>
+                        <span class="pixel-badge ${typeBadgeClass}" style="font-size: 0.65rem;">${ev.typeName || ev.type}</span>
                     </td>
                     <td data-label="Lokasi" class="cms-acc-cell">
                         <strong>${ev.venue}</strong><br>
@@ -1775,11 +1962,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-event');
                 const ev = BBC_STORE.getEventById(id);
                 if (ev) {
-                    promptDelete(`Jadwal: ${ev.title}`, async () => {
-                        await BBC_STORE.deleteEvent(id);
+                    promptDelete(`Jadwal: ${ev.title}`, () => {
+                        BBC_STORE.deleteEvent(id);
                         renderEventsTable();
                         updateTabCounts();
-                        showToast(`Jadwal "${ev.title}" berhasil dihapus dari file .json & Vercel.`);
+                        showToast(`Jadwal "${ev.title}" berhasil dihapus.`);
                     });
                 }
             });
@@ -1806,66 +1993,30 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal('modal-event');
     }
 
-    const inputEventDate = document.getElementById('event-date');
-    const inputEventDay = document.getElementById('event-day');
-    if (inputEventDate && inputEventDay) {
-        inputEventDate.addEventListener('change', () => {
-            const val = inputEventDate.value;
-            if (!val) return;
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            try {
-                const parts = val.split('-');
-                if (parts.length === 3) {
-                    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-                    if (!isNaN(d.getDay())) {
-                        inputEventDay.value = days[d.getDay()];
-                    }
-                }
-            } catch (e) { /* ignore */ }
-        });
-    }
-
     if (btnAddEvent) {
         btnAddEvent.addEventListener('click', () => {
             eventTitleHeader.textContent = 'TAMBAH JADWAL KEGIATAN BARU';
             formEvent.reset();
             document.getElementById('event-id').value = '';
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            document.getElementById('event-date').value = todayStr;
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            document.getElementById('event-day').value = days[today.getDay()] || 'Selasa';
+            document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
             openModal('modal-event');
         });
     }
 
     if (formEvent) {
-        formEvent.addEventListener('submit', async (e) => {
+        formEvent.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('event-id').value;
             const title = document.getElementById('event-title').value.trim();
             const type = document.getElementById('event-type').value;
             const status = document.getElementById('event-status').value;
             const date = document.getElementById('event-date').value;
-            let dayName = document.getElementById('event-day').value.trim();
+            const dayName = document.getElementById('event-day').value.trim();
             const time = document.getElementById('event-time').value.trim();
             const venue = document.getElementById('event-venue').value.trim();
             const city = document.getElementById('event-city').value.trim();
             const locationUrl = document.getElementById('event-location-url').value.trim();
             const description = document.getElementById('event-description').value.trim();
-
-            // Auto derive dayName jika kosong
-            if (!dayName && date) {
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                try {
-                    const parts = date.split('-');
-                    if (parts.length === 3) {
-                        const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-                        if (!isNaN(d.getDay())) dayName = days[d.getDay()];
-                    }
-                } catch (err) { /* ignore */ }
-            }
-            if (!dayName) dayName = 'Jadwal';
 
             const eventData = {
                 id: id || undefined,
@@ -1881,27 +2032,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 description
             };
 
-            const submitBtn = formEvent.querySelector('button[type="submit"]');
-            const origHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
-            }
-
-            try {
-                await BBC_STORE.saveEvent(eventData);
-                closeModal('modal-event');
-                renderEventsTable();
-                updateTabCounts();
-                showToast(id ? '✅ Jadwal berhasil disimpan ke .json & Vercel!' : '✅ Jadwal baru berhasil disimpan ke .json & Vercel!');
-            } catch (err) {
-                showToast(`⚠️ Gagal menyimpan jadwal: ${err.message}`, 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origHtml;
-                }
-            }
+            BBC_STORE.saveEvent(eventData);
+            closeModal('modal-event');
+            renderEventsTable();
+            updateTabCounts();
+            showToast(id ? 'Jadwal berhasil diperbarui!' : 'Jadwal baru berhasil ditambahkan!');
         });
     }
 
@@ -1934,7 +2069,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
                             <img src="${item.image}" alt="${item.alt || item.tag}" class="cms-accordion-thumb" style="width:38px; height:38px; border-radius:4px; object-fit:cover; flex-shrink:0;">
                             <div style="min-width:0; flex:1;">
-                                <span class="pixel-sticker ${badgeClass}" style="font-size: 0.72rem; padding: 2px 6px;">${item.tag}</span>
+                                <span class="pixel-sticker ${badgeClass}" style="font-size: 0.62rem; padding: 2px 6px;">${item.tag}</span>
                                 <div style="font-size: 0.8rem; font-weight: 700; color: var(--cms-dark); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     ${item.alt || 'Dokumentasi Lapangan BBC'}
                                 </div>
@@ -1980,11 +2115,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-gallery');
                 const g = BBC_STORE.getGalleryById(id);
                 if (g) {
-                    promptDelete(`Foto Galeri: "${g.tag}"`, async () => {
-                        await BBC_STORE.deleteGalleryItem(id);
+                    promptDelete(`Foto Galeri: "${g.tag}"`, () => {
+                        BBC_STORE.deleteGalleryItem(id);
                         renderGalleryGrid();
                         updateTabCounts();
-                        showToast('Foto galeri berhasil dihapus dari file .json & Vercel.');
+                        showToast('Foto galeri berhasil dihapus.');
                     });
                 }
             });
@@ -2021,7 +2156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formGallery) {
-        formGallery.addEventListener('submit', async (e) => {
+        formGallery.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('gallery-id').value;
             const tag = document.getElementById('gallery-tag').value.trim();
@@ -2042,27 +2177,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 image
             };
 
-            const submitBtn = formGallery.querySelector('button[type="submit"]');
-            const origHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
-            }
-
-            try {
-                await BBC_STORE.saveGalleryItem(itemData);
-                closeModal('modal-gallery');
-                renderGalleryGrid();
-                updateTabCounts();
-                showToast(id ? '✅ Foto galeri berhasil disimpan ke .json & Vercel!' : '✅ Foto baru berhasil disimpan ke .json & Vercel!');
-            } catch (err) {
-                showToast(`⚠️ Gagal menyimpan foto: ${err.message}`, 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origHtml;
-                }
-            }
+            BBC_STORE.saveGalleryItem(itemData);
+            closeModal('modal-gallery');
+            renderGalleryGrid();
+            updateTabCounts();
+            showToast(id ? 'Foto galeri diperbarui!' : 'Foto baru ditambahkan ke galeri!');
         });
     }
 
@@ -2105,7 +2224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <strong>${art.title}</strong>
                                     </div>
                                     <div class="cms-accordion-meta">
-                                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.70rem;">${art.category}</span>
+                                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.58rem;">${art.category}</span>
                                         <span class="cms-accordion-subtext">📅 ${art.date}</span>
                                     </div>
                                 </div>
@@ -2126,10 +2245,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </td>
                     <td data-label="Kategori" class="cms-acc-cell">
-                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.74rem;">${art.category}</span>
+                        <span class="pixel-badge pixel-badge--blue" style="font-size: 0.65rem;">${art.category}</span>
                     </td>
                     <td data-label="Tanggal" class="cms-acc-cell">
-                        <span style="font-family: var(--font-pixel); font-size: 0.74rem; color: var(--color-grey);">📅 ${art.date}</span>
+                        <span style="font-family: var(--font-pixel); font-size: 0.68rem; color: var(--color-grey);">📅 ${art.date}</span>
                     </td>
                     <td data-label="Waktu Baca" class="cms-acc-cell">
                         <span class="cms-read-time-pill">⏱️ ${art.readTime || '-'}</span>
@@ -2199,11 +2318,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-article');
                 const art = BBC_STORE.getArticleById(id);
                 if (art) {
-                    promptDelete(`Artikel: "${art.title}"`, async () => {
-                        await BBC_STORE.deleteArticle(id);
+                    promptDelete(`Artikel: "${art.title}"`, () => {
+                        BBC_STORE.deleteArticle(id);
                         renderArticlesTable();
                         updateTabCounts();
-                        showToast(`Artikel "${art.title}" berhasil dihapus dari file .json & Vercel.`);
+                        showToast(`Artikel "${art.title}" berhasil dihapus.`);
                     });
                 }
             });
@@ -2249,7 +2368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (formArticle) {
-        formArticle.addEventListener('submit', async (e) => {
+        formArticle.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('article-id').value;
             const title = document.getElementById('article-title').value.trim();
@@ -2280,27 +2399,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 image
             };
 
-            const submitBtn = formArticle.querySelector('button[type="submit"]');
-            const origHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
-            }
-
-            try {
-                await BBC_STORE.saveArticle(articleData);
-                closeModal('modal-article');
-                renderArticlesTable();
-                updateTabCounts();
-                showToast(id ? '✅ Artikel berhasil disimpan ke .json & Vercel!' : '✅ Artikel baru berhasil disimpan ke .json & Vercel!');
-            } catch (err) {
-                showToast(`⚠️ Gagal menyimpan artikel: ${err.message}`, 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origHtml;
-                }
-            }
+            BBC_STORE.saveArticle(articleData);
+            closeModal('modal-article');
+            renderArticlesTable();
+            updateTabCounts();
+            showToast(id ? 'Artikel berhasil diperbarui!' : 'Artikel baru berhasil dipublikasikan!');
         });
     }
 
@@ -2410,7 +2513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <strong>${o.name}</strong>
                                 </div>
                                 <div class="cms-accordion-meta">
-                                    <span class="pixel-badge pixel-badge--green" style="font-size: 0.70rem;">${o.role || '-'}</span>
+                                    <span class="pixel-badge pixel-badge--green" style="font-size: 0.58rem;">${o.role || '-'}</span>
                                     <span class="cms-accordion-subtext">${o.period || ''}</span>
                                 </div>
                             </div>
@@ -2428,7 +2531,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-weight: 800; color: var(--cms-dark);">${o.name}</div>
                 </td>
                 <td data-label="Jabatan" class="cms-acc-cell" style="font-size: 0.86rem; font-weight: 700;">${o.role || '-'}</td>
-                <td data-label="Periode" class="cms-acc-cell"><span class="pixel-badge pixel-badge--green" style="font-size: 0.72rem;">${o.period || '-'}</span></td>
+                <td data-label="Periode" class="cms-acc-cell"><span class="pixel-badge pixel-badge--green" style="font-size: 0.62rem;">${o.period || '-'}</span></td>
                 <td data-label="Aksi" class="cms-acc-cell">
                     <div class="cms-btn-group" style="justify-content: center;">
                         <button type="button" class="cms-btn-action cms-btn-action--edit" data-edit-official="${o.id}">✏️ EDIT</button>
@@ -2448,11 +2551,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = btn.getAttribute('data-delete-official');
                 const o = BBC_STORE.getOfficialById(id);
                 if (o) {
-                    promptDelete(`Pengurus: ${o.name} (${o.role})`, async () => {
-                        await BBC_STORE.deleteOfficial(id);
+                    promptDelete(`Pengurus: ${o.name} (${o.role})`, () => {
+                        BBC_STORE.deleteOfficial(id);
                         renderOfficialsTable();
                         updateTabCounts();
-                        showToast('Data pengurus berhasil dihapus dari file .json & Vercel.');
+                        showToast('Data pengurus berhasil dihapus.');
                     });
                 }
             });
@@ -2520,45 +2623,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (officialGenderInput) {
         officialGenderInput.addEventListener('change', updateOfficialPreview);
     }
-    // File upload for official photo is wired via attachBlobAutoUpload() supporting Vercel Blob & base64 fallback.
+    if (officialFileInput) {
+        officialFileInput.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                if (officialImageInput) officialImageInput.value = evt.target.result;
+                updateOfficialPreview();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     if (formOfficial) {
-        formOfficial.addEventListener('submit', async (e) => {
+        formOfficial.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('official-id').value;
             const image = document.getElementById('official-image') ? document.getElementById('official-image').value.trim() : '';
             const gender = document.getElementById('official-gender') ? document.getElementById('official-gender').value : 'male';
 
-            const officialData = {
+            BBC_STORE.saveOfficial({
                 id: id || undefined,
                 name: document.getElementById('official-name').value.trim(),
                 role: document.getElementById('official-role').value.trim(),
                 period: document.getElementById('official-period').value.trim(),
                 gender,
                 image
-            };
+            });
 
-            const submitBtn = formOfficial.querySelector('button[type="submit"]');
-            const origHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>💾 Menyimpan ke .json &amp; Vercel...</span>';
-            }
-
-            try {
-                await BBC_STORE.saveOfficial(officialData);
-                closeModal('modal-official');
-                renderOfficialsTable();
-                updateTabCounts();
-                showToast(id ? '✅ Data pengurus berhasil disimpan ke .json & Vercel!' : '✅ Pengurus baru berhasil disimpan ke .json & Vercel!');
-            } catch (err) {
-                showToast(`⚠️ Gagal menyimpan pengurus: ${err.message}`, 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origHtml;
-                }
-            }
+            closeModal('modal-official');
+            renderOfficialsTable();
+            updateTabCounts();
+            showToast(id ? 'Data pengurus diperbarui!' : 'Pengurus baru ditambahkan!');
         });
     }
 
@@ -2566,7 +2663,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. HERO SECTION PHOTO / VIDEO SETTINGS
     // ========================================================
     // Helper: compress image file using canvas to keep base64 size under ~100-150KB
-    function compressHeroImageFile(file, maxWidth = 960, maxHeight = 600, quality = 0.76) {
+    function compressHeroImageFile(file, maxWidth = 1280, maxHeight = 1280, quality = 0.82) {
         return new Promise((resolve, reject) => {
             if (!file || !file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -2827,61 +2924,39 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Dedicated Hero Save Action
-        let isSavingHero = false;
-        async function saveHeroSettingsAction(e) {
+        function saveHeroSettingsAction(e) {
             if (e) {
                 if (typeof e.preventDefault === 'function') e.preventDefault();
                 if (typeof e.stopPropagation === 'function') e.stopPropagation();
             }
-            if (isSavingHero) return;
-            isSavingHero = true;
+            const mediaType = getMediaType();
 
-            const submitBtn = btnHeroSave || (formHero && formHero.querySelector('button[type="submit"]'));
-            const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '💾 Menyimpan ke .json & Vercel...';
-            }
+            const mainImgVal = (fMainUrl && fMainUrl.value.trim()) || '';
+            const mainVideoVal = (fVideoUrl && fVideoUrl.value.trim()) || '';
+            const thumb1Val = (fThumb1Url && fThumb1Url.value.trim()) || '';
+            const thumb2Val = (fThumb2Url && fThumb2Url.value.trim()) || '';
 
-            try {
-                const mediaType = getMediaType();
+            const settings = {
+                mediaType: mediaType,
+                mainImage: mainImgVal,
+                mainVideo: mainVideoVal,
+                mainImageAlt: fMainAlt ? fMainAlt.value.trim() : '',
+                mainLabel: fMainLabel ? fMainLabel.value.trim() : '',
+                thumb1Image: thumb1Val,
+                thumb1Alt: fThumb1Alt ? fThumb1Alt.value.trim() : '',
+                thumb1Label: fThumb1Lbl ? fThumb1Lbl.value.trim() : '',
+                thumb2Image: thumb2Val,
+                thumb2Alt: fThumb2Alt ? fThumb2Alt.value.trim() : '',
+                thumb2Label: fThumb2Lbl ? fThumb2Lbl.value.trim() : ''
+            };
 
-                const mainImgVal = (fMainUrl && fMainUrl.value.trim()) || '';
-                const mainVideoVal = (fVideoUrl && fVideoUrl.value.trim()) || '';
-                const thumb1Val = (fThumb1Url && fThumb1Url.value.trim()) || '';
-                const thumb2Val = (fThumb2Url && fThumb2Url.value.trim()) || '';
-
-                const settings = {
-                    mediaType: mediaType,
-                    mainImage: mainImgVal,
-                    mainVideo: mainVideoVal,
-                    mainImageAlt: fMainAlt ? fMainAlt.value.trim() : '',
-                    mainLabel: fMainLabel ? fMainLabel.value.trim() : '',
-                    thumb1Image: thumb1Val,
-                    thumb1Alt: fThumb1Alt ? fThumb1Alt.value.trim() : '',
-                    thumb1Label: fThumb1Lbl ? fThumb1Lbl.value.trim() : '',
-                    thumb2Image: thumb2Val,
-                    thumb2Alt: fThumb2Alt ? fThumb2Alt.value.trim() : '',
-                    thumb2Label: fThumb2Lbl ? fThumb2Lbl.value.trim() : ''
-                };
-
-                const saved = await BBC_STORE.saveHeroSettings(settings);
-                if (saved) {
-                    const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
-                    showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan langsung ke hero.json & Vercel!`);
-                    if (loadHeroFormFn) loadHeroFormFn();
-                } else {
-                    showToast('❌ Gagal menyimpan! Pastikan link URL atau file foto/video valid.', 'error');
-                }
-            } catch (err) {
-                console.error('[CMS] Hero save error:', err);
-                showToast('❌ Terjadi kesalahan saat menyimpan pengaturan hero.', 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = origBtnHtml;
-                }
-                setTimeout(() => { isSavingHero = false; }, 400);
+            const saved = BBC_STORE.saveHeroSettings(settings);
+            if (saved) {
+                const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
+                showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan! Tampilan beranda langsung diperbarui.`);
+                if (loadHeroFormFn) loadHeroFormFn();
+            } else {
+                showToast('❌ Gagal menyimpan! Ukuran file melebihi kapasitas memori browser (5MB). Gunakan link URL gambar/video.', 'error');
             }
         }
 
@@ -2924,10 +2999,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function resetHeroSettingsAction() {
-            promptDelete('RESET MEDIA HERO KE DEFAULT BAWAAN', async () => {
-                await BBC_STORE.resetHeroSettings();
+            promptDelete('RESET MEDIA HERO KE DEFAULT BAWAAN', () => {
+                BBC_STORE.resetHeroSettings();
                 if (loadHeroFormFn) loadHeroFormFn();
-                showToast('↩ Media hero berhasil direset ke foto default bawaan dan tersimpan ke hero.json & Vercel.');
+                showToast('↩ Media hero berhasil direset ke foto default bawaan.');
             });
         }
 
@@ -2995,22 +3070,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!file) return;
                     applyMediaTypeToggle('image');
 
-                    // 1. Prioritas: Coba upload langsung ke Vercel Blob jika online
-                    if (typeof BBC_STORE !== 'undefined' && BBC_STORE.uploadToBlob) {
-                        try {
-                            const uploadResult = await BBC_STORE.uploadToBlob(file, 'hero');
-                            if (uploadResult && uploadResult.success && uploadResult.url) {
-                                if (fMainUrl) fMainUrl.value = uploadResult.url;
-                                updatePreview();
-                                showToast('☁️ Foto utama terupload ke Vercel Blob CDN!');
-                                return;
-                            }
-                        } catch (uploadErr) {
-                            console.info('[CMS] Hero upload fallback:', uploadErr);
-                        }
-                    }
-
-                    // 2. Simpan ke folder proyek jika BBC_FS tersedia
+                    // Prioritas: simpan ke folder proyek jika BBC_FS tersedia
                     if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured()) {
                         showToast('⏳ Menyimpan foto utama ke folder proyek...');
                         try {
@@ -3026,10 +3086,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // 3. Fallback: base64 dengan kompresi optimal
+                    // Fallback: base64 dengan kompresi
                     showToast('⏳ Mengompres foto utama...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 960, 600, 0.76);
+                        const base64 = await compressHeroImageFile(file, 1280, 1280, 0.82);
                         if (fMainUrl) fMainUrl.value = base64;
                         updatePreview();
                         showToast('✅ Foto utama siap disimpan!');
@@ -3061,7 +3121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showToast('⏳ Mengompres foto mini 1...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 480, 300, 0.72);
+                        const base64 = await compressHeroImageFile(file, 640, 640, 0.82);
                         if (fThumb1Url) fThumb1Url.value = base64;
                         updatePreview();
                         showToast('✅ Foto mini 1 siap disimpan!');
@@ -3093,7 +3153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showToast('⏳ Mengompres foto mini 2...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 480, 300, 0.72);
+                        const base64 = await compressHeroImageFile(file, 640, 640, 0.82);
                         if (fThumb2Url) fThumb2Url.value = base64;
                         updatePreview();
                         showToast('✅ Foto mini 2 siap disimpan!');
@@ -3107,36 +3167,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 fVideoFile.addEventListener('change', async () => {
                     const file = fVideoFile.files[0];
                     if (!file) return;
-                    if (file.size > 15 * 1024 * 1024) {
-                        showToast('⚠️ File video terlalu besar (> 15MB). Disarankan gunakan link YouTube.', 'error');
+                    if (file.size > 10 * 1024 * 1024) {
+                        showToast('⚠️ File video terlalu besar (> 10MB). Maksimal ukuran file video adalah 10MB.', 'error');
                         fVideoFile.value = '';
                         return;
                     }
                     applyMediaTypeToggle('video');
-                    showToast('⏳ Memproses file video...');
-
+                    showToast('⏳ Membaca file video (hingga 10MB)...');
                     try {
-                        // Jika ukuran <= 10MB, simpan sebagai Data URL agar kompatibel penuh dengan Vercel & pengunjung online!
-                        if (file.size <= 10 * 1024 * 1024) {
-                            const reader = new FileReader();
-                            reader.onload = function (e) {
-                                if (fVideoUrl) fVideoUrl.value = e.target.result;
-                                updatePreview(file);
-                                showToast('✅ File video siap disimpan (Base64 langsung kompatibel penuh untuk Vercel, maks 10MB)!');
-                            };
-                            reader.onerror = () => {
-                                showToast('❌ Gagal membaca file video.', 'error');
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            // Video > 10MB (disimpan di IndexedDB browser lokal admin)
-                            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.setMediaBlob) {
-                                await BBC_STORE.setMediaBlob('hero_main_video', file);
-                                if (fVideoUrl) fVideoUrl.value = 'indexeddb:hero_main_video';
-                            }
-                            updatePreview(file);
-                            showToast('✅ Video disimpan di browser lokal (> 10MB). Untuk tayang di Vercel publik, disarankan gunakan link YouTube!');
+                        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.setMediaBlob) {
+                            await BBC_STORE.setMediaBlob('hero_main_video', file);
+                            if (fVideoUrl) fVideoUrl.value = 'indexeddb:hero_main_video';
                         }
+                        updatePreview(file);
+                        showToast('✅ File video (10MB) berhasil dimuat dan siap disimpan!');
                     } catch (err) {
                         showToast('❌ Gagal memproses file video.', 'error');
                     }
@@ -3203,19 +3247,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTabCounts();
     }
 
-    async function initCMS() {
-        if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
-            try { await BBC_STORE.initialize(); } catch (initErr) { console.warn('[CMS Init Sync]', initErr); }
-        }
-        document.body.classList.remove('cms-auth-required');
-        try { renderAll(); } catch (errR) { console.error('[CMS Init Render]', errR); }
-        try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Init Hero]', errH); }
-        try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Init Storage]', errS); }
-        try { if (typeof switchTab === 'function') switchTab('dashboard'); } catch (errT) { console.error('[CMS Init Tab]', errT); }
-    }
-
     if (isAuthenticated()) {
-        initCMS();
+        document.body.classList.remove('cms-auth-required');
+        renderAll();
+        initHeroSettings();
+        switchTab('dashboard');
     } else {
         document.body.classList.add('cms-auth-required');
         const userIn = document.getElementById('login-username');
