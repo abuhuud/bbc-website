@@ -313,19 +313,152 @@ const BBC_GITHUB = (function () {
     }
 
     // ====================================================
-    // 4. STATUS INFO
+    // 4. AUTO-DEPLOY BACKGROUND SCHEDULER
+    // ====================================================
+    const LS_AUTODEPLOY_KEY = 'bbc_github_autodeploy_enabled';
+    let autoDeployTimer = null;
+    const pendingCategories = new Set();
+    const statusListeners = [];
+
+    /**
+     * Cek apakah auto-deploy otomatis diaktifkan.
+     * Default: true (aktif) jika GitHub sudah dikonfigurasi.
+     * @returns {boolean}
+     */
+    function isAutoDeployEnabled() {
+        const val = localStorage.getItem(LS_AUTODEPLOY_KEY);
+        return val === null ? true : val === 'true';
+    }
+
+    /**
+     * Set preferensi auto-deploy (aktif/nonaktif).
+     * @param {boolean} enabled
+     */
+    function setAutoDeployEnabled(enabled) {
+        localStorage.setItem(LS_AUTODEPLOY_KEY, enabled ? 'true' : 'false');
+        notifyStatusListeners({
+            type: 'autodeploy_toggle',
+            enabled: enabled,
+            message: enabled ? 'Auto-deploy ke Vercel diaktifkan.' : 'Auto-deploy ke Vercel dinonaktifkan.'
+        });
+    }
+
+    /**
+     * Daftarkan pendengar perubahan status sync / deploy.
+     * @param {function(object):void} callback
+     */
+    function onStatusChange(callback) {
+        if (typeof callback === 'function') {
+            statusListeners.push(callback);
+        }
+    }
+
+    /**
+     * Beritahu semua listener tentang status terkini.
+     * @param {object} event
+     */
+    function notifyStatusListeners(event) {
+        statusListeners.forEach(fn => {
+            try { fn(event); } catch (e) { console.error('[BBC_GITHUB] Listener error:', e); }
+        });
+    }
+
+    /**
+     * Picu auto-deploy ke GitHub & Vercel secara otomatis dengan debounce 2 detik.
+     * Jika terjadi beberapa kali perubahan data secara berturut-turut,
+     * kategori yang diubah dikumpulkan dan di-push sekaligus dalam satu batch.
+     *
+     * @param {string} category - Kategori data ('players' | 'events' | 'gallery' | 'articles' | 'officials' | 'hero')
+     */
+    function triggerAutoDeploy(category) {
+        if (!isConfigured()) return;
+        if (!isAutoDeployEnabled()) {
+            console.info('[BBC_GITHUB] Auto-deploy dilewati (fitur dinonaktifkan oleh admin).');
+            return;
+        }
+
+        if (category) {
+            pendingCategories.add(category);
+        }
+
+        const currentPending = Array.from(pendingCategories);
+
+        notifyStatusListeners({
+            type: 'queued',
+            categories: currentPending,
+            message: `Menunggu jeda perubahan (${currentPending.join(', ')})...`
+        });
+
+        // Reset timer jika ada mutasi baru dalam 2 detik
+        if (autoDeployTimer) {
+            clearTimeout(autoDeployTimer);
+        }
+
+        autoDeployTimer = setTimeout(async () => {
+            const categoriesToDeploy = Array.from(pendingCategories);
+            pendingCategories.clear();
+            autoDeployTimer = null;
+
+            if (categoriesToDeploy.length === 0) return;
+
+            console.info(`[BBC_GITHUB] 🚀 Memulai auto-push ke GitHub untuk: ${categoriesToDeploy.join(', ')}`);
+            notifyStatusListeners({
+                type: 'deploying',
+                categories: categoriesToDeploy,
+                message: `☁️ Mendorong ${categoriesToDeploy.join(', ')} ke GitHub & Vercel...`
+            });
+
+            try {
+                const result = await deployToGitHub({ categories: categoriesToDeploy });
+                if (result.success > 0 && result.failed === 0) {
+                    console.info(`[BBC_GITHUB] ✅ Auto-deploy berhasil untuk: ${categoriesToDeploy.join(', ')}`);
+                    notifyStatusListeners({
+                        type: 'success',
+                        categories: categoriesToDeploy,
+                        message: `✅ Berhasil sinkron ke Vercel (${categoriesToDeploy.join(', ')}). Vercel sedang redeploy!`,
+                        result
+                    });
+                } else if (result.failed > 0) {
+                    console.warn(`[BBC_GITHUB] ⚠️ Sebagian file gagal di-push:`, result.errors);
+                    notifyStatusListeners({
+                        type: 'error',
+                        categories: categoriesToDeploy,
+                        message: `⚠️ Gagal auto-deploy: ${result.errors.join('; ')}`,
+                        result
+                    });
+                }
+            } catch (err) {
+                console.error('[BBC_GITHUB] Auto-deploy error:', err);
+                notifyStatusListeners({
+                    type: 'error',
+                    categories: categoriesToDeploy,
+                    message: `⚠️ Gagal auto-deploy: ${err.message}`,
+                    error: err
+                });
+            }
+        }, 2000);
+    }
+
+    // ====================================================
+    // 5. STATUS INFO
     // ====================================================
     function getStatus() {
         const c = getConfig();
         if (!c || !c.token) {
-            return { configured: false, owner: null, repo: null, branch: null };
+            return {
+                configured: false,
+                owner: null,
+                repo: null,
+                branch: null,
+                autoDeployEnabled: isAutoDeployEnabled()
+            };
         }
         return {
             configured: isConfigured(),
             owner: c.owner,
             repo: c.repo,
             branch: c.branch,
-            // Jangan expose token di status
+            autoDeployEnabled: isAutoDeployEnabled(),
             tokenMasked: c.token ? ('••••••••' + c.token.slice(-4)) : null
         };
     }
@@ -335,6 +468,10 @@ const BBC_GITHUB = (function () {
         getConfig,
         clearConfig,
         isConfigured,
+        isAutoDeployEnabled,
+        setAutoDeployEnabled,
+        triggerAutoDeploy,
+        onStatusChange,
         verifyToken,
         deployToGitHub,
         getStatus,

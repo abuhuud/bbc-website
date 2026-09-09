@@ -2668,6 +2668,113 @@ body:not(.cms-auth-required) .cms-auth-screen {
   background: #DC2626;
 }
 
+/* ========================================================
+   TOPBAR LIVE CLOUD SYNC BADGE (VERCEL AUTO-DEPLOY)
+   ======================================================== */
+.cms-cloud-sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  background: #F3F4F6;
+  border: 2px solid #0D1612;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 #0D1612;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #1F2937;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.cms-cloud-sync-badge:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #0D1612;
+}
+
+.cms-cloud-sync-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #9CA3AF;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: background-color 0.25s ease;
+}
+
+/* State: Idle / Ready (Terkonfigurasi) */
+.cms-cloud-sync-badge--ready {
+  background: #ECFDF5;
+  border-color: #065F46;
+  color: #065F46;
+}
+.cms-cloud-sync-badge--ready .cms-cloud-sync-dot {
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
+}
+
+/* State: Queued / Menunggu Debounce */
+.cms-cloud-sync-badge--queued {
+  background: #FEF3C7;
+  border-color: #92400E;
+  color: #92400E;
+}
+.cms-cloud-sync-badge--queued .cms-cloud-sync-dot {
+  background: #F59E0B;
+  animation: ghStepPulse 0.8s ease-in-out infinite;
+}
+
+/* State: Syncing / Deploying ke GitHub & Vercel */
+.cms-cloud-sync-badge--syncing {
+  background: #EDE9FE;
+  border-color: #5B21B6;
+  color: #5B21B6;
+  animation: fsPulse 1.2s ease-in-out infinite;
+}
+.cms-cloud-sync-badge--syncing .cms-cloud-sync-dot {
+  background: #7C3AED;
+  box-shadow: 0 0 8px #7C3AED;
+  animation: ghStepPulse 0.5s ease-in-out infinite;
+}
+
+/* State: Success */
+.cms-cloud-sync-badge--success {
+  background: #D1FAE5;
+  border-color: #047857;
+  color: #047857;
+}
+.cms-cloud-sync-badge--success .cms-cloud-sync-dot {
+  background: #059669;
+}
+
+/* State: Error */
+.cms-cloud-sync-badge--error {
+  background: #FEE2E2;
+  border-color: #B91C1C;
+  color: #B91C1C;
+}
+.cms-cloud-sync-badge--error .cms-cloud-sync-dot {
+  background: #EF4444;
+}
+
+/* State: Belum Dikonfigurasi */
+.cms-cloud-sync-badge--unconfigured {
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+  color: #6B7280;
+}
+.cms-cloud-sync-badge--unconfigured .cms-cloud-sync-dot {
+  background: #9CA3AF;
+}
+
+@media (max-width: 640px) {
+  .cms-cloud-sync-badge {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+}
+
 
 .cms-hero-acc-subtitle {
   font-size: 0.88rem;

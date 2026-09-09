@@ -98,24 +98,34 @@ const BBC_STORE = (function () {
     };
 
     /**
-     * Sync kategori data tertentu ke file JSON di folder proyek (via BBC_FS).
-     * Non-blocking — gagal secara silent agar tidak mengganggu UX.
+     * Sync kategori data tertentu:
+     * 1. Ke file JSON lokal di folder proyek (via BBC_FS, jika diaktifkan).
+     * 2. Otomatis push ke GitHub / Vercel (via BBC_GITHUB.triggerAutoDeploy, jika diaktifkan).
+     * Non-blocking — gagal secara silent agar tidak mengganggu UX pengguna.
      * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
      */
     function syncToFile(storageKey) {
-        if (typeof BBC_FS === 'undefined' || !BBC_FS.isConfigured()) return;
         const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
-        BBC_FS.syncToFiles(category).then(({ synced, failed }) => {
-            if (synced.length > 0) {
-                console.info(`[BBC_STORE] ✅ Tersinkronisasi ke file: ${synced.join(', ')}.json`);
-            }
-            if (failed.length > 0) {
-                console.warn(`[BBC_STORE] ⚠️ Gagal sync ke file: ${failed.join(', ')}`);
-            }
-        }).catch(err => {
-            console.warn('[BBC_STORE] Error saat sync ke file:', err);
-        });
+
+        // 1. Sinkronisasi ke File Lokal (File System Access API)
+        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
+            BBC_FS.syncToFiles(category).then(({ synced, failed }) => {
+                if (synced.length > 0) {
+                    console.info(`[BBC_STORE] ✅ Tersinkronisasi ke file lokal: ${synced.join(', ')}.json`);
+                }
+                if (failed.length > 0) {
+                    console.warn(`[BBC_STORE] ⚠️ Gagal sync ke file lokal: ${failed.join(', ')}`);
+                }
+            }).catch(err => {
+                console.warn('[BBC_STORE] Error saat sync ke file lokal:', err);
+            });
+        }
+
+        // 2. Auto-Deploy Otomatis ke GitHub & Vercel
+        if (typeof BBC_GITHUB !== 'undefined' && typeof BBC_GITHUB.triggerAutoDeploy === 'function') {
+            BBC_GITHUB.triggerAutoDeploy(category);
+        }
     }
 
     // Helper to generate URL-safe slugs

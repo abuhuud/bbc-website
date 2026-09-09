@@ -5,24 +5,66 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-2. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-3. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-4. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-5. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-6. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-7. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-8. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-9. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-10. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-11. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-12. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-13. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-14. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-15. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-16. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-17. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-18. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+2. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+3. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+4. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+5. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+6. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+7. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+8. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+9. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+10. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+11. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+12. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+13. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+14. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+15. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+16. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+17. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+18. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+19. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"Buat secara otomatis jika ada perubahan data langsung di-push ke Vercel tanpa perlu download atau klik tombol manual."*
+
+### ✅ Solusi & Detail Implementasi Teknis
+
+**Pendekatan:** Mengintegrasikan **Background Auto-Deploy Scheduler** berbasis GitHub Contents API langsung ke dalam siklus hidup penyimpanan data (`BBC_STORE`).
+
+1. **Background Scheduler & Smart Debounce (`github-sync.js`):**
+   - Menambahkan fungsi `triggerAutoDeploy(category)` dengan jeda **debounce 2 detik**.
+   - Jika admin melakukan pengeditan berulang kali secara cepat, kategori-kategori yang berubah dikumpulkan ke dalam antrean (`pendingCategories`), lalu di-push secara efisien ke GitHub dalam satu batch tanpa spamming API.
+   - Menyediakan fungsi kontrol preferensi `isAutoDeployEnabled()` dan `setAutoDeployEnabled(bool)` yang tersimpan di `localStorage`.
+   - Mengimplementasikan sistem pub/sub listener `onStatusChange(callback)` untuk mengirim status real-time ke UI CMS (`queued`, `deploying`, `success`, `error`).
+
+2. **Otomatisasi Penuh di Layer Store (`store.js`):**
+   - Mengaitkan `BBC_GITHUB.triggerAutoDeploy(category)` langsung di dalam `syncToFile(storageKey)`.
+   - Setiap kali terjadi penambahan, pengeditan, atau penghapusan data (pemain, jadwal latihan, foto kegiatan, artikel berita, pejabat pengurus, dan pengaturan hero), sistem langsung menjadwalkan auto-push ke GitHub & Vercel secara non-blocking dan hening.
+
+3. **Live Status Indicator Topbar & Toggle Control (`cms.html`, `cms.css`, `cms.js`):**
+   - Menambahkan badge interaktif di header topbar CMS (`#cloud-sync-topbar-badge`):
+     - `☁️ Vercel: Auto` / `☁️ Vercel: Manual` (Ready)
+     - `⏳ Menyimpan...` (Queued / Debouncing)
+     - `🚀 Push Vercel...` (Sedang mengunggah ke GitHub dengan animasi pulse)
+     - `✅ Vercel: Terupdate!` (Sukses push & Vercel redeploy)
+     - `⚠️ Vercel: Gagal` (Jika token tidak valid atau offline)
+   - Badge dapat diklik untuk langsung berpindah ke panel pengaturan GitHub di Tab Backup.
+   - Menambahkan toggle checkbox *"⚡ Push Otomatis ke Vercel saat Data Berubah"* di panel Backup sehingga admin dapat mengaktifkan atau menonaktifkan fitur ini kapan saja.
+   - Menampilkan notifikasi toast non-intrusif saat proses auto-deploy berhasil selesai.
+
+### 📁 Berkas yang Dimodifikasi
+- `js/utils/github-sync.js` — Modul background auto-deploy scheduler, debounce, dan pub/sub status listener
+- `js/data/store.js` — Integrasi trigger auto-deploy di fungsi `syncToFile()` pada setiap operasi mutasi data
+- `pages/cms.html` — Komponen badge status live cloud sync di topbar dan checkbox toggle di form konfigurasi GitHub
+- `css/cms.css` — Styling neo-brutalist badge status topbar dan animasi pulse
+- `js/pages/cms.js` — Handler interaksi status real-time, toggle preference, dan shortcut navigasi topbar
+- `CHANGELOG.md` — Dokumentasi log perubahan rilis v2.16.0
 
 ---
 

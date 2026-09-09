@@ -437,6 +437,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================================
 
     /**
+     * Update badge status Cloud Sync di topbar header CMS.
+     * @param {'ready'|'queued'|'syncing'|'success'|'error'|'unconfigured'} state
+     * @param {string} text
+     */
+    function updateCloudSyncTopbarBadge(state, text) {
+        const badge = document.getElementById('cloud-sync-topbar-badge');
+        const label = document.getElementById('cloud-sync-topbar-text');
+        if (!badge || !label) return;
+
+        badge.className = `cms-cloud-sync-badge cms-cloud-sync-badge--${state}`;
+        if (text) label.textContent = text;
+    }
+
+    /**
      * Update badge status GitHub dan info repo yang terhubung.
      */
     function updateGithubStatusUI() {
@@ -457,6 +471,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (repoDisplay) repoDisplay.textContent = `${status.owner}/${status.repo}`;
             if (branchDisplay) branchDisplay.textContent = `[${status.branch}]`;
             if (deployBtn) deployBtn.disabled = false;
+
+            const isAuto = status.autoDeployEnabled !== false;
+            updateCloudSyncTopbarBadge('ready', isAuto ? '☁️ Vercel: Auto' : '☁️ Vercel: Manual');
         } else {
             if (badge) {
                 badge.textContent = '⚠️ BELUM DIKONFIGURASI';
@@ -464,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (connectedInfo) connectedInfo.style.display = 'none';
             if (deployBtn) deployBtn.disabled = true;
+
+            updateCloudSyncTopbarBadge('unconfigured', '☁️ Vercel: Setup');
         }
     }
 
@@ -473,6 +492,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadGithubConfigToForm() {
         if (typeof BBC_GITHUB === 'undefined') return;
         const config = BBC_GITHUB.getConfig();
+
+        const chkAuto = document.getElementById('github-autodeploy-checkbox');
+        if (chkAuto) chkAuto.checked = BBC_GITHUB.isAutoDeployEnabled();
+
         if (!config) return;
 
         const tokenInput = document.getElementById('github-token-input');
@@ -723,6 +746,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 tokenInput.type = (tokenInput.type === 'password') ? 'text' : 'password';
             });
         }
+
+        // Toggle Auto-Deploy Checkbox
+        const chkAutoDeploy = document.getElementById('github-autodeploy-checkbox');
+        if (chkAutoDeploy && !chkAutoDeploy._ghWired) {
+            chkAutoDeploy._ghWired = true;
+            chkAutoDeploy.addEventListener('change', () => {
+                if (typeof BBC_GITHUB !== 'undefined') {
+                    BBC_GITHUB.setAutoDeployEnabled(chkAutoDeploy.checked);
+                    showToast(
+                        chkAutoDeploy.checked
+                            ? '⚡ Auto-Deploy ke Vercel diaktifkan!'
+                            : 'Auto-Deploy ke Vercel dinonaktifkan.',
+                        'info'
+                    );
+                    updateGithubStatusUI();
+                }
+            });
+        }
+    }
+
+    // ========================================================
+    // 3D. REAKTIF CLOUD SYNC LISTENER & TOPBAR SHORTCUT
+    // ========================================================
+    if (typeof BBC_GITHUB !== 'undefined') {
+        // Klik badge di topbar untuk langsung membuka pengaturan Vercel di tab Backup
+        const topbarCloudBadge = document.getElementById('cloud-sync-topbar-badge');
+        if (topbarCloudBadge && !topbarCloudBadge._ghWired) {
+            topbarCloudBadge._ghWired = true;
+            topbarCloudBadge.addEventListener('click', () => {
+                switchTab('backup');
+                setTimeout(() => {
+                    const cfgForm = document.getElementById('github-config-form');
+                    if (cfgForm) cfgForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            });
+        }
+
+        // Daftarkan listener live status deploy
+        BBC_GITHUB.onStatusChange((evt) => {
+            console.info(`[CMS] Status Auto-Deploy: ${evt.type}`, evt);
+
+            if (evt.type === 'queued') {
+                updateCloudSyncTopbarBadge('queued', '⏳ Menyimpan...');
+                addDeployLog(`[Auto-Deploy] Perubahan data (${evt.categories.join(', ')}) dijadwalkan push ke Vercel...`, 'info');
+            } else if (evt.type === 'deploying') {
+                updateCloudSyncTopbarBadge('syncing', '🚀 Push Vercel...');
+                addDeployLog(`[Auto-Deploy] Sedang mengunggah (${evt.categories.join(', ')}) ke GitHub...`, 'info');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'uploading'));
+                }
+            } else if (evt.type === 'success') {
+                updateCloudSyncTopbarBadge('success', '✅ Vercel: Terupdate!');
+                addDeployLog(`[Auto-Deploy] ✅ Sukses! Vercel otomatis redeploy dalam ±1-2 menit.`, 'success');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'success'));
+                }
+                showToast(`✅ Data (${evt.categories.join(', ')}) berhasil di-push ke Vercel!`, 'success');
+
+                // Kembalikan teks badge ke siap setelah 5 detik
+                setTimeout(() => {
+                    updateGithubStatusUI();
+                }, 5000);
+            } else if (evt.type === 'error') {
+                updateCloudSyncTopbarBadge('error', '⚠️ Vercel: Gagal');
+                addDeployLog(`[Auto-Deploy] ❌ Gagal: ${evt.message}`, 'error');
+                if (evt.categories) {
+                    evt.categories.forEach(cat => setFlowStepState(cat, 'error'));
+                }
+                showToast(`⚠️ Auto-Deploy Vercel gagal. Buka tab Backup untuk detail.`, 'error');
+
+                setTimeout(() => {
+                    updateGithubStatusUI();
+                }, 6000);
+            } else if (evt.type === 'autodeploy_toggle') {
+                updateGithubStatusUI();
+            }
+        });
+
+        // Inisialisasi tampilan status topbar saat pertama load
+        updateGithubStatusUI();
     }
 
     // ========================================================

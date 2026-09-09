@@ -269,6 +269,12 @@
                         <div class="cms-topbar__controls">
                             <!-- Desktop & Tablet Actions -->
                             <div class="cms-topbar__actions cms-topbar__actions--desktop">
+                                <!-- Cloud Sync Status Badge (Vercel / GitHub Auto-Deploy) -->
+                                <div id="cloud-sync-topbar-badge" class="cms-cloud-sync-badge" title="Status Auto-Deploy ke Vercel" style="cursor: pointer;">
+                                    <span class="cms-cloud-sync-dot" id="cloud-sync-dot"></span>
+                                    <span id="cloud-sync-topbar-text" class="cms-cloud-sync-text">☁️ Vercel: Siap</span>
+                                </div>
+
                                 <a href="../index.html" class="cms-btn-topbar-site" title="Buka Website Utama BAZNAS Badminton Club">
                                     <span class="cms-btn-icon">🌐</span>
                                     <span class="cms-btn-text">LIHAT WEBSITE</span>
@@ -880,6 +886,20 @@
                                         <input type="text" id="github-branch-input" placeholder="main"
                                             style="width: 220px; padding: 7px 10px; border: 2px solid #D1D5DB; border-radius: 6px; font-size: 0.82rem;">
                                     </div>
+                                </div>
+
+                                <!-- Toggle Auto-Deploy Otomatis -->
+                                <div style="margin-top: 12px; padding: 10px 12px; background: #F5F3FF; border: 2px solid #DDD6FE; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <div>
+                                        <label for="github-autodeploy-checkbox" style="font-size: 0.8rem; font-weight: 800; color: #5B21B6; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                            ⚡ Push Otomatis ke Vercel saat Data Berubah
+                                        </label>
+                                        <div style="font-size: 0.7rem; color: #6D28D9; margin-top: 2px; line-height: 1.4;">
+                                            Setiap tambah/edit/hapus data di CMS langsung di-push ke GitHub &amp; memicu redeploy Vercel otomatis (debounce 2 detik).
+                                        </div>
+                                    </div>
+                                    <input type="checkbox" id="github-autodeploy-checkbox" checked
+                                        style="width: 20px; height: 20px; cursor: pointer; accent-color: #7C3AED; flex-shrink: 0;">
                                 </div>
 
                                 <!-- Tombol Simpan Konfigurasi & Verifikasi -->
