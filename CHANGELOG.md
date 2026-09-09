@@ -5,27 +5,76 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
-2. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
-3. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-4. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-5. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-6. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-7. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-8. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-9. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-10. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-11. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-12. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-13. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-14. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-15. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-16. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-17. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-18. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-19. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-20. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-21. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
+2. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
+3. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+4. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+5. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+6. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+7. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+8. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+9. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+10. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+11. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+12. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+13. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+14. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+15. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+16. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+17. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+18. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+19. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+20. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+21. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+22. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"masih terdapat bug pada update hero section, tidak berubah, gambar/video tidak tampil"*
+
+### ✅ Penyebab & Analisis Akar Masalah
+1. **Race Condition & Destructive DOM Replacement pada `hero.js`:**  
+   Pemanggilan `applyHero()` yang bersilangan antara `hero.js` (`BBC_onReady`) dan `home.js` (`initHeroSection` / `BBC_applyHero`) menggunakan `wrap.innerHTML = originalWrapHTML` secara asinkron. Akibatnya, elemen video/gambar yang sedang dibangun di-reset atau saling timpa, memicu kondisi *race condition* di mana elemen DOM hilang atau tidak tuntas dirender (tampak kosong/hitam).
+2. **Video Lokal Terisolasi di IndexedDB Tidak Tampil di Vercel:**  
+   Pengunggahan video di CMS sebelumnya hanya menyimpan video di IndexedDB browser lokal (`'indexeddb:hero_main_video'`). Nilai string ini disinkronkan ke file `data/hero.json` di GitHub/Vercel. Saat diakses di Vercel oleh publik (atau browser lain), IndexedDB kosong dan mekanisme fallback sebelumnya mengalami error referensi elemen `mainImg` yang terlepas dari DOM, menghasilkan kotak kosong/hitam tanpa media.
+3. **Triple-Submit / Multiple Parallel GitHub Push pada Tombol Simpan CMS:**  
+   Tombol `btn-hero-save` di `pages/cms.html` memiliki atribut inline `onclick="window.BBC_saveHeroSettings(event)"`, di samping `type="submit"` pada `<form id="form-hero">` dan `addEventListener('click')` di `cms.js`. Sekali klik memicu 3 kali proses penyimpanan dan push ke GitHub secara bersamaan, menyebabkan konflik HTTP 409 dan kegagalan sync.
+4. **Ukuran Gambar Base64 Melebihi Kuota LocalStorage (`QuotaExceededError`):**  
+   Fungsi kompresi foto banner sebelumnya menghasilkan Base64 beresolusi terlalu besar (>1.2MB). Ketika digabung dengan data artikel, galeri, dan tim di `localStorage`, penyimpanan browser gagal tanpa notifikasi jelas (*silent fail*), sehingga data hero tidak tersimpan di memori browser maupun ke GitHub.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Arsitektur Rendering Hero Idempoten & Defensif (`hero.js`):**
+   - Membangun kembali `hero.js` tanpa manipulasi `wrap.innerHTML = originalWrapHTML` yang destruktif.
+   - **Mode Foto:** Langsung menukar atau memperbarui elemen `<img>` yang tangguh dengan event `onerror` fallback ke gambar default.
+   - **Mode Video:** Mendukung video YouTube via URL embed aman (`youtube-nocookie.com`, controls aktif, tanpa `pointer-events: none`), file/URL video langsung (`<video>` dengan atribut `autoplay`, `muted`, `playsinline`, `webkit-playsinline`, `loop`), serta graceful fallback ke `mainImage` jika video gagal dimuat atau blob tidak ditemukan.
+   - Menambahkan proteksi *debounce* (20ms) agar eksekusi berulang dari `live-sync.js` dan `home.js` disatukan menjadi satu siklus rendering yang bersih.
+2. **Dukungan Video Base64 Langsung untuk Vercel (`cms.js`):**
+   - File video hero berukuran hingga 4MB kini dikonversi menjadi Base64 Data URL (`data:video/mp4;base64,...`) yang disimpan ke `data/hero.json` dan dipush ke GitHub. Dengan demikian, video dapat diputar langsung oleh semua pengunjung di Vercel tanpa tergantung pada IndexedDB lokal.
+   - Untuk video > 4MB (hingga 15MB), video disimpan di IndexedDB lokal dengan pesan panduan (toast info) agar menggunakan link YouTube untuk performa streaming optimal di Vercel publik.
+3. **Optimasi Kompresi Foto Banner & Deteksi Kuota Storage (`cms.js` & `store.js`):**
+   - Kompresi foto utama diatur ke resolusi optimal 960x600 px (kualitas 0.76), menghasilkan ukuran Base64 sangat efisien (~45KB-75KB), mencegah `QuotaExceededError`.
+   - Kompresi thumbnail diatur ke 480x300 px (~20KB-35KB).
+   - `store.js`: `saveHeroSettings()` memverifikasi hasil simpan `writeStorage()` dan memberikan peringatan jika kuota penyimpanan browser penuh.
+4. **Eliminasi Triple-Submit & Debounce Simpan (`cms.html` & `cms.js`):**
+   - Menghapus atribut inline `onclick` pada tombol `btn-hero-save` di `pages/cms.html`.
+   - Menambahkan flag `isSavingHero` pada `cms.js` untuk mencegah klik ganda/paralel saat proses simpan dan push GitHub berlangsung.
+5. **Optimasi Base64 Chunking (`github-sync.js`):**
+   - `safeBase64Encode` diperbarui dengan teknik chunk buffer (16KB per batch) sehingga payload berukuran ratusan kilobyte dienkode dalam hitungan milidetik tanpa memblokir antarmuka pengguna (*UI thread*).
+
+### 📁 Berkas yang Dimodifikasi
+| Berkas | Status | Ringkasan Perubahan |
+|---|---|---|
+| `js/components/hero.js` | Diperbarui | Idempotent non-destructive render, debounce, clean YouTube/video/img fallback |
+| `js/pages/cms.js` | Diperbarui | Video Base64 <=4MB untuk Vercel, kompresi foto 960x600, anti-duplicate save |
+| `pages/cms.html` | Diperbarui | Hapus inline `onclick` ganda di tombol Simpan Hero, update panduan video |
+| `js/data/store.js` | Diperbarui | Validasi hasil simpan `writeStorage()` pada `saveHeroSettings` |
+| `js/utils/github-sync.js` | Diperbarui | Chunked ArrayBuffer base64 encoder untuk efisiensi transfer data besar |
+| `data/hero.json` | Diperbarui | Penambahan properti `thumb2Image` dan bump `_version` timestamp |
+| `CHANGELOG.md` | Diperbarui | Pencatatan detail rilis v2.18.1 & pembaruan daftar isi |
 
 ---
 

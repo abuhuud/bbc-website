@@ -137,20 +137,21 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Encode string UTF-8 ke Base64 secara aman.
+     * Encode string UTF-8 ke Base64 secara aman dan cepat (mendukung payload besar multibyte).
      * @param {string} str
      * @returns {string}
      */
     function safeBase64Encode(str) {
         try {
-            return btoa(unescape(encodeURIComponent(str)));
-        } catch {
             const bytes = new TextEncoder().encode(str);
-            let binary = '';
-            for (let i = 0; i < bytes.byteLength; i++) {
-                binary += String.fromCharCode(bytes[i]);
+            const chunks = [];
+            const chunkSize = 16384;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                chunks.push(String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize)));
             }
-            return btoa(binary);
+            return btoa(chunks.join(''));
+        } catch {
+            return btoa(unescape(encodeURIComponent(str)));
         }
     }
 

@@ -2697,7 +2697,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. HERO SECTION PHOTO / VIDEO SETTINGS
     // ========================================================
     // Helper: compress image file using canvas to keep base64 size under ~100-150KB
-    function compressHeroImageFile(file, maxWidth = 1280, maxHeight = 1280, quality = 0.82) {
+    function compressHeroImageFile(file, maxWidth = 960, maxHeight = 600, quality = 0.76) {
         return new Promise((resolve, reject) => {
             if (!file || !file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -2958,39 +2958,47 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Dedicated Hero Save Action
-        function saveHeroSettingsAction(e) {
+        let isSavingHero = false;
+        async function saveHeroSettingsAction(e) {
             if (e) {
                 if (typeof e.preventDefault === 'function') e.preventDefault();
                 if (typeof e.stopPropagation === 'function') e.stopPropagation();
             }
-            const mediaType = getMediaType();
+            if (isSavingHero) return;
+            isSavingHero = true;
 
-            const mainImgVal = (fMainUrl && fMainUrl.value.trim()) || '';
-            const mainVideoVal = (fVideoUrl && fVideoUrl.value.trim()) || '';
-            const thumb1Val = (fThumb1Url && fThumb1Url.value.trim()) || '';
-            const thumb2Val = (fThumb2Url && fThumb2Url.value.trim()) || '';
+            try {
+                const mediaType = getMediaType();
 
-            const settings = {
-                mediaType: mediaType,
-                mainImage: mainImgVal,
-                mainVideo: mainVideoVal,
-                mainImageAlt: fMainAlt ? fMainAlt.value.trim() : '',
-                mainLabel: fMainLabel ? fMainLabel.value.trim() : '',
-                thumb1Image: thumb1Val,
-                thumb1Alt: fThumb1Alt ? fThumb1Alt.value.trim() : '',
-                thumb1Label: fThumb1Lbl ? fThumb1Lbl.value.trim() : '',
-                thumb2Image: thumb2Val,
-                thumb2Alt: fThumb2Alt ? fThumb2Alt.value.trim() : '',
-                thumb2Label: fThumb2Lbl ? fThumb2Lbl.value.trim() : ''
-            };
+                const mainImgVal = (fMainUrl && fMainUrl.value.trim()) || '';
+                const mainVideoVal = (fVideoUrl && fVideoUrl.value.trim()) || '';
+                const thumb1Val = (fThumb1Url && fThumb1Url.value.trim()) || '';
+                const thumb2Val = (fThumb2Url && fThumb2Url.value.trim()) || '';
 
-            const saved = BBC_STORE.saveHeroSettings(settings);
-            if (saved) {
-                const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
-                showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan! Tampilan beranda langsung diperbarui.`);
-                if (loadHeroFormFn) loadHeroFormFn();
-            } else {
-                showToast('❌ Gagal menyimpan! Ukuran file melebihi kapasitas memori browser (5MB). Gunakan link URL gambar/video.', 'error');
+                const settings = {
+                    mediaType: mediaType,
+                    mainImage: mainImgVal,
+                    mainVideo: mainVideoVal,
+                    mainImageAlt: fMainAlt ? fMainAlt.value.trim() : '',
+                    mainLabel: fMainLabel ? fMainLabel.value.trim() : '',
+                    thumb1Image: thumb1Val,
+                    thumb1Alt: fThumb1Alt ? fThumb1Alt.value.trim() : '',
+                    thumb1Label: fThumb1Lbl ? fThumb1Lbl.value.trim() : '',
+                    thumb2Image: thumb2Val,
+                    thumb2Alt: fThumb2Alt ? fThumb2Alt.value.trim() : '',
+                    thumb2Label: fThumb2Lbl ? fThumb2Lbl.value.trim() : ''
+                };
+
+                const saved = BBC_STORE.saveHeroSettings(settings);
+                if (saved) {
+                    const mediaMsg = mediaType === 'video' ? 'Video' : 'Foto';
+                    showToast(`✅ Pengaturan media hero (${mediaMsg}) berhasil disimpan! Tampilan beranda langsung diperbarui.`);
+                    if (loadHeroFormFn) loadHeroFormFn();
+                } else {
+                    showToast('❌ Gagal menyimpan! Pastikan link URL atau file foto/video tidak melebihi kapasitas memori.', 'error');
+                }
+            } finally {
+                setTimeout(() => { isSavingHero = false; }, 800);
             }
         }
 
@@ -3120,10 +3128,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // Fallback: base64 dengan kompresi
+                    // Fallback: base64 dengan kompresi optimal
                     showToast('⏳ Mengompres foto utama...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 1280, 1280, 0.82);
+                        const base64 = await compressHeroImageFile(file, 960, 600, 0.76);
                         if (fMainUrl) fMainUrl.value = base64;
                         updatePreview();
                         showToast('✅ Foto utama siap disimpan!');
@@ -3155,7 +3163,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showToast('⏳ Mengompres foto mini 1...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 640, 640, 0.82);
+                        const base64 = await compressHeroImageFile(file, 480, 300, 0.72);
                         if (fThumb1Url) fThumb1Url.value = base64;
                         updatePreview();
                         showToast('✅ Foto mini 1 siap disimpan!');
@@ -3187,7 +3195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showToast('⏳ Mengompres foto mini 2...');
                     try {
-                        const base64 = await compressHeroImageFile(file, 640, 640, 0.82);
+                        const base64 = await compressHeroImageFile(file, 480, 300, 0.72);
                         if (fThumb2Url) fThumb2Url.value = base64;
                         updatePreview();
                         showToast('✅ Foto mini 2 siap disimpan!');
@@ -3201,20 +3209,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 fVideoFile.addEventListener('change', async () => {
                     const file = fVideoFile.files[0];
                     if (!file) return;
-                    if (file.size > 10 * 1024 * 1024) {
-                        showToast('⚠️ File video terlalu besar (> 10MB). Maksimal ukuran file video adalah 10MB.', 'error');
+                    if (file.size > 15 * 1024 * 1024) {
+                        showToast('⚠️ File video terlalu besar (> 15MB). Disarankan gunakan link YouTube.', 'error');
                         fVideoFile.value = '';
                         return;
                     }
                     applyMediaTypeToggle('video');
-                    showToast('⏳ Membaca file video (hingga 10MB)...');
+                    showToast('⏳ Memproses file video...');
                     try {
-                        if (typeof BBC_STORE !== 'undefined' && BBC_STORE.setMediaBlob) {
-                            await BBC_STORE.setMediaBlob('hero_main_video', file);
-                            if (fVideoUrl) fVideoUrl.value = 'indexeddb:hero_main_video';
+                        // Jika ukuran <= 4MB, simpan sebagai Data URL agar kompatibel penuh dengan Vercel & pengunjung online!
+                        if (file.size <= 4 * 1024 * 1024) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                if (fVideoUrl) fVideoUrl.value = e.target.result;
+                                updatePreview(file);
+                                showToast('✅ File video siap disimpan (kompatibel penuh untuk Vercel)!');
+                            };
+                            reader.onerror = () => {
+                                showToast('❌ Gagal membaca file video.', 'error');
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            // Video > 4MB (disimpan di IndexedDB browser lokal admin)
+                            if (typeof BBC_STORE !== 'undefined' && BBC_STORE.setMediaBlob) {
+                                await BBC_STORE.setMediaBlob('hero_main_video', file);
+                                if (fVideoUrl) fVideoUrl.value = 'indexeddb:hero_main_video';
+                            }
+                            updatePreview(file);
+                            showToast('✅ Video disimpan di browser lokal. Untuk tayang di Vercel publik, disarankan gunakan link YouTube!');
                         }
-                        updatePreview(file);
-                        showToast('✅ File video (10MB) berhasil dimuat dan siap disimpan!');
                     } catch (err) {
                         showToast('❌ Gagal memproses file video.', 'error');
                     }

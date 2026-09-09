@@ -679,7 +679,11 @@ const BBC_STORE = (function () {
         try {
             const current = getHeroSettings();
             const merged = { ...current, ...settings };
-            writeStorage(STORAGE_KEYS.HERO, merged);
+            const ok = writeStorage(STORAGE_KEYS.HERO, merged);
+            if (!ok) {
+                console.warn('[BBC_STORE] writeStorage gagal menyimpan hero settings (kemungkinan memori lokal penuh).');
+                return null;
+            }
             syncToFile(STORAGE_KEYS.HERO);
             return merged;
         } catch (e) {
