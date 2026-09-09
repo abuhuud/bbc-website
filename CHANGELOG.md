@@ -5,12 +5,55 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-2. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-3. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-4. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-5. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-6. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+2. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+3. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+4. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+5. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+6. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+7. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"selalu error saat hit ke vercel, status The deployment failed because of a project or build error."*  
+> *"Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`."*
+
+### 🔍 Analisis Akar Masalah
+- Di dalam [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) sebelumnya terdapat blok:
+  ```json
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
+  ```
+- **Penyebab:** Pada platform Vercel, properti `"runtime"` di dalam blok konfigurasi `"functions"` dikhususkan untuk paket builder runtime komunitas pihak ketiga (misalnya `vercel-php@0.7.0` atau `now-php@1.0.0`). Nilai string `"nodejs20.x"` dianggap sebagai nama paket runtime kustom tanpa versi semver (`@version`), sehingga validator build Vercel langsung menghentikan proses deployment dengan error:  
+  `Error: Function Runtimes must have a valid version, for example now-php@1.0.0`.
+- Untuk Serverless Functions berbasis Node.js standar di folder `api/` (`api/data.js`, `api/upload.js`, `api/status.js`), Vercel mendeteksi dan menjalankannya secara native tanpa memerlukan deklarasi blok `"functions"`, dan versi Node.js didefinisikan secara resmi melalui field `"engines"` di [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json).
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Eliminasi Blok `"functions"` di [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json):**
+   - Menghapus konfigurasi `"functions": { "api/**/*.js": { "runtime": "nodejs20.x" } }` agar Vercel menggunakan native Node.js Serverless Function runtime otomatis.
+   - Mempertahankan aturan rute (`routes`) dan header anti-cache serta charset UTF-8 yang diperlukan.
+2. **Spesifikasi Engine Node Resmi di [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json):**
+   - Menetapkan target versi engine:
+     ```json
+     "engines": {
+       "node": "20.x"
+     }
+     ```
+   - Menaikkan versi proyek ke `4.1.5`.
+
+### 📂 Berkas yang Dimodifikasi
+- [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) — Penghapusan blok `"functions"` yang menyebabkan konflik parser runtime Vercel.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penyelarasan engine `"node": "20.x"` dan bump versi `4.1.5`.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.5 sesuai aturan `AGENTS.md`.
+
+---
 
 ---
 
