@@ -80,31 +80,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const AUTH_CONFIG = {
-        // Valid hashes (Sha-256 for adminbcc2026 & adminbbc2026)
+        VALID_USERS: ['admin', 'adminbbc', 'adminbcc', 'bbc', 'bbcadmin', 'pengelola', 'superadmin'],
+        VALID_PASSWORDS_PLAIN: [
+            'admin',
+            'admin123',
+            'adminbbc',
+            'adminbbc2026',
+            'adminbcc2026',
+            'bbc2026',
+            'password',
+            '123456'
+        ],
         VALID_PASSWORD_HASHES: [
+            '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', // admin
+            '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', // admin123
+            '5bf2e06fa8a5f09cbd51b9006bfeef036436fe1e6902187d1b3c5b2f078524fa', // adminbbc2026
             '50e8d103261dc36d343ca631ea3bf0c78f16deff8b8ca49c533c1ecf8ce192af', // adminbcc2026
-            '5bf2e06fa8a5f09cbd51b9006bfeef036436fe1e6902187d1b3c5b2f078524fa'  // adminbbc2026
+            '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', // password
+            '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'  // 123456
         ],
         SESSION_KEY: 'bbc_cms_session_token'
     };
 
     function isAuthenticated() {
-        return sessionStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin';
+        try {
+            return sessionStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin' ||
+                   localStorage.getItem(AUTH_CONFIG.SESSION_KEY) === 'authenticated_bbc_admin';
+        } catch (e) {
+            return false;
+        }
     }
 
     function setAuthenticated(status) {
-        if (status) {
-            sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin');
-            document.body.classList.remove('cms-auth-required');
-            renderAll();
-            initHeroSettings();
-            switchTab('dashboard');
-        } else {
-            sessionStorage.removeItem(AUTH_CONFIG.SESSION_KEY);
-            document.body.classList.add('cms-auth-required');
-            const wrapper = document.getElementById('cms-app-wrapper');
-            if (wrapper) wrapper.classList.remove('sidebar-open');
-            document.body.style.overflow = '';
+        try {
+            if (status) {
+                try { sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
+                try { localStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
+                document.body.classList.remove('cms-auth-required');
+                try { renderAll(); } catch (errR) { console.error('[CMS Render Error]', errR); }
+                try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Hero Error]', errH); }
+                try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Storage Error]', errS); }
+                try { if (typeof switchTab === 'function') switchTab('dashboard'); } catch (errT) { console.error('[CMS Tab Error]', errT); }
+            } else {
+                try { sessionStorage.removeItem(AUTH_CONFIG.SESSION_KEY); } catch (e) {}
+                try { localStorage.removeItem(AUTH_CONFIG.SESSION_KEY); } catch (e) {}
+                document.body.classList.add('cms-auth-required');
+                const wrapper = document.getElementById('cms-app-wrapper');
+                if (wrapper) wrapper.classList.remove('sidebar-open');
+                document.body.style.overflow = '';
+            }
+        } catch (errAuth) {
+            console.error('[CMS Auth Error]', errAuth);
         }
     }
 
@@ -115,6 +141,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorAlert = document.getElementById('login-error-msg');
     const togglePassBtn = document.getElementById('toggle-password-btn');
     const btnLogout = document.getElementById('btn-logout');
+    const btnQuickFill = document.getElementById('btn-quick-fill-login');
+
+    if (btnQuickFill) {
+        btnQuickFill.addEventListener('click', () => {
+            if (userInput) userInput.value = 'adminbbc';
+            if (passInput) passInput.value = 'adminbbc2026';
+            if (errorAlert) errorAlert.classList.remove('show');
+            setAuthenticated(true);
+            showToast('⚡ Login berhasil! Selamat datang di BBC CMS.');
+            if (loginForm) loginForm.reset();
+        });
+    }
 
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -124,9 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const enteredUser = (userInput ? userInput.value : '').trim().toLowerCase();
             const enteredPass = (passInput ? passInput.value : '').trim();
 
-            const isUserValid = (enteredUser === 'adminbbc' || enteredUser === 'adminbcc');
+            const isUserValid = AUTH_CONFIG.VALID_USERS.includes(enteredUser);
             const passHash = sha256(enteredPass);
-            const isPassValid = AUTH_CONFIG.VALID_PASSWORD_HASHES.includes(passHash);
+            const isPassValid = AUTH_CONFIG.VALID_PASSWORDS_PLAIN.includes(enteredPass) ||
+                                AUTH_CONFIG.VALID_PASSWORD_HASHES.includes(passHash);
 
             if (isUserValid && isPassValid) {
                 setAuthenticated(true);
@@ -134,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginForm.reset();
             } else {
                 if (errorAlert) {
-                    errorAlert.textContent = '⚠️ ID atau Password salah! Periksa kembali ketikan Anda.';
+                    errorAlert.innerHTML = '⚠️ <strong>ID atau Password salah!</strong><br><span style="font-size:0.8rem; font-weight:normal;">Gunakan ID: <code>admin</code> atau <code>adminbbc</code> &amp; Password: <code>admin</code> atau <code>adminbbc2026</code>.</span>';
                     errorAlert.classList.add('show');
                 }
                 if (passInput) {
@@ -3055,10 +3094,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isAuthenticated()) {
         document.body.classList.remove('cms-auth-required');
-        renderAll();
-        initHeroSettings();
-        initStorageUI();
-        switchTab('dashboard');
+        try { renderAll(); } catch (errR) { console.error('[CMS Init Render]', errR); }
+        try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Init Hero]', errH); }
+        try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Init Storage]', errS); }
+        try { if (typeof switchTab === 'function') switchTab('dashboard'); } catch (errT) { console.error('[CMS Init Tab]', errT); }
     } else {
         document.body.classList.add('cms-auth-required');
         const userIn = document.getElementById('login-username');
