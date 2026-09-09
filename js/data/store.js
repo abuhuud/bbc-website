@@ -679,8 +679,7 @@ const BBC_STORE = (function () {
         try {
             const current = getHeroSettings();
             const merged = { ...current, ...settings };
-            localStorage.setItem(STORAGE_KEYS.HERO, JSON.stringify(merged));
-            broadcast(STORAGE_KEYS.HERO);
+            writeStorage(STORAGE_KEYS.HERO, merged);
             syncToFile(STORAGE_KEYS.HERO);
             return merged;
         } catch (e) {
@@ -761,9 +760,9 @@ const BBC_STORE = (function () {
     }
 
     function resetHeroSettings() {
-        localStorage.removeItem(STORAGE_KEYS.HERO);
+        writeStorage(STORAGE_KEYS.HERO, { ...DEFAULT_HERO });
         deleteMediaBlob('hero_main_video');
-        broadcast(STORAGE_KEYS.HERO);
+        syncToFile(STORAGE_KEYS.HERO);
         return { ...DEFAULT_HERO };
     }
 

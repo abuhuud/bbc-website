@@ -496,17 +496,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const chkAuto = document.getElementById('github-autodeploy-checkbox');
         if (chkAuto) chkAuto.checked = BBC_GITHUB.isAutoDeployEnabled();
 
-        if (!config) return;
-
         const tokenInput = document.getElementById('github-token-input');
         const ownerInput = document.getElementById('github-owner-input');
         const repoInput = document.getElementById('github-repo-input');
         const branchInput = document.getElementById('github-branch-input');
 
-        if (tokenInput && config.token) tokenInput.value = config.token;
-        if (ownerInput && config.owner) ownerInput.value = config.owner;
-        if (repoInput && config.repo) repoInput.value = config.repo;
-        if (branchInput && config.branch) branchInput.value = config.branch;
+        if (tokenInput && config && config.token) tokenInput.value = config.token;
+        if (ownerInput) ownerInput.value = (config && config.owner) ? config.owner : 'abuhuud';
+        if (repoInput) repoInput.value = (config && config.repo) ? config.repo : 'bbc-website';
+        if (branchInput) branchInput.value = (config && config.branch) ? config.branch : 'main';
     }
 
     /**

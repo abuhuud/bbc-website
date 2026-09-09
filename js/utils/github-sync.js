@@ -50,10 +50,28 @@ const BBC_GITHUB = (function () {
     function getConfig() {
         try {
             const raw = localStorage.getItem(LS_CONFIG_KEY);
-            if (!raw) return null;
-            return JSON.parse(raw);
+            if (!raw) {
+                return {
+                    owner: 'abuhuud',
+                    repo: 'bbc-website',
+                    branch: 'main',
+                    token: ''
+                };
+            }
+            const parsed = JSON.parse(raw);
+            return {
+                owner: (parsed.owner || 'abuhuud').trim(),
+                repo: (parsed.repo || 'bbc-website').trim(),
+                branch: (parsed.branch || 'main').trim(),
+                token: (parsed.token || '').trim()
+            };
         } catch {
-            return null;
+            return {
+                owner: 'abuhuud',
+                repo: 'bbc-website',
+                branch: 'main',
+                token: ''
+            };
         }
     }
 
@@ -119,7 +137,26 @@ const BBC_GITHUB = (function () {
     }
 
     /**
-     * Push satu file ke GitHub (create or update).
+     * Encode string UTF-8 ke Base64 secara aman.
+     * @param {string} str
+     * @returns {string}
+     */
+    function safeBase64Encode(str) {
+        try {
+            return btoa(unescape(encodeURIComponent(str)));
+        } catch {
+            const bytes = new TextEncoder().encode(str);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
+    }
+
+    /**
+     * Push satu file ke GitHub (create or update) dengan mekanisme retry otomatis
+     * jika terjadi 409 Conflict (cabang baru saja diperbarui oleh commit lain).
      * @param {string} owner
      * @param {string} repo
      * @param {string} path - path file di repo
@@ -127,49 +164,68 @@ const BBC_GITHUB = (function () {
      * @param {string} token
      * @param {object|Array} data - data JavaScript yang akan di-stringify
      * @param {string} commitMessage
+     * @param {number} [maxRetries=3]
      * @returns {Promise<{success: boolean, url: string|null, error: string|null}>}
      */
-    async function pushFile(owner, repo, path, branch, token, data, commitMessage) {
-        try {
-            // 1. Ambil SHA file yang ada (jika file sudah ada)
-            const sha = await getFileSha(owner, repo, path, branch, token);
+    async function pushFile(owner, repo, path, branch, token, data, commitMessage, maxRetries = 3) {
+        let lastError = null;
 
-            // 2. Encode konten JSON ke base64
-            const jsonStr = JSON.stringify(data, null, 2);
-            const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // 1. Ambil SHA file terkini dari GitHub
+                const sha = await getFileSha(owner, repo, path, branch, token);
 
-            // 3. Push ke GitHub
-            const body = {
-                message: commitMessage,
-                content: base64Content,
-                branch: branch
-            };
-            if (sha) body.sha = sha; // Diperlukan untuk update (bukan create)
+                // 2. Encode konten JSON ke base64
+                const jsonStr = JSON.stringify(data, null, 2);
+                const base64Content = safeBase64Encode(jsonStr);
 
-            const resp = await fetch(
-                `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`,
-                {
-                    method: 'PUT',
-                    headers: makeHeaders(token),
-                    body: JSON.stringify(body)
+                // 3. Push ke GitHub
+                const body = {
+                    message: commitMessage,
+                    content: base64Content,
+                    branch: branch
+                };
+                if (sha) body.sha = sha; // Diperlukan untuk update file yang sudah ada
+
+                const resp = await fetch(
+                    `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`,
+                    {
+                        method: 'PUT',
+                        headers: makeHeaders(token),
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    const errMsg = err.message || `HTTP ${resp.status}`;
+
+                    // Jika 409 Conflict (branch updated in parallel), tunggu dan coba lagi dengan SHA baru
+                    if (resp.status === 409 && attempt < maxRetries) {
+                        console.warn(`[BBC_GITHUB] Conflict 409 pada '${path}' (percobaan ${attempt}/${maxRetries}), mencoba ulang dalam 500ms...`);
+                        await new Promise(r => setTimeout(r, 500 * attempt));
+                        continue;
+                    }
+
+                    throw new Error(errMsg);
                 }
-            );
 
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                throw new Error(err.message || `HTTP ${resp.status}`);
+                const result = await resp.json();
+                return {
+                    success: true,
+                    url: result.content ? result.content.html_url : null,
+                    error: null
+                };
+
+            } catch (e) {
+                lastError = e;
+                if (attempt < maxRetries) {
+                    await new Promise(r => setTimeout(r, 500 * attempt));
+                }
             }
-
-            const result = await resp.json();
-            return {
-                success: true,
-                url: result.content ? result.content.html_url : null,
-                error: null
-            };
-
-        } catch (e) {
-            return { success: false, url: null, error: e.message };
         }
+
+        return { success: false, url: null, error: lastError ? lastError.message : 'Unknown error' };
     }
 
     /**
@@ -306,6 +362,11 @@ const BBC_GITHUB = (function () {
                 failedCount++;
                 errors.push(`${file.key}: ${e.message}`);
                 if (onProgress) onProgress(file.key, 'error', e.message);
+            }
+
+            // Jeda singkat antar file untuk memberi waktu GitHub memperbarui ref pointer branch
+            if (targets.length > 1) {
+                await new Promise(r => setTimeout(r, 400));
             }
         }
 
