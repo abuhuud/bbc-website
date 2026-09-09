@@ -111,12 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function setAuthenticated(status) {
+    async function setAuthenticated(status) {
         try {
             if (status) {
                 try { sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
                 try { localStorage.setItem(AUTH_CONFIG.SESSION_KEY, 'authenticated_bbc_admin'); } catch (e) {}
                 document.body.classList.remove('cms-auth-required');
+
+                // Sinkronkan data terbaru dari Vercel JSON / Blob sebelum render
+                if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
+                    try { await BBC_STORE.initialize(); } catch (initErr) { console.warn('[CMS Sync]', initErr); }
+                }
+
                 try { renderAll(); } catch (errR) { console.error('[CMS Render Error]', errR); }
                 try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Hero Error]', errH); }
                 try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Storage Error]', errS); }
@@ -3092,12 +3098,19 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTabCounts();
     }
 
-    if (isAuthenticated()) {
+    async function initCMS() {
+        if (typeof BBC_STORE !== 'undefined' && typeof BBC_STORE.initialize === 'function') {
+            try { await BBC_STORE.initialize(); } catch (initErr) { console.warn('[CMS Init Sync]', initErr); }
+        }
         document.body.classList.remove('cms-auth-required');
         try { renderAll(); } catch (errR) { console.error('[CMS Init Render]', errR); }
         try { if (typeof initHeroSettings === 'function') initHeroSettings(); } catch (errH) { console.error('[CMS Init Hero]', errH); }
         try { if (typeof initStorageUI === 'function') initStorageUI(); } catch (errS) { console.error('[CMS Init Storage]', errS); }
         try { if (typeof switchTab === 'function') switchTab('dashboard'); } catch (errT) { console.error('[CMS Init Tab]', errT); }
+    }
+
+    if (isAuthenticated()) {
+        initCMS();
     } else {
         document.body.classList.add('cms-auth-required');
         const userIn = document.getElementById('login-username');

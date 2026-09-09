@@ -151,6 +151,17 @@ const BBC_STORE = (function () {
             if (res.ok) {
                 const json = await res.json();
                 console.info(`[BBC_STORE] ☁️ Terupdate secara realtime di Vercel: ${category}`, json);
+
+                // Update UI status badge realtime jika ada
+                if (typeof document !== 'undefined') {
+                    const badgeText = document.getElementById('cloud-sync-topbar-text');
+                    const badgeDot = document.getElementById('cloud-sync-dot');
+                    if (badgeText) badgeText.textContent = `☁️ Vercel Sync: ${category} terupdate!`;
+                    if (badgeDot) {
+                        badgeDot.style.background = '#10B981';
+                        badgeDot.style.boxShadow = '0 0 8px #10B981';
+                    }
+                }
                 return json;
             }
         } catch (e) {
@@ -942,11 +953,15 @@ const BBC_STORE = (function () {
             const existingData = localStorage.getItem(task.storageKey);
 
             // Override localStorage jika:
-            // 1. Data berasal dari Vercel Blob dan versinya >= versi lokal
-            // 2. Belum ada data di localStorage
-            // 3. Versi cloud/JSON lebih baru dari versi yang tersimpan
+            // 1. Belum ada data di localStorage
+            // 2. Konten data di Vercel JSON berbeda dari data localStorage (perubahan langsung di Vercel JSON!)
+            // 3. Data berasal dari Vercel Blob dan versinya >= versi lokal
+            // 4. Versi cloud/JSON lebih baru dari versi yang tersimpan
             const isFromCloud = result.source === 'vercel-blob';
-            if (!existingData || (isFromCloud && result.version >= storedVersion) || result.version > storedVersion) {
+            const dataString = JSON.stringify(result.data);
+            const contentChanged = !existingData || (existingData !== dataString);
+
+            if (!existingData || contentChanged || (isFromCloud && result.version >= storedVersion) || result.version > storedVersion) {
                 if (task.key === 'hero' && result.data && typeof result.data === 'object') {
                     memoryHeroCache = result.data;
                     let ok = writeStorage(task.storageKey, result.data);
@@ -958,9 +973,9 @@ const BBC_STORE = (function () {
                 } else {
                     writeStorage(task.storageKey, result.data);
                 }
-                localStorage.setItem(task.verKey, String(result.version));
-                const srcLabel = isFromCloud ? 'Vercel Blob ☁️' : 'JSON Statis 📁';
-                console.info(`[BBC_STORE] Data '${task.key}' tersinkronisasi dari ${srcLabel} (v${result.version}).`);
+                localStorage.setItem(task.verKey, String(result.version || Date.now()));
+                const srcLabel = isFromCloud ? 'Vercel Blob ☁️' : 'Vercel JSON 📁';
+                console.info(`[BBC_STORE] Data '${task.key}' langsung terupdate dari ${srcLabel} (v${result.version}).`);
             }
         }));
     }

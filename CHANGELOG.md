@@ -5,14 +5,59 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
-2. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
-3. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
-4. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
-5. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
-6. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
-7. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
-8. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+1. [v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)](#-v417---sinkronisasi-instan-perubahan-vercel-json-modern-rewrites-edge-zero-cache-headers--content-diffing-sync)
+2. [v4.1.6 — Penghapusan Tampilan Informasi Kredensial CMS Sebelum Login & Peningkatan Responsif Tata Letak Form Isian](#-v416---penghapusan-tampilan-informasi-kredensial-cms-sebelum-login--peningkatan-responsif-tata-letak-form-isian)
+3. [v4.1.5 — Perbaikan Fatal Vercel Build Error (Function Runtimes Must Have a Valid Version)](#-v415---perbaikan-fatal-vercel-build-error-function-runtimes-must-have-a-valid-version)
+4. [v4.1.4 — Perbaikan Sistem Autentikasi Login CMS (Multi-Credential Support, 1-Click Fast Login & Safeguard Error Guards)](#-v414---perbaikan-sistem-autentikasi-login-cms-multi-credential-support-1-click-fast-login--safeguard-error-guards)
+5. [v4.1.3 — Migrasi Vektor SVG Icon Mandiri (Anti-Tofu/Blank), Dynamic MutationObserver Icon Enhancer & Header UTF-8 Vercel](#-v413---migrasi-vektor-svg-icon-mandiri-anti-tofublank-dynamic-mutationobserver-icon-enhancer--header-utf-8-vercel)
+6. [v4.1.2 — Perbaikan Komprehensif Icon, Tombol Arrow Navigasi, Layout Hero Grid & Sanitasi SVG Asset](#-v412---perbaikan-komprehensif-icon-tombol-arrow-navigasi-layout-hero-grid--sanitasi-svg-asset)
+7. [v4.1.1 — Perbaikan Fatal Syntax Error pada CMS (Unclosed Blocks) & Restorasi Encoding UTF-8 index.html](#-v411---perbaikan-fatal-syntax-error-pada-cms-unclosed-blocks--restorasi-encoding-utf-8-indexhtml)
+8. [v4.1.0 — Sinkronisasi Data Real-time ke Vercel (Vercel Blob Serverless Functions & Store Auto-Sync)](#-v410---sinkronisasi-data-real-time-ke-vercel-vercel-blob-serverless-functions--store-auto-sync)
+9. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+
+---
+
+## 🚀 v4.1.7 — Sinkronisasi Instan Perubahan Vercel JSON (Modern Rewrites, Edge Zero-Cache Headers & Content Diffing Sync)
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"buat setiap perubahan langsung terupdate di vercel jasonnya"*
+
+### 🔍 Analisis Akar Masalah
+1. **Konflik Atribut Legacy di [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json):**
+   - Sebelumnya file `vercel.json` menggunakan blok `"routes"` lama bersamaan dengan blok `"headers"`. Pada arsitektur Vercel, properti legacy `"routes"` tidak dapat dikombinasikan dengan `"headers"`, sehingga aturan anti-cache pada header diabaikan oleh CDN Edge Vercel. Akibatnya berkas data JSON (`data/*.json`) dan file respons API di-cache oleh edge server Vercel, membuat perubahan yang diunggah tidak langsung terlihat oleh pengunjung.
+2. **Ketergantungan Versi Timestamp pada LocalStorage ([`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js)):**
+   - Sebelumnya logika `initialize()` hanya meng-override data browser jika `result.version > storedVersion`. Jika pengelola memperbarui file JSON langsung di repository atau Vercel tanpa menaikkan angka `_version`, browser pengguna tetap mempertahankan data lama dari `localStorage`.
+3. **Siklus Hidup CMS Belum Melakukan Sinkronisasi Awal ([`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js)):**
+   - Halaman CMS me-render tabel langsung saat `DOMContentLoaded` tanpa memanggil `await BBC_STORE.initialize()`, sehingga data yang diedit berisiko berbasis pada cache lokal usang bukan data Vercel JSON terbaru.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Modernisasi Konfigurasi [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json):**
+   - Mengganti properti legacy `"routes"` dengan format resmi Vercel: `"cleanUrls": true` dan `"rewrites": [ { "source": "/index", "destination": "/index.html" }, { "source": "/", "destination": "/index.html" } ]`.
+   - Mengonfigurasi header no-cache komprehensif pada Vercel Edge CDN untuk rute `/api/(.*)`, `/data/(.*)`, `/(.*)\.json`, dan `/(.*)\.html`:
+     - `Cache-Control: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0`
+     - `CDN-Cache-Control: no-store`
+     - `Vercel-CDN-Cache-Control: no-store`
+     - `Pragma: no-cache`
+     - `Expires: 0`
+   - Menjamin bahwa Edge CDN Vercel selalu menyajikan data JSON teranyar secara instan saat ada commit git ataupun update API.
+2. **Pendeteksi Perubahan Konten Dinamis (Content Diffing) di [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js):**
+   - Menambahkan perbandingan string JSON (`contentChanged = !existingData || (existingData !== dataString)`). Jika isi file JSON Vercel berbeda dari data `localStorage`, sistem langsung melakukan sinkronisasi otomatis tanpa terhalang oleh selisih timestamp `_version`.
+   - Menambahkan visual feedback pada topbar CMS (`cloud-sync-topbar-text` & `cloud-sync-dot`) saat `syncToVercel()` berhasil mengirimkan pembaruan.
+3. **Inisialisasi Sinkronisasi CMS Sebelum Render ([`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js)):**
+   - Menjadikan `setAuthenticated(status)` dan inisialisasi awal CMS (`initCMS()`) asinkron dengan memanggil `await BBC_STORE.initialize()` sebelum mengeksekusi `renderAll()`.
+4. **Header Edge Anti-Cache pada API Endpoints ([`api/data.js`](file:///e:/Ikrom%20Docs/bbc-website/api/data.js) & [`api/upload.js`](file:///e:/Ikrom%20Docs/bbc-website/api/upload.js)):**
+   - Menambahkan `s-maxage=0`, `CDN-Cache-Control: no-store`, dan `Vercel-CDN-Cache-Control: no-store` pada response headers Serverless Functions Vercel.
+5. **Penaikan Versi Aplikasi ([`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json)):**
+   - Menaikkan versi proyek menjadi `4.1.7`.
+
+### 📂 Berkas yang Dimodifikasi
+- [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) — Penghapusan blok `routes` legacy, migrasi ke `cleanUrls` & `rewrites`, penambahan header anti-cache CDN Vercel untuk seluruh berkas JSON & API.
+- [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js) — Penambahan content diffing detection pada `initialize()` dan real-time UI badge sync.
+- [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js) — Integrasi `await BBC_STORE.initialize()` pada proses render awal CMS.
+- [`api/data.js`](file:///e:/Ikrom%20Docs/bbc-website/api/data.js) & [`api/upload.js`](file:///e:/Ikrom%20Docs/bbc-website/api/upload.js) — Penambahan header `CDN-Cache-Control` & `Vercel-CDN-Cache-Control` zero-cache.
+- [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) — Penaikan versi ke `4.1.7`.
+- [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) — Pencatatan log versi v4.1.7 sesuai aturan `AGENTS.md`.
 
 ---
 
