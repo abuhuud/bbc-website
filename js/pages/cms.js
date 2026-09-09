@@ -1993,12 +1993,35 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal('modal-event');
     }
 
+    const inputEventDate = document.getElementById('event-date');
+    const inputEventDay = document.getElementById('event-day');
+    if (inputEventDate && inputEventDay) {
+        inputEventDate.addEventListener('change', () => {
+            const val = inputEventDate.value;
+            if (!val) return;
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            try {
+                const parts = val.split('-');
+                if (parts.length === 3) {
+                    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                    if (!isNaN(d.getDay())) {
+                        inputEventDay.value = days[d.getDay()];
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        });
+    }
+
     if (btnAddEvent) {
         btnAddEvent.addEventListener('click', () => {
             eventTitleHeader.textContent = 'TAMBAH JADWAL KEGIATAN BARU';
             formEvent.reset();
             document.getElementById('event-id').value = '';
-            document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            document.getElementById('event-date').value = todayStr;
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            document.getElementById('event-day').value = days[today.getDay()] || 'Selasa';
             openModal('modal-event');
         });
     }
@@ -2011,12 +2034,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = document.getElementById('event-type').value;
             const status = document.getElementById('event-status').value;
             const date = document.getElementById('event-date').value;
-            const dayName = document.getElementById('event-day').value.trim();
+            let dayName = document.getElementById('event-day').value.trim();
             const time = document.getElementById('event-time').value.trim();
             const venue = document.getElementById('event-venue').value.trim();
             const city = document.getElementById('event-city').value.trim();
             const locationUrl = document.getElementById('event-location-url').value.trim();
             const description = document.getElementById('event-description').value.trim();
+
+            // Auto derive dayName jika kosong
+            if (!dayName && date) {
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                try {
+                    const parts = date.split('-');
+                    if (parts.length === 3) {
+                        const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                        if (!isNaN(d.getDay())) dayName = days[d.getDay()];
+                    }
+                } catch (err) { /* ignore */ }
+            }
+            if (!dayName) dayName = 'Jadwal';
 
             const eventData = {
                 id: id || undefined,

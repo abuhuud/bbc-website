@@ -5,25 +5,67 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-2. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-3. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-4. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-5. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-6. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-7. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-8. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-9. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-10. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-11. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-12. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-13. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-14. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-15. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-16. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-17. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-18. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-19. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+2. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+3. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+4. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+5. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+6. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+7. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+8. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+9. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+10. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+11. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+12. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+13. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+14. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+15. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+16. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+17. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+18. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+19. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+20. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"Perubahan penambahan pada jadwal kalender bulutangkis tidak berubah pada page schedule.html."*
+
+### ✅ Penyebab & Analisis Akar Masalah
+1. **Runtime Error pada `event-card.js` (`TypeError: Cannot read properties of undefined`):**  
+   Fungsi `createNextPlayTicket()` memanggil `${event.dayName.toUpperCase()}` tanpa pemeriksaan nilai fallback. Jika jadwal baru ditambahkan dan atribut `dayName` bernilai `undefined` atau kosong, skrip JavaScript langsung terhenti seketika (*crash*), menyebabkan daftar tiket jadwal gagal dirender sama sekali.
+2. **Stale Closure pada Tombol Filter di `schedule.js`:**  
+   Event listener tombol filter agenda diikat sekali menggunakan penanda `btn.dataset.bbcBound`, tetapi pemanggilan fungsi filternya terkurung (*closure*) pada array jadwal lama dari inisialisasi pertama. Akibatnya, filter tidak merefleksikan jadwal yang baru ditambahkan/diubah.
+3. **Overwrite Data Baru oleh `initialize()` di `store.js`:**  
+   Saat admin menyimpan jadwal baru melalui `saveEvent()`, timestamp versi lokal (`bbc_json_ver_events`) tidak diperbarui di `localStorage`. Ketika halaman `schedule.html` dibuka dan menjalankan `BBC_STORE.initialize()`, sistem menganggap file JSON statis lama di server memiliki versi lebih baru, sehingga data lokal baru yang diinput admin tertimpa kembali oleh data lama.
+4. **Tidak Adanya Otomatisasi Nama Hari di Form Jadwal CMS:**  
+   Jika pengguna memilih tanggal di kalender tetapi tidak mengetik nama hari secara manual di formulir modal, kolom `dayName` tersimpan kosong.
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Defensif Rendering pada `event-card.js`:**
+   - Menambahkan helper `_getIndoDayFromDate(dateStr)` yang otomatis menghitung nama hari bahasa Indonesia (Senin–Minggu) dari format `YYYY-MM-DD`.
+   - Menggunakan fallback aman untuk seluruh properti tiket: `dayName`, `typeName`, `time`, `venue`, `city`, `locationUrl`, dan `description`. Tidak ada lagi risiko crash JavaScript saat data tidak lengkap.
+2. **Reaktivitas Penuh pada `schedule.js`:**
+   - Menyimpan `currentScheduleFilter` secara dinamis di luar closure tombol.
+   - Fungsi `renderSchedulePage()` selalu mengambil data segar langsung dari `BBC_STORE.getEvents()` pada setiap pemanggilan.
+   - Mengaitkan pendengar siaran live `BBC_LIVE.onChange('bbc_data_events_v4')` agar halaman `schedule.html` langsung merender ulang secara otomatis dan instan saat admin menambah/mengedit jadwal di CMS tanpa perlu reload manual.
+3. **Pembaruan Timestamp Versi Otomatis di `store.js`:**
+   - Memperbarui fungsi `writeStorage()` agar selalu mencatat timestamp terkini (`Date.now()`) ke kunci versi yang bersesuaian (`JSON_VERSION_KEYS.EVENTS`, `PLAYERS`, `ARTICLES`, dsb.).
+   - Menambahkan logika *auto-derive* nama hari di `saveEvent()` jika kolom hari kosong.
+   - Mencegah penimpaan (*overwrite*) oleh fetch data JSON statis.
+4. **Otomatisasi Nama Hari di Modal CMS (`cms.js`):**
+   - Menambahkan event listener `change` pada input tanggal `#event-date`: saat tanggal dipilih, kolom input `#event-day` langsung terisi otomatis dengan nama hari dalam bahasa Indonesia.
+   - Mengisi tanggal hari ini dan nama hari berjalan secara otomatis saat tombol *"Tambah Jadwal Baru"* diklik.
+
+### 📁 Berkas yang Dimodifikasi
+- `js/components/event-card.js` — Penanganan defensif properti jadwal dan helper nama hari
+- `js/pages/schedule.js` — Perbaikan reaktivitas render jadwal dan pemecahan stale closure tombol filter
+- `js/data/store.js` — Pembaruan otomatis version timestamp di `writeStorage` dan auto-derive `dayName` di `saveEvent`
+- `js/pages/cms.js` — Otomatisasi pengisian hari pada form modal tambah/edit jadwal
+- `CHANGELOG.md` — Dokumentasi log perubahan rilis v2.17.0
 
 ---
 

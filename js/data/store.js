@@ -65,10 +65,27 @@ const BBC_STORE = (function () {
         return fallback;
     }
 
+    // Peta storage key -> version key
+    const STORAGE_TO_VER_KEY_MAP = {
+        [STORAGE_KEYS.PLAYERS]: JSON_VERSION_KEYS.PLAYERS,
+        [STORAGE_KEYS.EVENTS]: JSON_VERSION_KEYS.EVENTS,
+        [STORAGE_KEYS.GALLERY]: JSON_VERSION_KEYS.GALLERY,
+        [STORAGE_KEYS.ARTICLES]: JSON_VERSION_KEYS.ARTICLES,
+        [STORAGE_KEYS.OFFICIALS]: JSON_VERSION_KEYS.OFFICIALS,
+        [STORAGE_KEYS.HERO]: JSON_VERSION_KEYS.HERO
+    };
+
     // Helper to write to localStorage
     function writeStorage(key, data) {
         try {
             localStorage.setItem(key, JSON.stringify(data));
+
+            // Perbarui timestamp versi lokal agar tidak tertimpa oleh fetch initialize()
+            const verKey = STORAGE_TO_VER_KEY_MAP[key];
+            if (verKey) {
+                localStorage.setItem(verKey, String(Date.now()));
+            }
+
             broadcast(key);
             return true;
         } catch (e) {
@@ -441,6 +458,21 @@ const BBC_STORE = (function () {
             };
             event.typeName = map[event.type] || 'Kegiatan';
         }
+
+        // Auto derive dayName dari tanggal jika kosong
+        if (!event.dayName && event.date) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            try {
+                const parts = event.date.split('-');
+                if (parts.length === 3) {
+                    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                    if (!isNaN(d.getDay())) {
+                        event.dayName = days[d.getDay()];
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+        if (!event.dayName) event.dayName = 'Jadwal';
 
         if (index >= 0) {
             list[index] = { ...list[index], ...event };
