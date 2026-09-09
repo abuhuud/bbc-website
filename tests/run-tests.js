@@ -14,7 +14,7 @@ console.log('='.repeat(60));
 const mockStorage = new Map();
 const windowMock = {
     location: {
-        pathname: '/index.php',
+        pathname: '/index.html',
         search: ''
     },
     localStorage: {

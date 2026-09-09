@@ -155,7 +155,7 @@ BBC_onReady(() => {
                                 Belum ada jadwal pertandingan atau latihan dalam 7 hari ke depan.
                                 Pantau jadwal lengkap BBC untuk rencana latihan selanjutnya.
                             </p>
-                            <a href="pages/schedule.php" class="btn btn-primary" style="box-shadow: 4px 4px 0 var(--color-dark);">
+                            <a href="pages/schedule.html" class="btn btn-primary" style="box-shadow: 4px 4px 0 var(--color-dark);">
                                 <span>LIHAT SEMUA JADWAL</span>
                                 <span style="font-family: var(--font-pixel);">→</span>
                             </a>
@@ -382,7 +382,7 @@ function createPotmCard(player, isAmilin) {
                 <div style="font-size: 0.75rem; color: var(--color-grey); font-weight: 700;">
                     ✦ TERPILIH BULAN INI
                 </div>
-                <a href="pages/player-detail.php?slug=${encodeURIComponent(player.slug || (typeof BBC_STORE !== 'undefined' && BBC_STORE.slugify ? BBC_STORE.slugify(player.name) : (typeof BBC_slugify === 'function' ? BBC_slugify(player.name) : player.id)))}" class="btn btn-sm ${isAmilin ? 'btn-primary' : 'btn-coral'}" style="box-shadow: 3px 3px 0 var(--color-dark);">
+                <a href="pages/player-detail.html?slug=${encodeURIComponent(player.slug || (typeof BBC_STORE !== 'undefined' && BBC_STORE.slugify ? BBC_STORE.slugify(player.name) : (typeof BBC_slugify === 'function' ? BBC_slugify(player.name) : player.id)))}" class="btn btn-sm ${isAmilin ? 'btn-primary' : 'btn-coral'}" style="box-shadow: 3px 3px 0 var(--color-dark);">
                     <span>LIHAT PROFIL</span>
                     <span style="font-family: var(--font-pixel);">→</span>
                 </a>

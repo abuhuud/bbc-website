@@ -5,34 +5,113 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v3.3.0 — Refaktor Menyeluruh Seluruh Halaman HTML Menjadi PHP (.php) & Harmonisasi Sistem](#-v330---refaktor-menyeluruh-seluruh-halaman-html-menjadi-php-php--harmonisasi-sistem)
-2. [v3.2.1 — Pengalihan Penuh ke Vercel Blob Public Access (`access: 'public'`) & Direct CDN URLs](#-v321---pengalihan-penuh-ke-vercel-blob-public-access-access-public--direct-cdn-urls)
-3. [v3.2.0 — Integrasi Vercel Blob SDK (@vercel/blob) & Cloud Storage Database "bbc-baznas-db"](#-v320---integrasi-vercel-blob-sdk-vercelblob--cloud-storage-database-bbc-baznas-db)
-4. [v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine](#-v310---optimalisasi--dukungan-penuh-database-mariadb-mariadb-10x--11x--deteksi-otomatis-engine)
-5. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
-6. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
-7. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
-8. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
-9. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
-10. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-11. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-12. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-13. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-14. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-15. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-16. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-17. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-18. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-19. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-20. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-21. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-22. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-23. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-24. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-25. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-26. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-27. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-28. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend](#-v400---refactoring-menyeluruh-proyek-menjadi-pure-html-css-javascript--eliminasi-berkas-backend)
+2. [v3.3.0 — Refaktor Menyeluruh Seluruh Halaman HTML Menjadi PHP (.php) & Harmonisasi Sistem](#-v330---refaktor-menyeluruh-seluruh-halaman-html-menjadi-php-php--harmonisasi-sistem)
+3. [v3.2.1 — Pengalihan Penuh ke Vercel Blob Public Access (`access: 'public'`) & Direct CDN URLs](#-v321---pengalihan-penuh-ke-vercel-blob-public-access-access-public--direct-cdn-urls)
+4. [v3.2.0 — Integrasi Vercel Blob SDK (@vercel/blob) & Cloud Storage Database "bbc-baznas-db"](#-v320---integrasi-vercel-blob-sdk-vercelblob--cloud-storage-database-bbc-baznas-db)
+5. [v3.1.0 — Optimalisasi & Dukungan Penuh Database MariaDB (MariaDB 10.x / 11.x) & Deteksi Otomatis Engine](#-v310---optimalisasi--dukungan-penuh-database-mariadb-mariadb-10x--11x--deteksi-otomatis-engine)
+6. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
+7. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
+8. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
+9. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
+10. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+11. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+12. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+13. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+14. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+15. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+16. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+17. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+18. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+19. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+20. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+21. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+22. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+23. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+24. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+25. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+26. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+27. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+28. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+29. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v4.0.0 — Refactoring Menyeluruh Proyek Menjadi Pure HTML, CSS, JavaScript & Eliminasi Berkas Backend
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"refactoring project menjadi project html, css, javascript dan hapus setiap file dan fungsi yang tidak digunakan"*
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Konversi 9 Berkas Halaman ke Format HTML Murni (`.html`):**
+   - Menghapus format `.php` dan mengembalikan seluruh berkas antarmuka ke format native `.html` via `git mv`:
+     - `index.php` ➔ [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html)
+     - `pages/cms.php` ➔ [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html)
+     - `pages/profile.php` ➔ [`pages/profile.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/profile.html)
+     - `pages/players.php` ➔ [`pages/players.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/players.html)
+     - `pages/player-detail.php` ➔ [`pages/player-detail.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/player-detail.html)
+     - `pages/schedule.php` ➔ [`pages/schedule.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/schedule.html)
+     - `pages/news.php` ➔ [`pages/news.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/news.html)
+     - `pages/article-detail.php` ➔ [`pages/article-detail.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/article-detail.html)
+     - `tests/index.php` ➔ [`tests/index.html`](file:///e:/Ikrom%20Docs/bbc-website/tests/index.html)
+2. **Pembersihan & Penghapusan Total Berkas Backend & Utilitas Usang:**
+   - Menghapus seluruh direktori `api/` (15 berkas: `articles.php`, `auth.php`, `events.php`, `gallery.php`, `health.php`, `hero.php`, `officials.php`, `players.php`, `seed.php`, `config/database.php`, `blob/data.js`, `blob/seed.js`, `blob/status.js`, `avatar/upload.js`, `avatar/view.js`).
+   - Menghapus seluruh direktori `database/` (`schema.sql` dan `README.md`).
+   - Menghapus berkas usang yang tidak terpakai: `js/utils/github-sync.js`.
+3. **Refaktorisasi & Pembersihan Logika Client-Side Data Store (`js/data/store.js`):**
+   - Menghapus fungsi panggilan REST API PHP: `getApiBasePath()`, `callApi()`, `checkApiHealth()`, `triggerSeed()`, `syncToApi()`.
+   - Menghapus fungsi integrasi Vercel Blob: `syncToBlob()`, `uploadToBlob()`, `checkBlobStatus()`, `triggerBlobSeed()`.
+   - Menyederhanakan `syncToFile()` untuk fokus pada mutasi `localStorage` dan File System Access API (`BBC_FS`).
+   - Menyederhanakan `initialize()` untuk langsung memuat data dari static JSON (`/data/*.json`) dan `localStorage` tanpa ketergantungan API backend.
+4. **Pembersihan Antarmuka & Modul CMS (`pages/cms.html` & `js/pages/cms.js`):**
+   - Menghapus panel database MariaDB (`#mysql-db-panel`) dan panel Vercel Blob (`#vercel-blob-panel`) dari tab Backup CMS.
+   - Menghapus handler fungsi `initDatabaseUI()`, `updateDatabaseStatusUI()`, `initBlobUI()`, `updateBlobStatusUI()`.
+   - Mengganti upload blob pada form media menjadi penanganan lokal via File System Access API (`BBC_FS`) dengan fallback Canvas image compression / Base64 Data URL.
+   - Mengubah badge topbar header CMS menjadi indikator status penyimpanan lokal (`💾 Storage: Aktif` / `📁 File: /folder`).
+5. **Harmonisasi Tautan Internal ke Format `.html`:**
+   - [`js/components/navbar.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/navbar.js): Memperbarui seluruh array navigasi, deteksi menu aktif, dan logo brand ke `.html`.
+   - [`js/components/footer.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/footer.js): Memperbarui peta navigasi dan daftar kegiatan ke `.html`.
+   - [`js/components/player-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/player-card.js): Tautan kartu pemain beralih ke `player-detail.html`.
+   - [`js/components/news-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/news-card.js): Tautan kartu artikel beralih ke `article-detail.html`.
+   - [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js): Tautan CTA jadwal & Player of the Month beralih ke `.html`.
+   - [`js/pages/player-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/player-detail.js): Tautan prev/next dan tombol kembali beralih ke `.html`.
+   - [`js/pages/article-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/article-detail.js): Tautan kembali ke berita beralih ke `news.html`.
+   - [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html): Seluruh tombol CTA di hero, agenda, profil, skuad, dan berita beralih ke `pages/*.html`.
+   - [`pages/article-detail.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/article-detail.html): Tautan kembali beralih ke `news.html`.
+   - [`tests/run-tests.js`](file:///e:/Ikrom%20Docs/bbc-website/tests/run-tests.js) & [`tests/index.html`](file:///e:/Ikrom%20Docs/bbc-website/tests/index.html): Mock router dan link navigasi beralih ke `.html`.
+6. **Penyelarasan Konfigurasi Deployment Statis (`vercel.json` & `package.json`):**
+   - [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json): Menghapus seluruh konfigurasi functions PHP dan Node.js serverless. Menyederhanakan routes ke `index.html` dan `handle: filesystem`.
+   - [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json): Menghapus dependensi `@vercel/blob`, memperbarui entry point `"main": "index.html"`, dan menaikkan versi rilis ke `4.0.0`.
+
+### 📁 Berkas yang Dimodifikasi, Dibuat, dan Dihapus
+| Berkas | Status | Ringkasan Perubahan |
+|---|---|---|
+| [`index.html`](file:///e:/Ikrom%20Docs/bbc-website/index.html) | Diubah nama dari `index.php` | Konversi ke format HTML murni dan pembaruan seluruh tautan CTA ke `.html` |
+| [`pages/cms.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/cms.html) | Diubah nama dari `pages/cms.php` | Konversi ke format HTML murni, pembersihan panel MariaDB & Vercel Blob |
+| [`pages/profile.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/profile.html) | Diubah nama dari `pages/profile.php` | Konversi ke format HTML murni |
+| [`pages/players.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/players.html) | Diubah nama dari `pages/players.php` | Konversi ke format HTML murni |
+| [`pages/player-detail.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/player-detail.html) | Diubah nama dari `pages/player-detail.php` | Konversi ke format HTML murni |
+| [`pages/schedule.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/schedule.html) | Diubah nama dari `pages/schedule.php` | Konversi ke format HTML murni |
+| [`pages/news.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/news.html) | Diubah nama dari `pages/news.php` | Konversi ke format HTML murni |
+| [`pages/article-detail.html`](file:///e:/Ikrom%20Docs/bbc-website/pages/article-detail.html) | Diubah nama dari `pages/article-detail.php` | Konversi ke format HTML murni dan pembaruan tautan ke `news.html` |
+| [`tests/index.html`](file:///e:/Ikrom%20Docs/bbc-website/tests/index.html) | Diubah nama dari `tests/index.php` | Konversi ke format HTML murni dan pembaruan tautan tes |
+| `api/*` (15 berkas) | 🗑️ Dihapus | Seluruh backend PHP REST API dan Vercel Blob handlers dihapus tuntas |
+| `database/*` (2 berkas) | 🗑️ Dihapus | Berkas `schema.sql` dan `README.md` dihapus tuntas |
+| [`js/utils/github-sync.js`](file:///e:/Ikrom%20Docs/bbc-website/js/utils/github-sync.js) | 🗑️ Dihapus | Utilitas usang peninggalan v2.15 dihapus tuntas |
+| [`js/data/store.js`](file:///e:/Ikrom%20Docs/bbc-website/js/data/store.js) | Dimodifikasi | Penghapusan pemanggilan backend REST API & Vercel Blob, penyederhanaan ke pure client storage |
+| [`js/pages/cms.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/cms.js) | Dimodifikasi | Penghapusan handler UI MariaDB & Vercel Blob, penyederhanaan upload media lokal |
+| [`js/components/navbar.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/navbar.js) | Dimodifikasi | Navigasi menu utama dan brand link beralih ke `.html` |
+| [`js/components/footer.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/footer.js) | Dimodifikasi | Peta tautan footer beralih ke `.html` |
+| [`js/components/player-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/player-card.js) | Dimodifikasi | Tautan detail atlet beralih ke `player-detail.html` |
+| [`js/components/news-card.js`](file:///e:/Ikrom%20Docs/bbc-website/js/components/news-card.js) | Dimodifikasi | Tautan detail berita beralih ke `article-detail.html` |
+| [`js/pages/home.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/home.js) | Dimodifikasi | Tautan agenda & POTM beralih ke `.html` |
+| [`js/pages/player-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/player-detail.js) | Dimodifikasi | Navigasi detail atlet beralih ke `.html` |
+| [`js/pages/article-detail.js`](file:///e:/Ikrom%20Docs/bbc-website/js/pages/article-detail.js) | Dimodifikasi | Tautan kembali ke berita beralih ke `news.html` |
+| [`tests/run-tests.js`](file:///e:/Ikrom%20Docs/bbc-website/tests/run-tests.js) | Dimodifikasi | Mock router beralih ke `/index.html` |
+| [`vercel.json`](file:///e:/Ikrom%20Docs/bbc-website/vercel.json) | Dimodifikasi | Konfigurasi hosting statis murni tanpa functions runtime |
+| [`package.json`](file:///e:/Ikrom%20Docs/bbc-website/package.json) | Dimodifikasi | Hapus `@vercel/blob`, entry point `"main": "index.html"`, versi `4.0.0` |
+| [`CHANGELOG.md`](file:///e:/Ikrom%20Docs/bbc-website/CHANGELOG.md) | Dimodifikasi | Pencatatan rilis v4.0.0 dan pembaruan Daftar Isi |
 
 ---
 

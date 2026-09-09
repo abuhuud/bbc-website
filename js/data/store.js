@@ -114,215 +114,31 @@ const BBC_STORE = (function () {
         [STORAGE_KEYS.HERO]:      'hero'
     };
 
-    // Path API relatif — otomatis menyesuaikan apakah di /pages/ atau root
-    function getApiBasePath() {
-        if (typeof window !== 'undefined' && window.location.pathname.includes('/pages/')) {
-            return '../api/';
-        }
-        return './api/';
-    }
-
     /**
-     * Helper async untuk memanggil endpoint PHP REST API
-     */
-    async function callApi(endpoint, method = 'GET', data = null, queryParams = '') {
-        try {
-            const base = getApiBasePath();
-            const url = `${base}${endpoint}.php${queryParams ? '?' + queryParams : ''}`;
-            const opts = {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            };
-            if (data && (method === 'POST' || method === 'PUT')) {
-                opts.body = JSON.stringify(data);
-            }
-            const res = await fetch(url, opts);
-            if (!res.ok) return null;
-            return await res.json();
-        } catch (err) {
-            return null;
-        }
-    }
-
-    /**
-     * Cek status kesehatan koneksi database MySQL
-     */
-    async function checkApiHealth() {
-        try {
-            const base = getApiBasePath();
-            const res = await fetch(`${base}health.php?t=${Date.now()}`);
-            if (!res.ok) return { success: false, database: 'disconnected' };
-            return await res.json();
-        } catch (e) {
-            return { success: false, database: 'disconnected', error: e.message };
-        }
-    }
-
-    /**
-     * Jalankan seeder database MySQL dari CMS
-     */
-    async function triggerSeed() {
-        try {
-            const base = getApiBasePath();
-            const res = await fetch(`${base}seed.php?t=${Date.now()}`);
-            if (!res.ok) return { success: false, error: `HTTP ${res.status}` };
-            return await res.json();
-        } catch (e) {
-            return { success: false, error: e.message };
-        }
-    }
-
-    /**
-     * Kirim mutasi data langsung ke Database MySQL via PHP REST API
-     */
-    function syncToApi(category, action = 'SAVE', payload = null) {
-        if (!category) return;
-
-        let endpoint = category;
-        let method = 'POST';
-        let queryParams = '';
-        let bodyData = payload;
-
-        if (action === 'DELETE') {
-            method = 'DELETE';
-            if (payload && payload.id) {
-                queryParams = `id=${encodeURIComponent(payload.id)}`;
-            }
-        } else if (action === 'POTM') {
-            method = 'PUT';
-            if (payload && payload.id) {
-                queryParams = `id=${encodeURIComponent(payload.id)}`;
-                bodyData = { id: payload.id, isPlayerOfTheMonth: payload.isPotm };
-            }
-        } else if (action === 'SAVE') {
-            if (category === 'hero') {
-                method = 'POST';
-            } else if (payload && payload.id && !isNaN(payload.id)) {
-                method = 'PUT';
-                queryParams = `id=${encodeURIComponent(payload.id)}`;
-            } else {
-                method = 'POST';
-            }
-        }
-
-        callApi(endpoint, method, bodyData, queryParams).then(res => {
-            if (res && res.success) {
-                console.info(`[BBC_STORE] ✅ Terupdate di Database MySQL (${category} -> ${method})`);
-            }
-        }).catch(err => {
-            console.warn(`[BBC_STORE] API call error untuk ${category}:`, err);
-        });
-    }
-
-    /**
-     * Sinkronisasi data kategori utuh ke Vercel Blob store bbc-baznas-db
-     */
-    async function syncToBlob(category, data = null) {
-        if (!category) return null;
-        try {
-            const base = getApiBasePath();
-            let payload = data;
-            if (!payload) {
-                if (category === 'players') payload = getPlayers();
-                else if (category === 'events') payload = getEvents();
-                else if (category === 'gallery') payload = getGallery();
-                else if (category === 'articles') payload = getArticles();
-                else if (category === 'officials') payload = getOfficials();
-                else if (category === 'hero') payload = getHeroSettings();
-            }
-            if (!payload) return null;
-
-            const res = await fetch(`${base}blob/data?category=${encodeURIComponent(category)}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (res.ok) {
-                const json = await res.json();
-                console.info(`[BBC_STORE] ☁️ Terupdate di Vercel Blob (bbc-baznas-db): ${category}`);
-                return json;
-            }
-        } catch (e) {
-            // Background enhancement
-        }
-        return null;
-    }
-
-    /**
-     * Upload file media langsung ke Vercel Blob (bbc-baznas-db)
-     * @param {File|Blob} file
-     * @param {string} folder - 'avatars' | 'gallery' | 'articles' | 'hero'
-     * @param {'public'|'private'} access
-     * @returns {Promise<{url: string, pathname: string, contentType: string}|null>}
-     */
-    async function uploadToBlob(file, folder = 'avatars', access = 'public') {
-        if (!file) return null;
-        try {
-            const base = getApiBasePath();
-            const filename = encodeURIComponent(file.name || `file-${Date.now()}`);
-            const res = await fetch(`${base}avatar/upload?filename=${filename}&folder=${folder}&access=${access}`, {
-                method: 'POST',
-                body: file
-            });
-            if (res.ok) {
-                return await res.json();
-            }
-        } catch (e) {
-            console.warn('[BBC_STORE] uploadToBlob failed:', e);
-        }
-        return null;
-    }
-
-    /**
-     * Cek status koneksi Vercel Blob store bbc-baznas-db
-     */
-    async function checkBlobStatus() {
-        try {
-            const base = getApiBasePath();
-            const res = await fetch(`${base}blob/status?t=${Date.now()}`);
-            if (!res.ok) return { success: false, status: 'error' };
-            return await res.json();
-        } catch (e) {
-            return { success: false, status: 'error', error: e.message };
-        }
-    }
-
-    /**
-     * Jalankan seeder data ke Vercel Blob store bbc-baznas-db
-     */
-    async function triggerBlobSeed() {
-        try {
-            const base = getApiBasePath();
-            const res = await fetch(`${base}blob/seed?t=${Date.now()}`, { method: 'POST' });
-            if (!res.ok) return { success: false, error: `HTTP ${res.status}` };
-            return await res.json();
-        } catch (e) {
-            return { success: false, error: e.message };
-        }
-    }
-
-    /**
-     * Sinkronisasi data ke backend PHP MySQL/MariaDB REST API, Vercel Blob, dan fallback lokal
+     * Sinkronisasi mutasi data (LocalStorage + File System Access API)
      * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
-     * @param {string} [action='SAVE'] - 'SAVE' | 'DELETE' | 'POTM'
-     * @param {object} [payload=null] - objek data spesifik yang dimutasi
      */
-    function syncToFile(storageKey, action = 'SAVE', payload = null) {
+    function syncToFile(storageKey) {
         const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
 
-        // 1. Sinkronisasi langsung ke Database MariaDB/MySQL via PHP REST API
-        syncToApi(category, action, payload);
+        // Otomatis sinkronisasi ke file lokal jika File System Access API aktif di CMS
+        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
+            try {
+                let data = null;
+                if (category === 'players') data = getPlayers();
+                else if (category === 'events') data = getEvents();
+                else if (category === 'gallery') data = getGallery();
+                else if (category === 'articles') data = getArticles();
+                else if (category === 'officials') data = getOfficials();
+                else if (category === 'hero') data = getHeroSettings();
 
-        // 2. Sinkronisasi langsung ke Vercel Blob (bbc-baznas-db)
-        syncToBlob(category);
-
-        // 3. Auto-Deploy Vercel jika konfigurasi GitHub aktif
-        if (typeof BBC_GITHUB !== 'undefined' && typeof BBC_GITHUB.triggerAutoDeploy === 'function') {
-            BBC_GITHUB.triggerAutoDeploy(category);
+                if (data) {
+                    BBC_FS.writeJsonFile(`data/${category}.json`, data);
+                }
+            } catch (err) {
+                console.warn(`[BBC_STORE] BBC_FS sync failed for ${category}:`, err);
+            }
         }
     }
 
@@ -991,51 +807,10 @@ const BBC_STORE = (function () {
 
     /**
      * initialize() — Harus dipanggil satu kali sebelum render halaman.
-     * Prioritas 1: Tarik data real-time langsung dari Database MySQL via PHP REST API.
-     * Prioritas 2 (Fallback): Jika offline/API belum terhubung, sinkronkan dari JSON statis.
+     * Sinkronkan data dari JSON statis (/data/*.json) ke LocalStorage jika ada pembaruan versi.
      * @returns {Promise<void>}
      */
     async function initialize() {
-        // 1. Coba inisialisasi dari Database MySQL via PHP REST API
-        let apiConnected = false;
-        try {
-            const health = await checkApiHealth();
-            if (health && health.database === 'connected') {
-                apiConnected = true;
-                console.info('[BBC_STORE] ✅ Terhubung ke Database MySQL via PHP REST API.');
-            }
-        } catch (e) {
-            apiConnected = false;
-        }
-
-        if (apiConnected) {
-            const apiTasks = [
-                { ep: 'players',   prop: 'players',   storageKey: STORAGE_KEYS.PLAYERS },
-                { ep: 'events',    prop: 'events',    storageKey: STORAGE_KEYS.EVENTS },
-                { ep: 'articles',  prop: 'articles',  storageKey: STORAGE_KEYS.ARTICLES },
-                { ep: 'gallery',   prop: 'gallery',   storageKey: STORAGE_KEYS.GALLERY },
-                { ep: 'officials', prop: 'officials', storageKey: STORAGE_KEYS.OFFICIALS },
-                { ep: 'hero',      prop: 'hero',      storageKey: STORAGE_KEYS.HERO }
-            ];
-
-            await Promise.all(apiTasks.map(async (task) => {
-                try {
-                    const res = await callApi(task.ep);
-                    if (res && res.success && res[task.prop] !== undefined) {
-                        if (task.ep === 'hero') {
-                            memoryHeroCache = res[task.prop];
-                        }
-                        writeStorage(task.storageKey, res[task.prop]);
-                        console.info(`[BBC_STORE] Data '${task.prop}' dimuat dari Database MySQL.`);
-                    }
-                } catch (err) {
-                    console.warn(`[BBC_STORE] Gagal memuat dari API ${task.ep}:`, err.message);
-                }
-            }));
-            return;
-        }
-
-        // 2. Fallback: jika API database tidak tersedia / offline, gunakan static JSON sync
         const tasks = [
             { file: 'players.json', key: 'players', storageKey: STORAGE_KEYS.PLAYERS, verKey: JSON_VERSION_KEYS.PLAYERS },
             { file: 'events.json',  key: 'events',  storageKey: STORAGE_KEYS.EVENTS,  verKey: JSON_VERSION_KEYS.EVENTS },
@@ -1135,6 +910,7 @@ const BBC_STORE = (function () {
 
         return files.map(f => f.filename);
     }
+
     function exportDatabase() {
         const backup = {
             version: '1.0',
@@ -1222,18 +998,7 @@ const BBC_STORE = (function () {
         getMediaBlob,
         deleteMediaBlob,
 
-        // PHP REST API & Database helpers
-        callApi,
-        checkApiHealth,
-        triggerSeed,
-
-        // Vercel Blob (bbc-baznas-db) helpers
-        syncToBlob,
-        uploadToBlob,
-        checkBlobStatus,
-        triggerBlobSeed,
-
-        // Static JSON sync (DEPLOYMENT FIX)
+        // Static JSON sync
         initialize,
         forceReloadFromJson,
         exportToJsonFiles,

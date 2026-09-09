@@ -1,14 +1,11 @@
 {
   "name": "bbc-website",
-  "version": "3.3.0",
-  "description": "Website Resmi BAZNAS Badminton Club (BBC) dengan Backend PHP & Vercel Blob",
+  "version": "4.0.0",
+  "description": "Website Resmi BAZNAS Badminton Club (BBC) — Pure HTML, CSS, & JavaScript",
   "type": "module",
-  "main": "index.php",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0"
-  },
-  "dependencies": {
-    "@vercel/blob": "^0.27.1"
+    "test": "node tests/run-tests.js"
   },
   "engines": {
     "node": ">=18.x"
@@ -17,7 +14,8 @@
     "badminton",
     "baznas",
     "bbc",
-    "vercel-blob"
+    "pixel-art",
+    "static-web"
   ],
   "author": "BAZNAS Badminton Club",
   "license": "MIT"

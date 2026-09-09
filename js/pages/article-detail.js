@@ -20,7 +20,7 @@ BBC_onReady(() => {
             <div style="background: white; border: 2px solid var(--color-dark); padding: 40px; text-align: center; border-radius: var(--radius-md);">
                 <h3>ARTIKEL TIDAK DITEMUKAN</h3>
                 <p>Artikel yang Anda cari tidak tersedia.</p>
-                <a href="news.php" class="btn btn-primary" style="margin-top: 16px;">KEMBALI KE BERITA</a>
+                <a href="news.html" class="btn btn-primary" style="margin-top: 16px;">KEMBALI KE BERITA</a>
             </div>
         `;
         return;
