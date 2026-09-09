@@ -3217,26 +3217,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyMediaTypeToggle('video');
                     showToast('⏳ Memproses file video...');
                     try {
-                        // Jika ukuran <= 4MB, simpan sebagai Data URL agar kompatibel penuh dengan Vercel & pengunjung online!
-                        if (file.size <= 4 * 1024 * 1024) {
+                        // Jika ukuran <= 10MB, simpan sebagai Data URL agar kompatibel penuh dengan Vercel & pengunjung online!
+                        if (file.size <= 10 * 1024 * 1024) {
                             const reader = new FileReader();
                             reader.onload = function (e) {
                                 if (fVideoUrl) fVideoUrl.value = e.target.result;
                                 updatePreview(file);
-                                showToast('✅ File video siap disimpan (kompatibel penuh untuk Vercel)!');
+                                showToast('✅ File video siap disimpan (Base64 langsung kompatibel penuh untuk Vercel, maks 10MB)!');
                             };
                             reader.onerror = () => {
                                 showToast('❌ Gagal membaca file video.', 'error');
                             };
                             reader.readAsDataURL(file);
                         } else {
-                            // Video > 4MB (disimpan di IndexedDB browser lokal admin)
+                            // Video > 10MB (disimpan di IndexedDB browser lokal admin)
                             if (typeof BBC_STORE !== 'undefined' && BBC_STORE.setMediaBlob) {
                                 await BBC_STORE.setMediaBlob('hero_main_video', file);
                                 if (fVideoUrl) fVideoUrl.value = 'indexeddb:hero_main_video';
                             }
                             updatePreview(file);
-                            showToast('✅ Video disimpan di browser lokal. Untuk tayang di Vercel publik, disarankan gunakan link YouTube!');
+                            showToast('✅ Video disimpan di browser lokal (> 10MB). Untuk tayang di Vercel publik, disarankan gunakan link YouTube!');
                         }
                     } catch (err) {
                         showToast('❌ Gagal memproses file video.', 'error');

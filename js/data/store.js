@@ -662,7 +662,12 @@ const BBC_STORE = (function () {
     // ========================================================
     // 6. HERO SETTINGS
     // ========================================================
+    let memoryHeroCache = null;
+
     function getHeroSettings() {
+        if (memoryHeroCache && typeof memoryHeroCache === 'object') {
+            return { ...DEFAULT_HERO, ...memoryHeroCache };
+        }
         try {
             const raw = localStorage.getItem(STORAGE_KEYS.HERO);
             if (raw) {
@@ -679,11 +684,23 @@ const BBC_STORE = (function () {
         try {
             const current = getHeroSettings();
             const merged = { ...current, ...settings };
-            const ok = writeStorage(STORAGE_KEYS.HERO, merged);
+            memoryHeroCache = merged;
+
+            // Coba simpan ke localStorage
+            let ok = writeStorage(STORAGE_KEYS.HERO, merged);
             if (!ok) {
-                console.warn('[BBC_STORE] writeStorage gagal menyimpan hero settings (kemungkinan memori lokal penuh).');
-                return null;
+                // Jika video berukuran besar (misal Base64 mendekati 10MB) dan melebihi kuota localStorage:
+                console.warn('[BBC_STORE] writeStorage kuota penuh. Menyimpan video ke IndexedDB & memory cache...');
+                const lightweight = { ...merged };
+                if (lightweight.mainVideo && lightweight.mainVideo.startsWith('data:video/')) {
+                    if (typeof setMediaBlob === 'function') {
+                        setMediaBlob('hero_main_video', lightweight.mainVideo);
+                    }
+                    lightweight.mainVideo = 'indexeddb:hero_main_video';
+                }
+                ok = writeStorage(STORAGE_KEYS.HERO, lightweight);
             }
+
             syncToFile(STORAGE_KEYS.HERO);
             return merged;
         } catch (e) {
@@ -764,6 +781,7 @@ const BBC_STORE = (function () {
     }
 
     function resetHeroSettings() {
+        memoryHeroCache = null;
         writeStorage(STORAGE_KEYS.HERO, { ...DEFAULT_HERO });
         deleteMediaBlob('hero_main_video');
         syncToFile(STORAGE_KEYS.HERO);
@@ -814,7 +832,17 @@ const BBC_STORE = (function () {
 
             // Override localStorage jika: (1) belum ada data, atau (2) versi JSON lebih baru
             if (!existingData || result.version > storedVersion) {
-                writeStorage(task.storageKey, result.data);
+                if (task.key === 'hero' && result.data && typeof result.data === 'object') {
+                    memoryHeroCache = result.data;
+                    let ok = writeStorage(task.storageKey, result.data);
+                    if (!ok && result.data.mainVideo && result.data.mainVideo.startsWith('data:video/')) {
+                        setMediaBlob('hero_main_video', result.data.mainVideo);
+                        const lightweight = { ...result.data, mainVideo: 'indexeddb:hero_main_video' };
+                        writeStorage(task.storageKey, lightweight);
+                    }
+                } else {
+                    writeStorage(task.storageKey, result.data);
+                }
                 localStorage.setItem(task.verKey, String(result.version));
                 console.info(`[BBC_STORE] Data '${task.key}' diperbarui dari JSON (v${result.version}).`);
             }
