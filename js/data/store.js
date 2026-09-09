@@ -114,32 +114,123 @@ const BBC_STORE = (function () {
         [STORAGE_KEYS.HERO]:      'hero'
     };
 
+    // Path API relatif — otomatis menyesuaikan apakah di /pages/ atau root
+    function getApiBasePath() {
+        if (typeof window !== 'undefined' && window.location.pathname.includes('/pages/')) {
+            return '../api/';
+        }
+        return './api/';
+    }
+
     /**
-     * Sync kategori data tertentu:
-     * 1. Ke file JSON lokal di folder proyek (via BBC_FS, jika diaktifkan).
-     * 2. Otomatis push ke GitHub / Vercel (via BBC_GITHUB.triggerAutoDeploy, jika diaktifkan).
-     * Non-blocking — gagal secara silent agar tidak mengganggu UX pengguna.
-     * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
+     * Helper async untuk memanggil endpoint PHP REST API
      */
-    function syncToFile(storageKey) {
+    async function callApi(endpoint, method = 'GET', data = null, queryParams = '') {
+        try {
+            const base = getApiBasePath();
+            const url = `${base}${endpoint}.php${queryParams ? '?' + queryParams : ''}`;
+            const opts = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            };
+            if (data && (method === 'POST' || method === 'PUT')) {
+                opts.body = JSON.stringify(data);
+            }
+            const res = await fetch(url, opts);
+            if (!res.ok) return null;
+            return await res.json();
+        } catch (err) {
+            return null;
+        }
+    }
+
+    /**
+     * Cek status kesehatan koneksi database MySQL
+     */
+    async function checkApiHealth() {
+        try {
+            const base = getApiBasePath();
+            const res = await fetch(`${base}health.php?t=${Date.now()}`);
+            if (!res.ok) return { success: false, database: 'disconnected' };
+            return await res.json();
+        } catch (e) {
+            return { success: false, database: 'disconnected', error: e.message };
+        }
+    }
+
+    /**
+     * Jalankan seeder database MySQL dari CMS
+     */
+    async function triggerSeed() {
+        try {
+            const base = getApiBasePath();
+            const res = await fetch(`${base}seed.php?t=${Date.now()}`);
+            if (!res.ok) return { success: false, error: `HTTP ${res.status}` };
+            return await res.json();
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Kirim mutasi data langsung ke Database MySQL via PHP REST API
+     */
+    function syncToApi(category, action = 'SAVE', payload = null) {
+        if (!category) return;
+
+        let endpoint = category;
+        let method = 'POST';
+        let queryParams = '';
+        let bodyData = payload;
+
+        if (action === 'DELETE') {
+            method = 'DELETE';
+            if (payload && payload.id) {
+                queryParams = `id=${encodeURIComponent(payload.id)}`;
+            }
+        } else if (action === 'POTM') {
+            method = 'PUT';
+            if (payload && payload.id) {
+                queryParams = `id=${encodeURIComponent(payload.id)}`;
+                bodyData = { id: payload.id, isPlayerOfTheMonth: payload.isPotm };
+            }
+        } else if (action === 'SAVE') {
+            if (category === 'hero') {
+                method = 'POST';
+            } else if (payload && payload.id && !isNaN(payload.id)) {
+                method = 'PUT';
+                queryParams = `id=${encodeURIComponent(payload.id)}`;
+            } else {
+                method = 'POST';
+            }
+        }
+
+        callApi(endpoint, method, bodyData, queryParams).then(res => {
+            if (res && res.success) {
+                console.info(`[BBC_STORE] ✅ Terupdate di Database MySQL (${category} -> ${method})`);
+            }
+        }).catch(err => {
+            console.warn(`[BBC_STORE] API call error untuk ${category}:`, err);
+        });
+    }
+
+    /**
+     * Sinkronisasi data ke backend PHP MySQL REST API dan fallback lokal
+     * @param {string} storageKey - kunci STORAGE_KEYS yang baru saja diperbarui
+     * @param {string} [action='SAVE'] - 'SAVE' | 'DELETE' | 'POTM'
+     * @param {object} [payload=null] - objek data spesifik yang dimutasi
+     */
+    function syncToFile(storageKey, action = 'SAVE', payload = null) {
         const category = FS_CATEGORY_MAP[storageKey];
         if (!category) return;
 
-        // 1. Sinkronisasi ke File Lokal (File System Access API)
-        if (typeof BBC_FS !== 'undefined' && BBC_FS.isConfigured && BBC_FS.isConfigured()) {
-            BBC_FS.syncToFiles(category).then(({ synced, failed }) => {
-                if (synced.length > 0) {
-                    console.info(`[BBC_STORE] ✅ Tersinkronisasi ke file lokal: ${synced.join(', ')}.json`);
-                }
-                if (failed.length > 0) {
-                    console.warn(`[BBC_STORE] ⚠️ Gagal sync ke file lokal: ${failed.join(', ')}`);
-                }
-            }).catch(err => {
-                console.warn('[BBC_STORE] Error saat sync ke file lokal:', err);
-            });
-        }
+        // 1. Sinkronisasi langsung ke Database MySQL via PHP REST API
+        syncToApi(category, action, payload);
 
-        // 2. Auto-Deploy Otomatis ke GitHub & Vercel
+        // 2. Auto-Deploy Vercel jika konfigurasi GitHub aktif
         if (typeof BBC_GITHUB !== 'undefined' && typeof BBC_GITHUB.triggerAutoDeploy === 'function') {
             BBC_GITHUB.triggerAutoDeploy(category);
         }
@@ -307,7 +398,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'POTM', { id, isPotm });
         return true;
     }
 
@@ -367,7 +458,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'SAVE', player);
         return player;
     }
 
@@ -376,7 +467,7 @@ const BBC_STORE = (function () {
         list = list.filter(p => String(p.id) !== String(id));
         ensureSinglePotmPerGender(list);
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'DELETE', { id });
         return list;
     }
 
@@ -392,7 +483,7 @@ const BBC_STORE = (function () {
         };
         p.gallery.push(newPhoto);
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'SAVE', p);
         return newPhoto;
     }
 
@@ -408,7 +499,7 @@ const BBC_STORE = (function () {
             caption: photoData.caption !== undefined ? photoData.caption : p.gallery[idx].caption
         };
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'SAVE', p);
         return p.gallery[idx];
     }
 
@@ -418,7 +509,7 @@ const BBC_STORE = (function () {
         if (!p || !Array.isArray(p.gallery)) return false;
         p.gallery = p.gallery.filter(g => String(g.id) !== String(photoId));
         writeStorage(STORAGE_KEYS.PLAYERS, list);
-        syncToFile(STORAGE_KEYS.PLAYERS);
+        syncToFile(STORAGE_KEYS.PLAYERS, 'SAVE', p);
         return true;
     }
 
@@ -481,7 +572,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.EVENTS, list);
-        syncToFile(STORAGE_KEYS.EVENTS);
+        syncToFile(STORAGE_KEYS.EVENTS, 'SAVE', event);
         return event;
     }
 
@@ -489,7 +580,7 @@ const BBC_STORE = (function () {
         let list = getEvents();
         list = list.filter(e => String(e.id) !== String(id));
         writeStorage(STORAGE_KEYS.EVENTS, list);
-        syncToFile(STORAGE_KEYS.EVENTS);
+        syncToFile(STORAGE_KEYS.EVENTS, 'DELETE', { id });
         return list;
     }
 
@@ -531,7 +622,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.GALLERY, list);
-        syncToFile(STORAGE_KEYS.GALLERY);
+        syncToFile(STORAGE_KEYS.GALLERY, 'SAVE', item);
         return item;
     }
 
@@ -539,7 +630,7 @@ const BBC_STORE = (function () {
         let list = getGallery();
         list = list.filter(g => String(g.id) !== String(id));
         writeStorage(STORAGE_KEYS.GALLERY, list);
-        syncToFile(STORAGE_KEYS.GALLERY);
+        syncToFile(STORAGE_KEYS.GALLERY, 'DELETE', { id });
         return list;
     }
 
@@ -576,7 +667,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.ARTICLES, list);
-        syncToFile(STORAGE_KEYS.ARTICLES);
+        syncToFile(STORAGE_KEYS.ARTICLES, 'SAVE', article);
         return article;
     }
 
@@ -584,7 +675,7 @@ const BBC_STORE = (function () {
         let list = getArticles();
         list = list.filter(a => String(a.id) !== String(id));
         writeStorage(STORAGE_KEYS.ARTICLES, list);
-        syncToFile(STORAGE_KEYS.ARTICLES);
+        syncToFile(STORAGE_KEYS.ARTICLES, 'DELETE', { id });
         return list;
     }
 
@@ -647,7 +738,7 @@ const BBC_STORE = (function () {
         }
 
         writeStorage(STORAGE_KEYS.OFFICIALS, list);
-        syncToFile(STORAGE_KEYS.OFFICIALS);
+        syncToFile(STORAGE_KEYS.OFFICIALS, 'SAVE', cleanOfficial);
         return cleanOfficial;
     }
 
@@ -655,7 +746,7 @@ const BBC_STORE = (function () {
         let list = getOfficials();
         list = list.filter(o => String(o.id) !== String(id));
         writeStorage(STORAGE_KEYS.OFFICIALS, list);
-        syncToFile(STORAGE_KEYS.OFFICIALS);
+        syncToFile(STORAGE_KEYS.OFFICIALS, 'DELETE', { id });
         return list;
     }
 
@@ -701,7 +792,7 @@ const BBC_STORE = (function () {
                 ok = writeStorage(STORAGE_KEYS.HERO, lightweight);
             }
 
-            syncToFile(STORAGE_KEYS.HERO);
+            syncToFile(STORAGE_KEYS.HERO, 'SAVE', merged);
             return merged;
         } catch (e) {
             console.error('[BBC_STORE] Failed to save hero settings:', e);
@@ -784,7 +875,7 @@ const BBC_STORE = (function () {
         memoryHeroCache = null;
         writeStorage(STORAGE_KEYS.HERO, { ...DEFAULT_HERO });
         deleteMediaBlob('hero_main_video');
-        syncToFile(STORAGE_KEYS.HERO);
+        syncToFile(STORAGE_KEYS.HERO, 'SAVE', { ...DEFAULT_HERO });
         return { ...DEFAULT_HERO };
     }
 
@@ -810,10 +901,51 @@ const BBC_STORE = (function () {
 
     /**
      * initialize() — Harus dipanggil satu kali sebelum render halaman.
-     * Fetch semua data dari JSON statis dan sync ke localStorage jika versi lebih baru.
+     * Prioritas 1: Tarik data real-time langsung dari Database MySQL via PHP REST API.
+     * Prioritas 2 (Fallback): Jika offline/API belum terhubung, sinkronkan dari JSON statis.
      * @returns {Promise<void>}
      */
     async function initialize() {
+        // 1. Coba inisialisasi dari Database MySQL via PHP REST API
+        let apiConnected = false;
+        try {
+            const health = await checkApiHealth();
+            if (health && health.database === 'connected') {
+                apiConnected = true;
+                console.info('[BBC_STORE] ✅ Terhubung ke Database MySQL via PHP REST API.');
+            }
+        } catch (e) {
+            apiConnected = false;
+        }
+
+        if (apiConnected) {
+            const apiTasks = [
+                { ep: 'players',   prop: 'players',   storageKey: STORAGE_KEYS.PLAYERS },
+                { ep: 'events',    prop: 'events',    storageKey: STORAGE_KEYS.EVENTS },
+                { ep: 'articles',  prop: 'articles',  storageKey: STORAGE_KEYS.ARTICLES },
+                { ep: 'gallery',   prop: 'gallery',   storageKey: STORAGE_KEYS.GALLERY },
+                { ep: 'officials', prop: 'officials', storageKey: STORAGE_KEYS.OFFICIALS },
+                { ep: 'hero',      prop: 'hero',      storageKey: STORAGE_KEYS.HERO }
+            ];
+
+            await Promise.all(apiTasks.map(async (task) => {
+                try {
+                    const res = await callApi(task.ep);
+                    if (res && res.success && res[task.prop] !== undefined) {
+                        if (task.ep === 'hero') {
+                            memoryHeroCache = res[task.prop];
+                        }
+                        writeStorage(task.storageKey, res[task.prop]);
+                        console.info(`[BBC_STORE] Data '${task.prop}' dimuat dari Database MySQL.`);
+                    }
+                } catch (err) {
+                    console.warn(`[BBC_STORE] Gagal memuat dari API ${task.ep}:`, err.message);
+                }
+            }));
+            return;
+        }
+
+        // 2. Fallback: jika API database tidak tersedia / offline, gunakan static JSON sync
         const tasks = [
             { file: 'players.json', key: 'players', storageKey: STORAGE_KEYS.PLAYERS, verKey: JSON_VERSION_KEYS.PLAYERS },
             { file: 'events.json',  key: 'events',  storageKey: STORAGE_KEYS.EVENTS,  verKey: JSON_VERSION_KEYS.EVENTS },
@@ -892,6 +1024,10 @@ const BBC_STORE = (function () {
             {
                 filename: 'officials.json',
                 content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, officials: getOfficials() }, null, 2)
+            },
+            {
+                filename: 'hero.json',
+                content: JSON.stringify({ _version: Date.now(), _updatedAt: timestamp, hero: getHeroSettings() }, null, 2)
             }
         ];
 
@@ -995,6 +1131,11 @@ const BBC_STORE = (function () {
         setMediaBlob,
         getMediaBlob,
         deleteMediaBlob,
+
+        // PHP REST API & Database helpers
+        callApi,
+        checkApiHealth,
+        triggerSeed,
 
         // Static JSON sync (DEPLOYMENT FIX)
         initialize,

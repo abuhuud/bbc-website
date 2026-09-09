@@ -5,29 +5,114 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
-2. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
-3. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
-4. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
-5. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
-6. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
-7. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
-8. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
-9. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
-10. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
-11. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
-12. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
-13. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
-14. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
-15. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
-16. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
-17. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
-18. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
-19. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
-20. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
-21. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
-22. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
-23. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+1. [v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS](#-v300---refaktor-arsitektur-backend-php-rest-api-serverless--database-mysql-terintegrasi-untuk-vercel--cms)
+2. [v2.18.2 — Peningkatan Batas Video Base64 Langsung ke 10MB untuk Vercel & Hybrid Memory Storage](#-v2182---peningkatan-batas-video-base64-langsung-ke-10mb-untuk-vercel--hybrid-memory-storage)
+3. [v2.18.1 — Fix Komprehensif Hero Media (Foto & Video), Eliminasi Race Condition DOM & Base64 Video Vercel](#-v2181---fix-komprehensif-hero-media-foto--video-eliminasi-race-condition-dom--base64-video-vercel)
+4. [v2.18.0 — Perbaikan Tampilan Banner Hero index.html & Optimasi Auto-Update Vercel](#-v2180---perbaikan-tampilan-banner-hero-indexhtml--optimasi-auto-update-vercel)
+5. [v2.17.0 — Fix Sinkronisasi & Reaktivitas Jadwal Kalender Bulutangkis di schedule.html](#-v2170---fix-sinkronisasi--reaktivitas-jadwal-kalender-bulutangkis-di-schedulehtml)
+6. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+7. [v2.15.1 — Fix Merge Conflict Git & Penyelarasan Metadata JSON pada GitHub Sync](#-v2151---fix-merge-conflict-git--penyelarasan-metadata-json-pada-github-sync)
+8. [v2.15.0 — GitHub Auto-Deploy 1-Klik ke Vercel (BBC_GITHUB Module)](#-v2150---github-auto-deploy-1-klik-ke-vercel-bbc_github-module)
+9. [v2.14.0 — Simpan Data CMS ke File Assets (File System Access API)](#-v2140---simpan-data-cms-ke-file-assets-file-system-access-api)
+10. [v2.13.0 — Fix Deploy Vercel (Invalid request: exportedAt) & Migrasi Data CMS ke data/*.json](#-v2130---fix-deploy-vercel-invalid-request-exportedat--migrasi-data-cms-ke-datajson)
+11. [v2.12.0 — Favicon Logo BBC di Semua Halaman](#-v2120---favicon-logo-bbc-di-semua-halaman)
+12. [v2.11.0 — Fix Data CMS Tidak Muncul di Vercel: Static JSON Sync + Export Deploy](#-v2110---fix-data-cms-tidak-muncul-di-vercel-static-json-sync--export-deploy)
+13. [v2.10.0 — Pembaruan Foto Dummy Anime Amilat (Pemain & Pengurus Hijab) & Selector Kategori Pengurus](#-v2100---pembaruan-foto-dummy-anime-amilat-pemain--pengurus-hijab--selector-kategori-pengurus)
+14. [v2.9.0 — Pembaruan Foto Dummy Anime Amilin (Pemain & Pengurus) & Fallback onerror](#-v290---pembaruan-foto-dummy-anime-amilin-pemain--pengurus--fallback-onerror)
+15. [v2.8.0 — Penyembunyian Menu Navigasi & Seluruh Layout CMS Sebelum Login](#-v280---penyembunyian-menu-navigasi--seluruh-layout-cms-sebelum-login)
+16. [v2.7.0 — Penyimpanan Data Kosong di CMS & Visibilitas Dinamis Section index.html](#-v270---penyimpanan-data-kosong-di-cms--visibilitas-dinamis-section-indexhtml)
+17. [v2.6.0 — Penyeragaman Ukuran Box Navigasi, Single Burger Button & Header Clean](#-v260---penyeragaman-ukuran-box-navigasi-single-burger-button--header-clean)
+18. [v2.5.0 — Sidebar Navigasi Samping Kiri Buka-Tutup (Collapsible) Desktop & Tablet](#-v250---sidebar-navigasi-samping-kiri-buka-tutup-collapsible-desktop--tablet)
+19. [v2.4.0 — Perapian Dashboard Mobile & Penataan Modul CMS](#-v240---perapian-dashboard-mobile--penataan-modul-cms)
+20. [v2.3.0 — Fitur Lazy Load Data (>10 Baris) & Penyesuaian Font Tab Menu](#-v230---fitur-lazy-load-data-10-baris--penyesuaian-font-tab-menu)
+21. [v2.2.0 — Optimasi Tipografi dan Responsivitas Konten Form & Tabel CMS](#-v220---optimasi-tipografi-dan-responsivitas-konten-form--tabel-cms)
+22. [v2.1.0 — Accordion Header Ringkas, Urutan Menu Prioritas & Hapus Label "Menu"](#-v210---accordion-header-ringkas-urutan-menu-prioritas--hapus-label-menu)
+23. [v2.0.0 — Responsivitas Pusat Navigasi Modul & Status Sistem Mobile](#-v200---responsivitas-pusat-navigasi-modul--status-sistem-mobile)
+24. [v1.9.0 — Pembersihan Header CMS (BBC ADMIN + Burger Button) & Navigasi Mobile](#-v190---pembersihan-header-cms-bbc-admin--burger-button--navigasi-mobile)
+
+---
+
+## 🚀 v3.0.0 — Refaktor Arsitektur: Backend PHP REST API Serverless & Database MySQL Terintegrasi untuk Vercel & CMS
+**Tanggal:** 9 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"sekarang refactor agar dapat di deploy di vercel menggunakan database mysql / mongodb, buatkan databasenya dan setiap ada penginputan, edit dan hapus melalui cms akan terupdate di db. buatkan dalam bentuk php, dan perbaiki struktur codingannya, hilangkan yang tidak perlu"*
+
+### 🛠️ Solusi & Detail Implementasi Teknis
+1. **Skema & Arsitektur Database MySQL (`database/schema.sql`):**
+   - Merancang DDL tabel relasional berstandar industri dengan mesin `InnoDB` dan set karakter `utf8mb4_unicode_ci`:
+     - `bbc_users`: Penyimpanan kredensial admin pengelola dengan hash kata sandi SHA-256 terproteksi.
+     - `bbc_players`: Data roster pemain Amilin & Amilat, status Player of the Month (POTM), statistik performa (attendance, matches, wins, losses, win rate), prestasi teks, tautan gambar profil, dan koleksi galeri foto aksi (JSON array).
+     - `bbc_events`: Kalender kegiatan lapangan (Latihan Rutin, Turnamen, dsb), penentuan nama hari otomatis (Senin–Minggu), waktu, lokasi, dan status badge.
+     - `bbc_articles`: Publikasi berita/artikel bulutangkis, slug unik ramah SEO, kategori liputan, estimasi waktu baca, jumlah pembaca (views increment otomatis), dan tanggal terbit.
+     - `bbc_gallery`: Dokumentasi foto momen smash, kejuaraan, dan kebersamaan komunitas.
+     - `bbc_officials`: Struktur organisasi kepengurusan klub (nama, jabatan, urutan sort, foto profil).
+     - `bbc_hero`: Konfigurasi banner beranda (tipe media foto/video, tautan video YouTube/MP4, thumbnail foto mini 1 & 2, serta label sticker).
+   - Menyediakan panduan setup lengkap di [database/README.md](file:///e:/Ikrom%20Docs/bbc-website/database/README.md) untuk deployment cloud gratis (TiDB Cloud Serverless MySQL, PlanetScale, Aiven, Railway) maupun server lokal (XAMPP / Laragon).
+
+2. **Serverless PHP REST API Modular (`/api/*.php`):**
+   - Membangun backend REST API berbasis PHP murni dengan PDO (PHP Data Objects) dan Prepared Statements untuk keamanan penuh dari SQL Injection:
+     - `api/config/database.php`: Singleton PDO connection pool yang mendukung Environment Variables Vercel (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL`), CORS headers terstandarisasi, penanganan HTTP OPTIONS preflight, serta helper `jsonResponse()` dan `getJsonInput()`.
+     - `api/health.php`: Diagnostic endpoint untuk memeriksa status konektivitas database MySQL secara live, versi runtime PHP, dan latensi query.
+     - `api/seed.php`: One-click data migration/seeder yang otomatis mengimpor seluruh data awal dari file `data/*.json` langsung ke tabel-tabel MySQL.
+     - `api/players.php`: Endpoints CRUD pemain (GET dengan filter kategori/POTM, POST tambah pemain baru, PUT perbarui pemain & penegakan aturan 1 POTM per kategori, DELETE hapus pemain).
+     - `api/events.php`: Endpoints CRUD agenda kegiatan (GET dengan filter masa depan/kategori, POST otomatis konversi nama hari Indonesia, PUT, DELETE).
+     - `api/articles.php`: Endpoints CRUD berita (GET dengan filter slug/kategori serta penambahan views count otomatis, POST artikel baru, PUT, DELETE).
+     - `api/gallery.php`: Endpoints CRUD galeri foto (GET koleksi foto terbaru, POST foto baru, DELETE).
+     - `api/officials.php`: Endpoints CRUD pengurus klub (GET berdasarkan urutan `sort_order`, POST, PUT, DELETE).
+     - `api/hero.php`: Endpoints GET & POST/PUT konfigurasi media banner beranda website.
+     - `api/auth.php`: Server-side authentication endpoint untuk validasi login admin terhadap tabel `bbc_users`.
+
+3. **Konfigurasi Serverless Runtime Vercel (`vercel.json`):**
+   - Menambahkan konfigurasi runtime serverless `vercel-php@0.7.3` untuk mengeksekusi script PHP di infrastruktur AWS Lambda Vercel tanpa perlu setup server dedicated:
+     ```json
+     "functions": {
+       "api/**/*.php": {
+         "runtime": "vercel-php@0.7.3"
+       }
+     }
+     ```
+   - Mengatur rute API `/api/(.*)` ke `/api/$1` serta menyertakan CORS headers global.
+
+4. **Sinkronisasi Data Real-Time CMS ke MySQL (`js/data/store.js`):**
+   - Mengintegrasikan fungsi sinkronisasi otomatis `syncToApi(category, action, payload)` ke dalam setiap metode mutasi pada `BBC_STORE`:
+     - `savePlayer()`, `deletePlayer()`, `setPlayerOfTheMonth()`, `addPlayerGalleryPhoto()`, `deletePlayerGalleryPhoto()`.
+     - `saveEvent()`, `deleteEvent()`.
+     - `saveArticle()`, `deleteArticle()`.
+     - `saveGalleryItem()`, `deleteGalleryItem()`.
+     - `saveOfficial()`, `deleteOfficial()`.
+     - `saveHeroSettings()`, `resetHeroSettings()`.
+   - Menambahkan mekanisme *Graceful Resilience*: Pada saat inisialisasi (`initialize()`), sistem memeriksa `checkApiHealth()`. Jika database MySQL aktif, data di-load langsung dari MySQL. Jika database sedang offline / belum dikonfigurasi, sistem secara otomatis beralih menggunakan data fallback JSON lokal sehingga website tidak pernah blank.
+
+5. **Pembersihan Kode Usang & Modernisasi UI CMS (`pages/cms.html`, `js/pages/cms.js`):**
+   - Menghapus ketergantungan modul workaround lama `github-sync.js` (push commit langsung dari browser yang rawan konflik dan lambat).
+   - Memodernisasi tab Backup & Sistem di CMS dengan menambahkan panel **Database MySQL & PHP REST API (Real-Time CRUD)** yang menampilkan:
+     - Badge status koneksi MySQL live (`🟢 TERHUBUNG KE MYSQL` / `⚪ STANDBY (LOCAL JSON)`).
+     - Badge host database dan versi PHP Serverless runtime.
+     - Tombol **⚡ SINKRONKAN / SEED KE MYSQL** untuk migrasi data awal 1-klik.
+     - Tombol **🔄 CEK KONEKSI** untuk uji latensi koneksi secara instan.
+     - Panduan konfigurasi Environment Variables Vercel.
+
+### 📁 Berkas yang Dimodifikasi & Ditambahkan
+| Berkas | Status | Ringkasan Perubahan |
+|---|---|---|
+| `database/schema.sql` | ✨ Baru | DDL skema database MySQL lengkap 7 tabel relasional (`bbc_users`, `bbc_players`, `bbc_events`, `bbc_articles`, `bbc_gallery`, `bbc_officials`, `bbc_hero`) |
+| `database/README.md` | ✨ Baru | Panduan konfigurasi dan integrasi database cloud (TiDB Serverless, PlanetScale, Aiven, Supabase, XAMPP) |
+| `api/config/database.php` | ✨ Baru | Singleton PDO connection handler, environment variable reader, CORS headers, JSON helpers |
+| `api/health.php` | ✨ Baru | Endpoint kesehatan koneksi MySQL dan serverless runtime diagnostic |
+| `api/seed.php` | ✨ Baru | Endpoint migrasi/seeder 1-klik dari file `data/*.json` ke database MySQL |
+| `api/players.php` | ✨ Baru | REST API CRUD pemain, statistik, foto, dan aturan eksklusif POTM |
+| `api/events.php` | ✨ Baru | REST API CRUD agenda & jadwal kegiatan bulutangkis |
+| `api/articles.php` | ✨ Baru | REST API CRUD berita, publikasi liputan, slug, dan auto views counter |
+| `api/gallery.php` | ✨ Baru | REST API CRUD dokumentasi galeri foto klub |
+| `api/officials.php` | ✨ Baru | REST API CRUD kepengurusan klub bulutangkis |
+| `api/hero.php` | ✨ Baru | REST API konfigurasi media banner hero (foto & video) |
+| `api/auth.php` | ✨ Baru | REST API autentikasi admin login server-side |
+| `vercel.json` | Diperbarui | Konfigurasi runtime `vercel-php@0.7.3`, routing `/api/*`, dan CORS rules |
+| `js/data/store.js` | Diperbarui | Integrasi `callApi()`, `checkApiHealth()`, `triggerSeed()`, `syncToApi()`, dan resilient hybrid fallback |
+| `js/pages/cms.js` | Diperbarui | Integrasi UI status database live, handler seeder, uji koneksi, eliminasi kode usang GitHub sync |
+| `pages/cms.html` | Diperbarui | Panel kontrol database MySQL baru di tab backup, pembersihan script usang `github-sync.js` |
+| `CHANGELOG.md` | Diperbarui | Dokumentasi komprehensif rilis major v3.0.0 & pembaruan daftar isi |
 
 ---
 

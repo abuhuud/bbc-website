@@ -433,12 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ========================================================
-    // 3C. BBC_GITHUB — GITHUB AUTO-DEPLOY UI HANDLERS
+    // 3C. DATABASE MYSQL & SERVERLESS PHP REST API INTEGRATION
+    // Real-time CRUD direct to MySQL via /api/*.php
     // ========================================================
 
     /**
      * Update badge status Cloud Sync di topbar header CMS.
-     * @param {'ready'|'queued'|'syncing'|'success'|'error'|'unconfigured'} state
+     * @param {'ready'|'syncing'|'success'|'error'|'offline'} state
      * @param {string} text
      */
     function updateCloudSyncTopbarBadge(state, text) {
@@ -451,379 +452,143 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Update badge status GitHub dan info repo yang terhubung.
+     * Memeriksa status kesehatan database MySQL dan memperbarui panel CMS.
+     * @param {boolean} forceRefresh
      */
-    function updateGithubStatusUI() {
-        if (typeof BBC_GITHUB === 'undefined') return;
-        const status = BBC_GITHUB.getStatus();
-        const badge = document.getElementById('github-status-badge');
-        const connectedInfo = document.getElementById('github-connected-info');
-        const repoDisplay = document.getElementById('github-repo-display');
-        const branchDisplay = document.getElementById('github-branch-display');
-        const deployBtn = document.getElementById('btn-deploy-vercel');
+    async function updateDatabaseStatusUI(forceRefresh = false) {
+        const badge = document.getElementById('db-status-badge');
+        const hostBadge = document.getElementById('db-host-badge');
+        const infoEngine = document.getElementById('db-info-engine');
+        const infoConnected = document.getElementById('db-info-connected');
+        const infoHost = document.getElementById('db-info-host');
 
-        if (status.configured) {
-            if (badge) {
-                badge.textContent = '✅ TERHUBUNG';
-                badge.className = 'pixel-badge gh-badge--configured';
-            }
-            if (connectedInfo) connectedInfo.style.display = '';
-            if (repoDisplay) repoDisplay.textContent = `${status.owner}/${status.repo}`;
-            if (branchDisplay) branchDisplay.textContent = `[${status.branch}]`;
-            if (deployBtn) deployBtn.disabled = false;
-
-            const isAuto = status.autoDeployEnabled !== false;
-            updateCloudSyncTopbarBadge('ready', isAuto ? '☁️ Vercel: Auto' : '☁️ Vercel: Manual');
-        } else {
-            if (badge) {
-                badge.textContent = '⚠️ BELUM DIKONFIGURASI';
-                badge.className = 'pixel-badge gh-badge--unconfigured';
-            }
-            if (connectedInfo) connectedInfo.style.display = 'none';
-            if (deployBtn) deployBtn.disabled = true;
-
-            updateCloudSyncTopbarBadge('unconfigured', '☁️ Vercel: Setup');
-        }
-    }
-
-    /**
-     * Isi form konfigurasi GitHub dari data tersimpan di localStorage.
-     */
-    function loadGithubConfigToForm() {
-        if (typeof BBC_GITHUB === 'undefined') return;
-        const config = BBC_GITHUB.getConfig();
-
-        const chkAuto = document.getElementById('github-autodeploy-checkbox');
-        if (chkAuto) chkAuto.checked = BBC_GITHUB.isAutoDeployEnabled();
-
-        const tokenInput = document.getElementById('github-token-input');
-        const ownerInput = document.getElementById('github-owner-input');
-        const repoInput = document.getElementById('github-repo-input');
-        const branchInput = document.getElementById('github-branch-input');
-
-        if (tokenInput && config && config.token) tokenInput.value = config.token;
-        if (ownerInput) ownerInput.value = (config && config.owner) ? config.owner : 'abuhuud';
-        if (repoInput) repoInput.value = (config && config.repo) ? config.repo : 'bbc-website';
-        if (branchInput) branchInput.value = (config && config.branch) ? config.branch : 'main';
-    }
-
-    /**
-     * Update state satu github-flow-step.
-     * @param {string} category - 'players'|'events'|'gallery'|'articles'|'officials'|'hero'
-     * @param {'idle'|'uploading'|'success'|'error'} state
-     */
-    function setFlowStepState(category, state) {
-        const el = document.getElementById(`gh-step-${category}`);
-        if (!el) return;
-        el.className = 'github-flow-step' + (state !== 'idle' ? ` github-flow-step--${state}` : '');
-    }
-
-    /**
-     * Reset semua flow steps ke state idle.
-     */
-    function resetFlowSteps() {
-        ['players', 'events', 'gallery', 'articles', 'officials', 'hero'].forEach(k => setFlowStepState(k, 'idle'));
-    }
-
-    /**
-     * Tambahkan baris ke log deploy (terminal style).
-     * @param {string} message
-     * @param {'info'|'success'|'error'|'warn'} type
-     */
-    function addDeployLog(message, type = 'info') {
-        const logEl = document.getElementById('github-deploy-log');
-        if (!logEl) return;
-        logEl.style.display = 'block';
-
-        const colors = {
-            info: '#C4B5FD',
-            success: '#6EE7B7',
-            error: '#FCA5A5',
-            warn: '#FCD34D'
-        };
-        const prefixes = {
-            info: '→',
-            success: '✓',
-            error: '✗',
-            warn: '!'
-        };
-
-        const line = document.createElement('div');
-        line.style.color = colors[type] || colors.info;
-        line.textContent = `${prefixes[type] || '→'} ${message}`;
-        logEl.appendChild(line);
-        logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    /**
-     * Tangani klik tombol "💾 Simpan & Verifikasi".
-     */
-    async function handleSaveGithubConfig() {
-        if (typeof BBC_GITHUB === 'undefined') return;
-
-        const token = (document.getElementById('github-token-input') || {}).value || '';
-        const owner = (document.getElementById('github-owner-input') || {}).value || '';
-        const repo = (document.getElementById('github-repo-input') || {}).value || '';
-        const branch = (document.getElementById('github-branch-input') || {}).value || 'main';
-
-        const verifyEl = document.getElementById('github-verify-status');
-        const btn = document.getElementById('btn-save-github-config');
-
-        if (!token.trim() || !owner.trim() || !repo.trim()) {
-            if (verifyEl) {
-                verifyEl.style.display = '';
-                verifyEl.style.color = '#DC2626';
-                verifyEl.textContent = '❌ Token, Username, dan Nama Repository wajib diisi.';
-            }
-            return;
+        if (badge) {
+            badge.textContent = '⏳ MEMERIKSA...';
+            badge.style.background = '#64748B';
         }
 
-        if (btn) { btn.disabled = true; btn.textContent = '⏳ Memverifikasi...'; }
-        if (verifyEl) { verifyEl.style.display = ''; verifyEl.style.color = '#6B7280'; verifyEl.textContent = '⏳ Menghubungi GitHub API...'; }
+        try {
+            const health = await BBC_STORE.checkApiHealth(forceRefresh);
 
-        const result = await BBC_GITHUB.verifyToken(token.trim());
-
-        if (result.valid) {
-            BBC_GITHUB.saveConfig({ token: token.trim(), owner: owner.trim(), repo: repo.trim(), branch: branch.trim() || 'main' });
-            if (verifyEl) {
-                verifyEl.style.color = '#059669';
-                verifyEl.textContent = `✅ Token valid! Login sebagai @${result.username}. Konfigurasi disimpan.`;
-            }
-            updateGithubStatusUI();
-            showToast(`✅ GitHub terhubung sebagai @${result.username}!`, 'success');
-        } else {
-            if (verifyEl) {
-                verifyEl.style.color = '#DC2626';
-                verifyEl.textContent = `❌ Verifikasi gagal: ${result.error}`;
-            }
-            showToast('❌ Token GitHub tidak valid. Periksa kembali.', 'error');
-        }
-
-        if (btn) { btn.disabled = false; btn.textContent = '💾 Simpan & Verifikasi'; }
-    }
-
-    /**
-     * Tangani klik tombol "🗑️ Hapus Konfigurasi".
-     */
-    function handleClearGithubConfig() {
-        if (typeof BBC_GITHUB === 'undefined') return;
-        BBC_GITHUB.clearConfig();
-
-        const inputs = ['github-token-input', 'github-owner-input', 'github-repo-input', 'github-branch-input'];
-        inputs.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = '';
-        });
-
-        const verifyEl = document.getElementById('github-verify-status');
-        if (verifyEl) { verifyEl.style.display = 'none'; verifyEl.textContent = ''; }
-
-        updateGithubStatusUI();
-        showToast('🗑️ Konfigurasi GitHub dihapus.', 'info');
-    }
-
-    /**
-     * Tangani klik tombol "🚀 DEPLOY KE VERCEL".
-     * Push semua file JSON ke GitHub → Vercel auto-redeploy.
-     */
-    async function handleDeployToVercel() {
-        if (typeof BBC_GITHUB === 'undefined' || !BBC_GITHUB.isConfigured()) {
-            showToast('⚠️ Konfigurasi GitHub belum diatur. Isi token terlebih dahulu.', 'error');
-            return;
-        }
-
-        const deployBtn = document.getElementById('btn-deploy-vercel');
-        const btnText = document.getElementById('btn-deploy-vercel-text');
-        const successNote = document.getElementById('github-deploy-success-note');
-        const logEl = document.getElementById('github-deploy-log');
-        const badge = document.getElementById('github-status-badge');
-
-        // Reset state
-        if (logEl) { logEl.innerHTML = ''; logEl.style.display = 'none'; }
-        if (successNote) successNote.style.display = 'none';
-        resetFlowSteps();
-
-        // UI: deploying state
-        if (deployBtn) deployBtn.disabled = true;
-        if (btnText) btnText.textContent = '⏳ Sedang Deploy...';
-        if (badge) { badge.textContent = '🔄 DEPLOYING...'; badge.className = 'pixel-badge gh-badge--deploying'; }
-
-        showToast('🚀 Memulai push ke GitHub...', 'info');
-        addDeployLog('Memulai sinkronisasi ke GitHub...', 'info');
-
-        const config = BBC_GITHUB.getConfig();
-        addDeployLog(`Target: ${config.owner}/${config.repo} [${config.branch}]`, 'info');
-
-        let anyFailed = false;
-
-        const result = await BBC_GITHUB.deployToGitHub({
-            onProgress: (category, status, error) => {
-                if (status === 'uploading') {
-                    setFlowStepState(category, 'uploading');
-                    addDeployLog(`Uploading ${category}.json...`, 'info');
-                } else if (status === 'success') {
-                    setFlowStepState(category, 'success');
-                    addDeployLog(`${category}.json ✓ berhasil di-push`, 'success');
-                } else if (status === 'error') {
-                    setFlowStepState(category, 'error');
-                    addDeployLog(`${category}.json ✗ GAGAL: ${error}`, 'error');
-                    anyFailed = true;
+            if (health && health.database === 'connected') {
+                if (badge) {
+                    badge.textContent = '🟢 TERHUBUNG KE MYSQL';
+                    badge.style.background = '#059669';
+                    badge.style.color = '#FFFFFF';
                 }
+                if (hostBadge) {
+                    hostBadge.style.display = '';
+                    hostBadge.textContent = `HOST: ${health.db_host || 'MySQL'}`;
+                }
+                if (infoConnected) {
+                    infoConnected.innerHTML = '<span style="color:#059669;font-weight:800;">✅ Terhubung ke MySQL</span>';
+                }
+                if (infoHost) {
+                    infoHost.textContent = `${health.db_host || 'localhost'} (DB: ${health.db_name || 'bbc_database'})`;
+                }
+                if (infoEngine && health.php_version) {
+                    infoEngine.textContent = `PHP ${health.php_version} Serverless (${health.mysql_version ? 'MySQL ' + health.mysql_version : 'MySQL'})`;
+                }
+                updateCloudSyncTopbarBadge('ready', '🗄️ MySQL: Online');
+                return true;
+            } else {
+                if (badge) {
+                    badge.textContent = '⚪ STANDBY (LOCAL JSON)';
+                    badge.style.background = '#F59E0B';
+                    badge.style.color = '#1E1B4B';
+                }
+                if (hostBadge) {
+                    hostBadge.style.display = 'none';
+                }
+                if (infoConnected) {
+                    const reason = (health && health.error) ? ` (${health.error})` : '';
+                    infoConnected.innerHTML = `<span style="color:#D97706;font-weight:700;">⚠️ Offline / Standby${reason}</span>`;
+                }
+                if (infoHost) {
+                    infoHost.textContent = 'Tidak terhubung (Mode Fallback JSON)';
+                }
+                updateCloudSyncTopbarBadge('offline', '🗄️ MySQL: Standby');
+                return false;
             }
-        });
-
-        // UI: done state
-        if (deployBtn) deployBtn.disabled = false;
-
-        if (result.success > 0 && result.failed === 0) {
-            // Semua berhasil
-            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
-            if (badge) { badge.textContent = '✅ BERHASIL DEPLOY'; badge.className = 'pixel-badge gh-badge--success'; }
-            if (successNote) successNote.style.display = '';
-            addDeployLog(`✓ Selesai! ${result.success} file berhasil di-push ke GitHub.`, 'success');
-            addDeployLog('Vercel sedang redeploy... tunggu ±1–2 menit.', 'info');
-            showToast(`🚀 ${result.success} file berhasil di-push! Vercel sedang redeploy...`, 'success');
-
-            // Reset badge setelah 10 detik
-            setTimeout(() => {
-                updateGithubStatusUI();
-            }, 10000);
-
-        } else if (result.success > 0 && result.failed > 0) {
-            // Sebagian berhasil
-            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
-            if (badge) { badge.textContent = `⚠️ ${result.failed} GAGAL`; badge.className = 'pixel-badge gh-badge--error'; }
-            addDeployLog(`Selesai dengan error: ${result.success} berhasil, ${result.failed} gagal.`, 'warn');
-            showToast(`⚠️ ${result.success} file berhasil, ${result.failed} gagal. Cek log di bawah.`, 'warning');
-
-        } else {
-            // Semua gagal
-            if (btnText) btnText.textContent = 'DEPLOY KE VERCEL';
-            if (badge) { badge.textContent = '❌ DEPLOY GAGAL'; badge.className = 'pixel-badge gh-badge--error'; }
-            addDeployLog(`Semua file gagal di-push. Periksa token & koneksi internet.`, 'error');
-            if (result.errors.length > 0) {
-                addDeployLog(`Error: ${result.errors[0]}`, 'error');
+        } catch (err) {
+            if (badge) {
+                badge.textContent = '⚠️ GAGAL CEK API';
+                badge.style.background = '#EF4444';
             }
-            showToast('❌ Deploy gagal. Periksa token GitHub dan koneksi internet.', 'error');
+            if (infoConnected) {
+                infoConnected.innerHTML = `<span style="color:#DC2626;font-weight:700;">❌ Terputus (${err.message || 'Network Error'})</span>`;
+            }
+            updateCloudSyncTopbarBadge('error', '🗄️ MySQL: Offline');
+            return false;
         }
     }
 
     /**
-     * Init semua UI GitHub deploy — dipanggil saat tab Backup dibuka.
+     * Inisialisasi event listener panel Database MySQL di tab Backup.
      */
-    function initGithubUI() {
-        // Load config ke form
-        loadGithubConfigToForm();
-        updateGithubStatusUI();
+    function initDatabaseUI() {
+        updateDatabaseStatusUI();
 
-        // Wire event listeners (hanya sekali)
-        const btnSave = document.getElementById('btn-save-github-config');
-        if (btnSave && !btnSave._ghWired) {
-            btnSave._ghWired = true;
-            btnSave.addEventListener('click', handleSaveGithubConfig);
-        }
-
-        const btnClear = document.getElementById('btn-clear-github-config');
-        if (btnClear && !btnClear._ghWired) {
-            btnClear._ghWired = true;
-            btnClear.addEventListener('click', handleClearGithubConfig);
-        }
-
-        const btnDeploy = document.getElementById('btn-deploy-vercel');
-        if (btnDeploy && !btnDeploy._ghWired) {
-            btnDeploy._ghWired = true;
-            btnDeploy.addEventListener('click', handleDeployToVercel);
-        }
-
-        // Toggle password visibility
-        const btnToggle = document.getElementById('btn-toggle-token');
-        const tokenInput = document.getElementById('github-token-input');
-        if (btnToggle && tokenInput && !btnToggle._ghWired) {
-            btnToggle._ghWired = true;
-            btnToggle.addEventListener('click', () => {
-                tokenInput.type = (tokenInput.type === 'password') ? 'text' : 'password';
-            });
-        }
-
-        // Toggle Auto-Deploy Checkbox
-        const chkAutoDeploy = document.getElementById('github-autodeploy-checkbox');
-        if (chkAutoDeploy && !chkAutoDeploy._ghWired) {
-            chkAutoDeploy._ghWired = true;
-            chkAutoDeploy.addEventListener('change', () => {
-                if (typeof BBC_GITHUB !== 'undefined') {
-                    BBC_GITHUB.setAutoDeployEnabled(chkAutoDeploy.checked);
-                    showToast(
-                        chkAutoDeploy.checked
-                            ? '⚡ Auto-Deploy ke Vercel diaktifkan!'
-                            : 'Auto-Deploy ke Vercel dinonaktifkan.',
-                        'info'
-                    );
-                    updateGithubStatusUI();
-                }
-            });
-        }
-    }
-
-    // ========================================================
-    // 3D. REAKTIF CLOUD SYNC LISTENER & TOPBAR SHORTCUT
-    // ========================================================
-    if (typeof BBC_GITHUB !== 'undefined') {
-        // Klik badge di topbar untuk langsung membuka pengaturan Vercel di tab Backup
+        // Topbar badge shortcut ke tab Backup
         const topbarCloudBadge = document.getElementById('cloud-sync-topbar-badge');
-        if (topbarCloudBadge && !topbarCloudBadge._ghWired) {
-            topbarCloudBadge._ghWired = true;
+        if (topbarCloudBadge && !topbarCloudBadge._dbWired) {
+            topbarCloudBadge._dbWired = true;
             topbarCloudBadge.addEventListener('click', () => {
                 switchTab('backup');
                 setTimeout(() => {
-                    const cfgForm = document.getElementById('github-config-form');
-                    if (cfgForm) cfgForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const dbPanel = document.getElementById('mysql-db-panel');
+                    if (dbPanel) dbPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 100);
             });
         }
 
-        // Daftarkan listener live status deploy
-        BBC_GITHUB.onStatusChange((evt) => {
-            console.info(`[CMS] Status Auto-Deploy: ${evt.type}`, evt);
-
-            if (evt.type === 'queued') {
-                updateCloudSyncTopbarBadge('queued', '⏳ Menyimpan...');
-                addDeployLog(`[Auto-Deploy] Perubahan data (${evt.categories.join(', ')}) dijadwalkan push ke Vercel...`, 'info');
-            } else if (evt.type === 'deploying') {
-                updateCloudSyncTopbarBadge('syncing', '🚀 Push Vercel...');
-                addDeployLog(`[Auto-Deploy] Sedang mengunggah (${evt.categories.join(', ')}) ke GitHub...`, 'info');
-                if (evt.categories) {
-                    evt.categories.forEach(cat => setFlowStepState(cat, 'uploading'));
+        // Tombol Test Koneksi Ulang
+        const btnTestDb = document.getElementById('btn-test-db');
+        if (btnTestDb && !btnTestDb._dbWired) {
+            btnTestDb._dbWired = true;
+            btnTestDb.addEventListener('click', async () => {
+                btnTestDb.disabled = true;
+                btnTestDb.innerHTML = '<span>⏳ Memeriksa...</span>';
+                const isOnline = await updateDatabaseStatusUI(true);
+                btnTestDb.disabled = false;
+                btnTestDb.innerHTML = '<span>🔄 CEK KONEKSI</span>';
+                if (isOnline) {
+                    showToast('✅ Koneksi ke MySQL & PHP REST API berhasil!');
+                } else {
+                    showToast('⚠️ Koneksi ke MySQL belum aktif. Pastikan environment variables di Vercel sudah diatur.', 'warning');
                 }
-            } else if (evt.type === 'success') {
-                updateCloudSyncTopbarBadge('success', '✅ Vercel: Terupdate!');
-                addDeployLog(`[Auto-Deploy] ✅ Sukses! Vercel otomatis redeploy dalam ±1-2 menit.`, 'success');
-                if (evt.categories) {
-                    evt.categories.forEach(cat => setFlowStepState(cat, 'success'));
+            });
+        }
+
+        // Tombol Seed / Migrasi ke MySQL
+        const btnSeedDb = document.getElementById('btn-seed-database');
+        if (btnSeedDb && !btnSeedDb._dbWired) {
+            btnSeedDb._dbWired = true;
+            btnSeedDb.addEventListener('click', async () => {
+                const confirmed = confirm('Apakah Anda yakin ingin melakukan sinkronisasi / migrasi data awal ke MySQL?\n\nSemua data dari file JSON lokal akan diimpor ke database MySQL.');
+                if (!confirmed) return;
+
+                btnSeedDb.disabled = true;
+                btnSeedDb.innerHTML = '<span>⏳ Melakukan Migrasi...</span>';
+
+                try {
+                    const result = await BBC_STORE.triggerSeed();
+                    if (result && result.success) {
+                        showToast('🎉 Berhasil! Seluruh data awal telah disinkronkan ke database MySQL.');
+                        await updateDatabaseStatusUI(true);
+                        renderAll();
+                    } else {
+                        const errMsg = (result && result.error) ? result.error : 'Gagal melakukan seed database.';
+                        showToast(`❌ Migrasi gagal: ${errMsg}`, 'error');
+                    }
+                } catch (err) {
+                    showToast(`❌ Error migrasi: ${err.message}`, 'error');
+                } finally {
+                    btnSeedDb.disabled = false;
+                    btnSeedDb.innerHTML = '<span>⚡ SINKRONKAN / SEED KE MYSQL</span>';
                 }
-                showToast(`✅ Data (${evt.categories.join(', ')}) berhasil di-push ke Vercel!`, 'success');
-
-                // Kembalikan teks badge ke siap setelah 5 detik
-                setTimeout(() => {
-                    updateGithubStatusUI();
-                }, 5000);
-            } else if (evt.type === 'error') {
-                updateCloudSyncTopbarBadge('error', '⚠️ Vercel: Gagal');
-                addDeployLog(`[Auto-Deploy] ❌ Gagal: ${evt.message}`, 'error');
-                if (evt.categories) {
-                    evt.categories.forEach(cat => setFlowStepState(cat, 'error'));
-                }
-                showToast(`⚠️ Auto-Deploy Vercel gagal. Buka tab Backup untuk detail.`, 'error');
-
-                setTimeout(() => {
-                    updateGithubStatusUI();
-                }, 6000);
-            } else if (evt.type === 'autodeploy_toggle') {
-                updateGithubStatusUI();
-            }
-        });
-
-        // Inisialisasi tampilan status topbar saat pertama load
-        updateGithubStatusUI();
+            });
+        }
     }
 
     // ========================================================
@@ -1034,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target === 'backup') {
             initFsUI();
-            initGithubUI();
+            initDatabaseUI();
         }
 
         // Close mobile drawer if opened on mobile devices
@@ -3308,6 +3073,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('cms-auth-required');
         renderAll();
         initHeroSettings();
+        initDatabaseUI();
         switchTab('dashboard');
     } else {
         document.body.classList.add('cms-auth-required');
