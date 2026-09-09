@@ -2578,6 +2578,97 @@ body:not(.cms-auth-required) .cms-auth-screen {
 }
 
 
+/* BBC_GITHUB — GitHub Auto-Deploy Status & Flow Steps */
+.github-flow-step {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 2px solid #E2E8F0;
+  background: #F8FAFC;
+  color: #64748B;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.github-flow-step::after {
+  content: '○';
+  margin-left: auto;
+  font-size: 0.75rem;
+}
+
+.github-flow-step--uploading {
+  border-color: #F59E0B;
+  background: #FFFBEB;
+  color: #92400E;
+  animation: ghStepPulse 0.8s ease-in-out infinite;
+}
+.github-flow-step--uploading::after {
+  content: '⏳';
+}
+
+.github-flow-step--success {
+  border-color: #059669;
+  background: #ECFDF5;
+  color: #065F46;
+}
+.github-flow-step--success::after {
+  content: '✅';
+}
+
+.github-flow-step--error {
+  border-color: #DC2626;
+  background: #FEF2F2;
+  color: #991B1B;
+}
+.github-flow-step--error::after {
+  content: '❌';
+}
+
+@keyframes ghStepPulse {
+  0%, 100% { opacity: 1; transform: none; }
+  50% { opacity: 0.7; transform: translateX(2px); }
+}
+
+/* Tombol Deploy hover effect */
+#btn-deploy-vercel:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #1E1B4B;
+}
+
+#btn-deploy-vercel:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 #1E1B4B;
+}
+
+#btn-deploy-vercel:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* GitHub status badge states */
+#github-status-badge.gh-badge--unconfigured {
+  background: #9CA3AF;
+}
+#github-status-badge.gh-badge--configured {
+  background: #059669;
+  animation: fsPulse 2s ease-in-out infinite;
+}
+#github-status-badge.gh-badge--deploying {
+  background: #F59E0B;
+  animation: ghStepPulse 0.6s ease-in-out infinite;
+}
+#github-status-badge.gh-badge--success {
+  background: #059669;
+}
+#github-status-badge.gh-badge--error {
+  background: #DC2626;
+}
+
+
 .cms-hero-acc-subtitle {
   font-size: 0.88rem;
   font-weight: 800;
