@@ -5,9 +5,37 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.18.0 — Fix Stuck Loading Profil Pemain (Galeri Foto) & Range Mingguan Agenda](#-v2180---fix-stuck-loading-profil-pemain-galeri-foto--range-mingguan-agenda)
-2. [v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang](#-v2170---github-token-diamankan-via-vercel-server-side-proxy--auto-deploy-tanpa-konfigurasi-ulang)
-3. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+1. [v2.18.1 — Optimasi Posisi Thumbnail Galeri Pemain: Fokus Wajah di Tengah](#-v2181---optimasi-posisi-thumbnail-galeri-pemain-fokus-wajah-di-tengah)
+2. [v2.18.0 — Fix Stuck Loading Profil Pemain (Galeri Foto) & Range Mingguan Agenda](#-v2180---fix-stuck-loading-profil-pemain-galeri-foto--range-mingguan-agenda)
+3. [v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang](#-v2170---github-token-diamankan-via-vercel-server-side-proxy--auto-deploy-tanpa-konfigurasi-ulang)
+
+---
+
+## 🎨 v2.18.1 — Optimasi Posisi Thumbnail Galeri Pemain: Fokus Wajah di Tengah
+**Tanggal:** 10 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"pada thumbnail gallery player, fokuskan wajah player berada di tengah tumbnail agar tidak terpotong saat tampil pada detail player"*
+
+### 🔍 Analisis Tampilan
+1. **Posisi Default `object-position: center` Memotong Wajah:**  
+   Thumbnail galeri sebelumnya menggunakan `aspect-ratio: 4 / 3` dengan `object-position: center` (50% 50%). Pada foto aksi berorientasi potret (atau foto berdiri atlet), area wajah berada di sepertiga atas foto (sekitar 15%–30% dari atas). Pengaturan tengah vertikal (50%) menempatkan dada/perut di tengah thumbnail dan mendorong kepala/wajah ke luar batas atas bingkai (`overflow: hidden`), sehingga wajah atlet terpotong.
+2. **Rasio Aspek 4:3 Terlalu Pendek:**  
+   Format horizontal 4:3 terlalu ceper untuk mengakomodasi komposisi foto pemain bulutangkis.
+
+### ✅ Solusi & Detail Implementasi Teknis
+1. **Penyelarasan Rasio Aspek Persegi (`aspect-ratio: 1 / 1`):**  
+   Mengubah rasio aspek bingkai `.pd-gallery-img-wrap` pada [css/components.css](file:///e:/Ikrom%20Docs/bbc-website/css/components.css) menjadi persegi `1 / 1`. Hal ini memberikan tinggi vertikal yang seimbang untuk foto potret maupun lanskap.
+2. **Fokus Wajah di Tengah Thumbnail (`object-position: center 20%`):**  
+   - Mengatur `object-position: center 20%` pada `.pd-gallery-img` sehingga titik fokus wajah (20% dari batas atas foto) ditempatkan tepat di pusat optik thumbnail. Wajah atlet tidak lagi terpotong.
+   - Mengatur `transform-origin: center 20%` pada efek hover zoom agar pembesaran foto tetap terpusat ke arah wajah atlet.
+3. **Penyelarasan Thumbnail di Dashboard CMS:**  
+   Menerapkan `object-position: center 20%` pada `.cms-pg-card__thumb` dan `.cms-player-gallery-preview-item img` di [css/cms.css](file:///e:/Ikrom%20Docs/bbc-website/css/cms.css) agar pratinjau foto di CMS memiliki fokus wajah yang konsisten dengan halaman detail publik.
+
+### 📁 Berkas yang Dimodifikasi
+- `css/components.css` — Penyesuaian `aspect-ratio: 1 / 1`, `object-position: center 20%`, dan `transform-origin` pada thumbnail galeri pemain
+- `css/cms.css` — Penyesuaian `object-position: center 20%` pada thumbnail galeri pemain di CMS
+- `CHANGELOG.md` — Dokumentasi log perubahan rilis v2.18.1
 
 ---
 
