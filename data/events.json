@@ -1,5 +1,5 @@
 {
-  "_version": 1789011217313,
+  "_version": 1789049259490,
   "_updatedAt": "2026-09-10",
   "events": [
     {
@@ -13,7 +13,7 @@
       "venue": "Pakko Sport Court 1,2 dan 3",
       "city": "Jakarta Timur",
       "locationUrl": "https://maps.app.goo.gl/QoLXqKsTGkTTxRhv6",
-      "status": "upcoming",
+      "status": "completed",
       "description": "Mabar Rutin Mingguan BBC"
     },
     {
