@@ -5,8 +5,41 @@ Dokumen ini mencatat seluruh riwayat perubahan, pembaruan fitur, optimasi tampil
 ---
 
 ## 📌 DAFTAR ISI RIWAYAT PERUBAHAN
-1. [v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang](#-v2170---github-token-diamankan-via-vercel-server-side-proxy--auto-deploy-tanpa-konfigurasi-ulang)
-2. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+1. [v2.18.0 — Fix Stuck Loading Profil Pemain (Galeri Foto) & Range Mingguan Agenda](#-v2180---fix-stuck-loading-profil-pemain-galeri-foto--range-mingguan-agenda)
+2. [v2.17.0 — GitHub Token Diamankan via Vercel Server-Side Proxy + Auto-Deploy Tanpa Konfigurasi Ulang](#-v2170---github-token-diamankan-via-vercel-server-side-proxy--auto-deploy-tanpa-konfigurasi-ulang)
+3. [v2.16.0 — Auto-Deploy Otomatis ke GitHub & Vercel saat Data Berubah](#-v2160---auto-deploy-otomatis-ke-github--vercel-saat-data-berubah)
+
+---
+
+## 🐞 v2.18.0 — Fix Stuck Loading Profil Pemain (Galeri Foto) & Range Mingguan Agenda
+**Tanggal:** 10 September 2026
+
+### 📝 Permintaan Pengguna / Masalah
+> *"perbaiki bug pada pemain yang memiliki DAFTAR FOTO TERPASANG, saat diklik 'lihat profil' stuck hanya loading memuat data"*
+
+### 🔍 Analisis Akar Masalah (Root Cause)
+1. **`ReferenceError: fallbackSvg is not defined` pada `player-detail.js`:**  
+   Ketika seorang pemain memiliki foto di galeri (`player.gallery.length > 0`), template string melakukan iterasi `gallery.map(...)` dan mengevaluasi ekspresi `${fallbackSvg}` pada atribut `onerror="this.src='${fallbackSvg}'"`. Variabel `fallbackSvg` tidak pernah dideklarasikan di skrip, sehingga browser melempar fatal error (*Uncaught ReferenceError*).
+2. **Halaman Terhenti pada State Loading:**  
+   Karena error terjadi di dalam callback fungsi `BBC_onReady()`, eksekusi JavaScript langsung terputus sebelum baris pembaruan kontainer `container.innerHTML = ...` selesai dijalankan. Akibatnya kontainer profil atlet tetap menampilkan markup bawaan yaitu banner `<span class="pixel-badge pixel-badge--yellow">MEMUAT DATA PEMAIN...</span>`.
+3. **Pemain Tanpa Galeri Tidak Mengalami Masalah:**  
+   Pada pemain yang belum memiliki foto galeri (`gallery.length === 0`), blok map galeri tidak dieksekusi sehingga ekspresi `${fallbackSvg}` tidak terpanggil dan halaman berhasil dimuat. Hal ini persis menjelaskan mengapa kendala hanya terjadi saat membuka profil pemain dengan foto terpasang.
+
+### ✅ Solusi & Detail Implementasi Teknis
+1. **Deklarasi Fallback & Penanganan Defensif Foto Galeri (`player-detail.js`):**
+   - Mendefinisikan variabel `fallbackSvg = dummyPhoto` sebagai gambar cadangan jika foto galeri aksi gagal dimuat.
+   - Menambahkan sanitasi properti `item`: mendukung baik format objek `{ url, image, caption }` maupun format string URL biasa (`typeof item === 'string'`).
+   - Mencegah infinite loop dengan menambahkan `this.onerror=null;` pada tag gambar galeri.
+2. **Dukungan Teks Keterangan Foto di Lightbox Modal (`player-detail.html` & `player-detail.js`):**
+   - Menambahkan elemen `#pd-lightbox-caption` pada `.pd-lightbox__caption-bar` di `player-detail.html` agar judul/keterangan foto aksi dapat tampil di modal perbesaran foto (*lightbox*).
+   - Memperbarui fungsi `showLightboxPhoto()` untuk menyajikan caption dan menangani fallback foto secara aman.
+3. **Penerapan Guard Block `try ... catch`:**
+   - Membungkus seluruh logika render profil pemain di dalam blok `try ... catch` sehingga jika ada kendala data di masa depan, sistem tidak akan macet di state loading melainkan menampilkan tampilan error yang informatif beserta tombol kembali ke daftar pemain.
+
+### 📁 Berkas yang Dimodifikasi
+- `pages/player-detail.html` — Penambahan elemen `#pd-lightbox-caption` pada caption bar lightbox
+- `js/pages/player-detail.js` — Perbaikan bug variabel `fallbackSvg`, sanitasi data galeri, dan penambahan `try ... catch`
+- `CHANGELOG.md` — Dokumentasi log perubahan rilis v2.18.0
 
 ---
 
