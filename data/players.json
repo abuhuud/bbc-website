@@ -1,13 +1,13 @@
 {
-  "_version": 1789049225583,
-  "_updatedAt": "2026-09-10",
+  "_version": 1789220610641,
+  "_updatedAt": "2026-09-12",
   "players": [
     {
       "id": "ikrom",
       "name": "M. Arifin Purwakananta",
       "gender": "male",
       "division": "Kedeputian I",
-      "isPlayerOfTheMonth": true,
+      "isPlayerOfTheMonth": false,
       "stats": {
         "attendance": 24,
         "matches": 30,
@@ -49,7 +49,7 @@
       "name": "Irsan Sanusi",
       "gender": "male",
       "division": "Manajemen Risiko",
-      "isPlayerOfTheMonth": false,
+      "isPlayerOfTheMonth": true,
       "stats": {
         "attendance": 22,
         "matches": 25,
