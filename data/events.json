@@ -1,6 +1,6 @@
 {
-  "_version": 1789049259490,
-  "_updatedAt": "2026-09-10",
+  "_version": 1789220243366,
+  "_updatedAt": "2026-09-12",
   "events": [
     {
       "id": "event-001",
@@ -42,6 +42,20 @@
       "city": "Jakarta Timur",
       "locationUrl": "https://maps.app.goo.gl/M23haoR3twhaayau5",
       "description": "Mabar BBC",
+      "typeName": "Latihan Rutin"
+    },
+    {
+      "id": "latihan-rutin-mingguan-bbc-1315",
+      "title": "Latihan Rutin Mingguan BBC",
+      "type": "training",
+      "status": "upcoming",
+      "date": "2026-09-16",
+      "dayName": "Kamis",
+      "time": "17:00 - 20.00 WIB",
+      "venue": "Pakko Sport Court 1,2 dan 3",
+      "city": "Jakarta Timur",
+      "locationUrl": "",
+      "description": "",
       "typeName": "Latihan Rutin"
     }
   ]
