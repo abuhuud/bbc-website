@@ -1,5 +1,5 @@
 {
-  "_version": 1789656133800,
+  "_version": 1789656141888,
   "_updatedAt": "2026-09-17",
   "events": [
     {
@@ -34,7 +34,7 @@
       "id": "mabar-rutin-bbc-5268",
       "title": "Mabar Rutin BBC",
       "type": "training",
-      "status": "upcoming",
+      "status": "completed",
       "date": "2026-09-17",
       "dayName": "Kamis",
       "time": "17.00 - 20.00 WIB",
